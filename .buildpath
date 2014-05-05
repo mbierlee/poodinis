@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="con" path="org.eclipse.dltk.launching.INTERPRETER_CONTAINER"/>
+	<buildpathentry kind="con" path="org.dsource.ddt.ide.core.DubContainer"/>
+	<buildpathentry kind="src" path="source"/>
+</buildpath>

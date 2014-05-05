@@ -1,0 +1,33 @@
+{
+	"name" : "poodinis",
+	"description" : "A dependency injection framework.",
+	"homepage": "http://lostmoment.com",
+	"authors": ["Lostmoment", "Mike Bierlee"],
+	"copyright": "Copyright 2014 Lostmoment",
+	"license": "proprietary",
+	"configurations": [
+		{
+			"name": "debug-build",
+			"targetType": "library",
+			"buildOptions": [
+				"debugMode",
+				"debugInfo"
+			]
+		},
+		{
+			"name": "unittest",
+			"targetType": "executable",
+			"buildOptions": [
+				"debugMode",
+				"debugInfo",
+				"unittests"
+			],
+			"sourcePaths": [
+				"test"
+			],
+			"dflags-dmd": [
+				"-main"
+			]
+		}
+	]
+}
