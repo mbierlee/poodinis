@@ -3,7 +3,7 @@ module poodinis.container;
 import std.string;
 
 struct Registration {
-	TypeInfo registratedType = null;
+	TypeInfo registeredType = null;
 	TypeInfo_Class instantiatableType = null;
 	
 	public Object getInstance() {
@@ -12,8 +12,8 @@ struct Registration {
 }
 
 class RegistrationException : Exception {
-	this(string message, TypeInfo registratedType, TypeInfo_Class instantiatableType) {
-		super(format("Exception while registering type %s to %s: %s", registratedType.toString(), instantiatableType.name, message));
+	this(string message, TypeInfo registeredType, TypeInfo_Class instantiatableType) {
+		super(format("Exception while registering type %s to %s: %s", registeredType.toString(), instantiatableType.name, message));
 	}
 }
 
@@ -37,7 +37,7 @@ class Container {
 		}
 		
 		Registration newRegistration = { registeredType, instantiatableType };
-		registrations[newRegistration.registratedType] = newRegistration;
+		registrations[newRegistration.registeredType] = newRegistration;
 		return newRegistration;
 	}
 	

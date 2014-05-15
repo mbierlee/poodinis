@@ -15,7 +15,7 @@ version(unittest) {
 	unittest {
 		// Test register concrete type
 		auto registration = Container.register!(TestClass)();
-		assert(registration.registratedType == typeid(TestClass), "Type of registered type not the same");
+		assert(registration.registeredType == typeid(TestClass), "Type of registered type not the same");
 	}
 	
 	unittest {
