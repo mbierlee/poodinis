@@ -15,13 +15,13 @@ class Container {
 	private this() {
 	}
 	
-	public static Registration register(T)() {
-		Registration newRegistration = { typeid(T) };
+	public static Registration register(ClassType)() {
+		Registration newRegistration = { typeid(ClassType) };
 		registrations[newRegistration.registratedType] = newRegistration;
 		return newRegistration;
 	}
 	
-	public static T resolve(T)() {
-		return cast(T) registrations[typeid(T)].getInstance();
+	public static ClassType resolve(ClassType)() {
+		return cast(ClassType) registrations[typeid(ClassType)].getInstance();
 	}
 }
