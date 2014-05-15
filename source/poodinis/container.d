@@ -1,22 +1,27 @@
 module poodinis.container;
 
 struct Registration {
-	TypeInfo_Class registratedType = null;
+	TypeInfo registratedType = null;
+	TypeInfo_Class instantiatableType = null;
 	
 	public Object getInstance() {
-		return registratedType.create();
+		return instantiatableType.create();
 	}
 }
 
 class Container {
 	
-	private static Registration[TypeInfo_Class] registrations;
+	private static Registration[TypeInfo] registrations;
 	
 	private this() {
 	}
 	
-	public static Registration register(ClassType)() {
-		Registration newRegistration = { typeid(ClassType) };
+	public static Registration register(ConcreteType)() {
+		return register!(ConcreteType, ConcreteType)();
+	}
+	
+	public static Registration register(InterfaceType, ConcreteType)() {
+		Registration newRegistration = { typeid(InterfaceType), typeid(ConcreteType) };
 		registrations[newRegistration.registratedType] = newRegistration;
 		return newRegistration;
 	}
