@@ -1,6 +1,6 @@
 import poodinis.container;
 
-import std.stdio;
+import std.exception;
 
 version(unittest) {
 	interface TestInterface {
@@ -35,9 +35,13 @@ version(unittest) {
 	}
 	
 	unittest {
-		// Test resolve type registered with unrelated type fails
-		Container.register!(UnrelatedClass, TestClass)();
-		UnrelatedClass actualInstance = Container.resolve!(UnrelatedClass)();
-		assert(actualInstance is null, "Resolved type is not null");
+		// Test register unrelated types fails
+		assertThrown!RegistrationException(Container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types does not fail");
 	}
+	
+	unittest {
+		// Test register unrelated types with disabled check on registration
+		assertNotThrown!RegistrationException(Container.register!(UnrelatedClass, TestClass)(false), "Registering unrelated types while disabling type validity fails");
+	}
+	
 }
