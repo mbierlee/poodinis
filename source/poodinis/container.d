@@ -1,6 +1,7 @@
 module poodinis.container;
 
 import std.string;
+import std.array;
 
 struct Registration {
 	TypeInfo registeredType = null;
@@ -14,6 +15,12 @@ struct Registration {
 class RegistrationException : Exception {
 	this(string message, TypeInfo registeredType, TypeInfo_Class instantiatableType) {
 		super(format("Exception while registering type %s to %s: %s", registeredType.toString(), instantiatableType.name, message));
+	}
+}
+
+class ResolveException : Exception {
+	this(string message, TypeInfo resolveType) {
+		super(format("Exception while resolving type %s: %s", resolveType.toString(), message));
 	}
 }
 
@@ -44,12 +51,21 @@ class Container {
 	private static void checkValidity(InterfaceType)(TypeInfo registeredType, TypeInfo_Class instanceType) {
 		InterfaceType instanceCanBeCastToInterface = cast(InterfaceType) instanceType.create(); 
 		if (!instanceCanBeCastToInterface) {
-			string errorMessage = format("%s cannot be cast to %s", instanceType.name, registeredType.toString());
+			string errorMessage = format("%s cannot be cast to %s.", instanceType.name, registeredType.toString());
 			throw new RegistrationException(errorMessage, registeredType, instanceType);
 		}
 	}
 	
 	public static ClassType resolve(ClassType)() {
-		return cast(ClassType) registrations[typeid(ClassType)].getInstance();
+		TypeInfo resolveType = typeid(ClassType);
+		Registration* registration = resolveType in registrations;
+		if (!registration) {
+			throw new ResolveException("Type not registered.", resolveType);
+		}
+		return cast(ClassType) registration.getInstance();
+	}
+	
+	public static void clearRegistrations() {
+		registrations.clear();
 	}
 }
