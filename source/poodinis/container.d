@@ -26,30 +26,27 @@ class ResolveException : Exception {
 
 class Container {
 	
-	private static Registration[TypeInfo] registrations;
+	private Registration[TypeInfo] registrations;
 	
-	private static bool _globalTypeValidityCheckEnabled = true;
+	private bool _typeValidityCheckEnabled = true;
 	
-	@property public static void globalTypeValidityCheckEnabled(bool enabled) {
-		_globalTypeValidityCheckEnabled = enabled;
+	@property public void typeValidityCheckEnabled(bool enabled) {
+		_typeValidityCheckEnabled = enabled;
 	}
 	
-	@property public static bool globalTypeValidityCheckEnabled() {
-		return _globalTypeValidityCheckEnabled;
+	@property public bool typeValidityCheckEnabled() {
+		return _typeValidityCheckEnabled;
 	}
 	
-	private this() {
-	}
-	
-	public static Registration register(ConcreteType)() {
+	public Registration register(ConcreteType)() {
 		return register!(ConcreteType, ConcreteType)();
 	}
 	
-	public static Registration register(InterfaceType, ConcreteType)(bool checkTypeValidity = true) {
+	public Registration register(InterfaceType, ConcreteType)(bool checkTypeValidity = true) {
 		TypeInfo registeredType = typeid(InterfaceType);
 		TypeInfo_Class instantiatableType = typeid(ConcreteType);
 		
-		if (globalTypeValidityCheckEnabled && checkTypeValidity) {
+		if (typeValidityCheckEnabled && checkTypeValidity) {
 			checkValidity!(InterfaceType)(registeredType, instantiatableType);
 		}
 		
@@ -58,7 +55,7 @@ class Container {
 		return newRegistration;
 	}
 	
-	private static void checkValidity(InterfaceType)(TypeInfo registeredType, TypeInfo_Class instanceType) {
+	private void checkValidity(InterfaceType)(TypeInfo registeredType, TypeInfo_Class instanceType) {
 		InterfaceType instanceCanBeCastToInterface = cast(InterfaceType) instanceType.create(); 
 		if (!instanceCanBeCastToInterface) {
 			string errorMessage = format("%s cannot be cast to %s.", instanceType.name, registeredType.toString());
@@ -66,7 +63,7 @@ class Container {
 		}
 	}
 	
-	public static ClassType resolve(ClassType)() {
+	public ClassType resolve(ClassType)() {
 		TypeInfo resolveType = typeid(ClassType);
 		Registration* registration = resolveType in registrations;
 		if (!registration) {
@@ -75,7 +72,7 @@ class Container {
 		return cast(ClassType) registration.getInstance();
 	}
 	
-	public static void clearRegistrations() {
+	public void clearRegistrations() {
 		registrations.clear();
 	}
 }

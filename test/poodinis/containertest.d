@@ -14,55 +14,60 @@ version(unittest) {
 	
 	unittest {
 		// Test register concrete type
-		Container.clearRegistrations();
-		auto registration = Container.register!(TestClass)();
+		auto container = new Container();
+		auto registration = container.register!(TestClass)();
 		assert(registration.registeredType == typeid(TestClass), "Type of registered type not the same");
 	}
 	
 	unittest {
 		// Test resolve registered type
-		Container.clearRegistrations();
-		Container.register!(TestClass)();
-		TestClass actualInstance = Container.resolve!(TestClass)();
+		auto container = new Container();
+		container.register!(TestClass)();
+		TestClass actualInstance = container.resolve!(TestClass)();
 		assert(actualInstance !is null, "Resolved type is null");
 		assert(cast(TestClass) actualInstance, "Resolved class is not the same type as expected");
 	}
 	
 	unittest {
 		// Test register interface
-		Container.clearRegistrations();
-		Container.register!(TestInterface, TestClass)();
-		TestInterface actualInstance = Container.resolve!(TestInterface)();
+		auto container = new Container();
+		container.register!(TestInterface, TestClass)();
+		TestInterface actualInstance = container.resolve!(TestInterface)();
 		assert(actualInstance !is null, "Resolved type is null");
 		assert(cast(TestInterface) actualInstance, "Resolved class is not the same type as expected");
 	}
 	
 	unittest {
 		// Test register unrelated types fails
-		Container.clearRegistrations();
-		assertThrown!RegistrationException(Container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types does not fail");
+		auto container = new Container();
+		assertThrown!RegistrationException(container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types does not fail");
 	}
 	
 	unittest {
 		// Test register unrelated types with disabled check on registration
-		Container.clearRegistrations();
-		assertNotThrown!RegistrationException(Container.register!(UnrelatedClass, TestClass)(false), "Registering unrelated types while disabling type validity fails");
+		auto container = new Container();
+		assertNotThrown!RegistrationException(container.register!(UnrelatedClass, TestClass)(false), "Registering unrelated types while disabling type validity fails");
 	}
 	
 	unittest {
 		// Test resolve non-registered type
-		Container.clearRegistrations();
-		assertThrown!ResolveException(Container.resolve!(TestClass)(), "Resolving non-registered type does not fail");
+		auto container = new Container();
+		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving non-registered type does not fail");
 	}
 	
 	unittest {
 		// Test register unrelated class with disable global type validity disabled
-		bool currentSetting = Container.globalTypeValidityCheckEnabled;
-		Container.globalTypeValidityCheckEnabled = false;
-		
-		assertNotThrown!RegistrationException(Container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types while disabling global type validity fails");
-		
-		Container.globalTypeValidityCheckEnabled = currentSetting;
+		auto container = new Container();
+		container.typeValidityCheckEnabled = false;
+		assertNotThrown!RegistrationException(container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types while disabling global type validity fails");
+	}
+	
+	unittest {
+		// Test clear registrations
+		auto container = new Container();
+		container.register!(TestClass)();
+		container.clearRegistrations();
+		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving cleared type does not fail");
 	}
 	
 }
