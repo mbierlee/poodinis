@@ -70,4 +70,11 @@ version(unittest) {
 		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving cleared type does not fail");
 	}
 	
+	unittest {
+		// Test get singleton of container
+		auto instance1 = Container.getInstance();
+		auto instance2 = Container.getInstance();
+		assert(instance1 is instance2, "getInstance does not return the same instance");
+	}
+	
 }

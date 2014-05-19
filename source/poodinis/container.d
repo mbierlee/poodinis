@@ -25,9 +25,10 @@ class ResolveException : Exception {
 }
 
 class Container {
+
+	private static Container instance;
 	
 	private Registration[TypeInfo] registrations;
-	
 	private bool _typeValidityCheckEnabled = true;
 	
 	@property public void typeValidityCheckEnabled(bool enabled) {
@@ -74,5 +75,12 @@ class Container {
 	
 	public void clearRegistrations() {
 		registrations.clear();
+	}
+	
+	public static Container getInstance() {
+		if (instance is null) {
+			instance = new Container();
+		}
+		return instance;
 	}
 }
