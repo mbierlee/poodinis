@@ -40,7 +40,7 @@ class Container {
 	}
 	
 	public Registration register(ConcreteType)() {
-		return register!(ConcreteType, ConcreteType)();
+		return register!(ConcreteType, ConcreteType)(false);
 	}
 	
 	public Registration register(InterfaceType, ConcreteType)(bool checkTypeValidity = true) {

@@ -12,6 +12,12 @@ version(unittest) {
 	class UnrelatedClass{
 	}
 	
+	class FailOnCreationClass {
+		this() {
+			throw new Exception("This class should not be instantiated");
+		}
+	}
+	
 	unittest {
 		// Test register concrete type
 		auto container = new Container();
@@ -75,6 +81,17 @@ version(unittest) {
 		auto instance1 = Container.getInstance();
 		auto instance2 = Container.getInstance();
 		assert(instance1 is instance2, "getInstance does not return the same instance");
+	}
+	
+	unittest {
+		// Test registering concrete type does not do a validity check
+		auto container = new Container();
+		assert(container.typeValidityCheckEnabled);
+		try {
+			container.register!(FailOnCreationClass)();
+		} catch (Exception)  {
+			assert(false, "Registering concrete type executed a validity check");
+		}
 	}
 	
 }
