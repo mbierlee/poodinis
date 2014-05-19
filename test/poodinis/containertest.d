@@ -55,4 +55,14 @@ version(unittest) {
 		assertThrown!ResolveException(Container.resolve!(TestClass)(), "Resolving non-registered type does not fail");
 	}
 	
+	unittest {
+		// Test register unrelated class with disable global type validity disabled
+		bool currentSetting = Container.globalTypeValidityCheckEnabled;
+		Container.globalTypeValidityCheckEnabled = false;
+		
+		assertNotThrown!RegistrationException(Container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types while disabling global type validity fails");
+		
+		Container.globalTypeValidityCheckEnabled = currentSetting;
+	}
+	
 }

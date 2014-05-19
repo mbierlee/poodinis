@@ -28,6 +28,16 @@ class Container {
 	
 	private static Registration[TypeInfo] registrations;
 	
+	private static bool _globalTypeValidityCheckEnabled = true;
+	
+	@property public static void globalTypeValidityCheckEnabled(bool enabled) {
+		_globalTypeValidityCheckEnabled = enabled;
+	}
+	
+	@property public static bool globalTypeValidityCheckEnabled() {
+		return _globalTypeValidityCheckEnabled;
+	}
+	
 	private this() {
 	}
 	
@@ -39,7 +49,7 @@ class Container {
 		TypeInfo registeredType = typeid(InterfaceType);
 		TypeInfo_Class instantiatableType = typeid(ConcreteType);
 		
-		if (checkTypeValidity) {
+		if (globalTypeValidityCheckEnabled && checkTypeValidity) {
 			checkValidity!(InterfaceType)(registeredType, instantiatableType);
 		}
 		
