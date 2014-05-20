@@ -46,3 +46,8 @@ class SingleInstanceScope : RegistrationScope {
 		return instance;
 	}
 }
+
+public Registration singleInstance(ref Registration registration) {
+	registration.registationScope = new SingleInstanceScope(registration.instantiatableType);
+	return registration;
+}
