@@ -31,4 +31,14 @@ version(unittest) {
 		assert(instance1 is instance2, "Registration with single instance scope did not return the same instance");
 		assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
 	}
+	
+	// Test getting instance from new instance scope
+	unittest {
+		Registration registration = new Registration(null, null);
+		registration.registationScope = new NewInstanceScope(typeid(TestType));
+		auto instance1 = registration.getInstance();
+		auto instance2 = registration.getInstance();
+		assert(instance1 !is instance2, "Registration with new instance scope did not return a different instance");
+	}
+	
 }

@@ -56,3 +56,15 @@ public Registration singleInstance(Registration registration) {
 	registration.registationScope = new SingleInstanceScope(registration.instantiatableType);
 	return registration;
 }
+
+class NewInstanceScope : RegistrationScope {
+	TypeInfo_Class instantiatableType = null;
+	
+	this(TypeInfo_Class instantiatableType) {
+		this.instantiatableType = instantiatableType;
+	}
+	
+	public Object getInstance() {
+		return instantiatableType.create();
+	}
+}
