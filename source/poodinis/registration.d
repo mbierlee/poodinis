@@ -1,9 +1,14 @@
 module poodinis.registration;
 
-struct Registration {
+class Registration {
 	TypeInfo registeredType = null;
 	TypeInfo_Class instantiatableType = null;
 	RegistrationScope registationScope = null;
+	
+	this(TypeInfo registeredType, TypeInfo_Class instantiatableType) {
+		this.registeredType = registeredType;
+		this.instantiatableType = instantiatableType;
+	}
 	
 	public Object getInstance() {
 		if (registationScope is null) {
@@ -47,7 +52,7 @@ class SingleInstanceScope : RegistrationScope {
 	}
 }
 
-public Registration singleInstance(ref Registration registration) {
+public Registration singleInstance(Registration registration) {
 	registration.registationScope = new SingleInstanceScope(registration.instantiatableType);
 	return registration;
 }

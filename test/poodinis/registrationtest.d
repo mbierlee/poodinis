@@ -8,14 +8,14 @@ version(unittest) {
 	
 	// Test getting instance without scope defined throws exception
 	unittest {
-		Registration registration = Registration();
+		Registration registration = new Registration(null, null);
 		registration.registeredType = typeid(TestType);
 		assertThrown!(NoScopeDefinedException)(registration.getInstance());
 	}
 	
 	// Test getting instance from single instance scope
 	unittest {
-		Registration registration = Registration();
+		Registration registration = new Registration(null, null);
 		registration.registationScope = new SingleInstanceScope(typeid(TestType));
 		auto instance1 = registration.getInstance();
 		auto instance2 = registration.getInstance();
@@ -24,8 +24,7 @@ version(unittest) {
 	
 	// Test set single instance scope using scope setter
 	unittest {
-		Registration registration = Registration();
-		registration.instantiatableType = typeid(TestType);
+		Registration registration = new Registration(null, typeid(TestType));
 		auto chainedRegistration = registration.singleInstance();
 		auto instance1 = registration.getInstance();
 		auto instance2 = registration.getInstance();
