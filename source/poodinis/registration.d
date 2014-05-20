@@ -3,7 +3,7 @@ module poodinis.registration;
 class Registration {
 	TypeInfo registeredType = null;
 	TypeInfo_Class instantiatableType = null;
-	RegistrationScope registationScope = null;
+	CreationScope registationScope = null;
 	
 	this(TypeInfo registeredType, TypeInfo_Class instantiatableType) {
 		this.registeredType = registeredType;
@@ -25,17 +25,17 @@ class NoScopeDefinedException : Exception {
 	}
 }
 
-interface RegistrationScope {
+interface CreationScope {
 	public Object getInstance();
 }
 
-class NullScope : RegistrationScope {
+class NullScope : CreationScope {
 	public Object getInstance() {
 		return null;
 	}
 }
 
-class SingleInstanceScope : RegistrationScope {
+class SingleInstanceScope : CreationScope {
 	TypeInfo_Class instantiatableType = null;
 	Object instance = null;
 	
@@ -57,7 +57,7 @@ public Registration singleInstance(Registration registration) {
 	return registration;
 }
 
-class NewInstanceScope : RegistrationScope {
+class NewInstanceScope : CreationScope {
 	TypeInfo_Class instantiatableType = null;
 	
 	this(TypeInfo_Class instantiatableType) {
@@ -74,7 +74,7 @@ public Registration newInstance(Registration registration) {
 	return registration;
 }
 
-class ExistingInstanceScope : RegistrationScope {
+class ExistingInstanceScope : CreationScope {
 	Object instance = null;
 	
 	this(Object instance) {
