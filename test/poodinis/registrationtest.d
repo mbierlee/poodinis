@@ -51,4 +51,13 @@ version(unittest) {
 		assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
 	} 
 	
+	// Test getting instance from existing instance scope
+	unittest {
+		Registration registration = new Registration(null, null);
+		TestType expectedInstance = new TestType();
+		registration.registationScope = new ExistingInstanceScope(expectedInstance);
+		auto actualInstance = registration.getInstance();
+		assert(expectedInstance is actualInstance, "Registration with existing instance did not return given instance");
+	}
+	
 }

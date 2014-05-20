@@ -73,3 +73,15 @@ public Registration newInstance(Registration registration) {
 	registration.registationScope = new NewInstanceScope(registration.instantiatableType);
 	return registration;
 }
+
+class ExistingInstanceScope : RegistrationScope {
+	Object instance = null;
+	
+	this(Object instance) {
+		this.instance = instance;
+	}
+	
+	public Object getInstance() {
+		return instance;
+	}
+}
