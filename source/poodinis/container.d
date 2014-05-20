@@ -44,7 +44,7 @@ class Container {
 			checkValidity!(InterfaceType)(registeredType, instantiatableType);
 		}
 		
-		Registration newRegistration = { registeredType, instantiatableType, new NullScope() };
+		Registration newRegistration = { registeredType, instantiatableType, new SingleInstanceScope(instantiatableType) };
 		registrations[newRegistration.registeredType] = newRegistration;
 		return newRegistration;
 	}

@@ -10,7 +10,7 @@ struct Registration {
 			throw new NoScopeDefinedException(registeredType);
 		}
 		
-		return instantiatableType.create();
+		return registationScope.getInstance();
 	}
 }
 
@@ -27,5 +27,22 @@ interface RegistrationScope {
 class NullScope : RegistrationScope {
 	public Object getInstance() {
 		return null;
+	}
+}
+
+class SingleInstanceScope : RegistrationScope {
+	TypeInfo_Class instantiatableType = null;
+	Object instance = null;
+	
+	this(TypeInfo_Class instantiatableType) {
+		this.instantiatableType = instantiatableType;
+	}
+	
+	public Object getInstance() {
+		if (instance is null) {
+			instance = instantiatableType.create();
+		}
+		
+		return instance;
 	}
 }
