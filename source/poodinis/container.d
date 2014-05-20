@@ -3,14 +3,7 @@ module poodinis.container;
 import std.string;
 import std.array;
 
-struct Registration {
-	TypeInfo registeredType = null;
-	TypeInfo_Class instantiatableType = null;
-	
-	public Object getInstance() {
-		return instantiatableType.create();
-	}
-}
+public import poodinis.registration;
 
 class RegistrationException : Exception {
 	this(string message, TypeInfo registeredType, TypeInfo_Class instantiatableType) {
