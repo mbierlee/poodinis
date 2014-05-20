@@ -68,3 +68,8 @@ class NewInstanceScope : RegistrationScope {
 		return instantiatableType.create();
 	}
 }
+
+public Registration newInstance(Registration registration) {
+	registration.registationScope = new NewInstanceScope(registration.instantiatableType);
+	return registration;
+}

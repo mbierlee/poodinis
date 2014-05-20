@@ -103,4 +103,13 @@ version(unittest) {
 		assert(instance1 is instance2);
 	}
 	
+	// Test resolve new instance for type
+	unittest {
+		auto container = new Container();
+		container.register!(TestClass)().newInstance();
+		auto instance1 = container.resolve!(TestClass);
+		auto instance2 = container.resolve!(TestClass);
+		assert(instance1 !is instance2);
+	}
+	
 }
