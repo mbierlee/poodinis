@@ -49,7 +49,7 @@ version(unittest) {
 		auto instance2 = registration.getInstance();
 		assert(instance1 !is instance2, "Registration with new instance scope did not return a different instance");
 		assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
-	} 
+	}
 	
 	// Test getting instance from existing instance scope
 	unittest {
@@ -58,6 +58,16 @@ version(unittest) {
 		registration.registationScope = new ExistingInstanceScope(expectedInstance);
 		auto actualInstance = registration.getInstance();
 		assert(expectedInstance is actualInstance, "Registration with existing instance did not return given instance");
+	}
+	
+	// Test set existing instance scope using scope setter
+	unittest {
+		Registration registration = new Registration(null, null);
+		auto expectedInstance = new TestType();
+		auto chainedRegistration = registration.existingInstance(expectedInstance);
+		auto actualInstance = registration.getInstance();
+		assert(expectedInstance is expectedInstance, "Registration with existing instance scope did not return the same instance");
+		assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
 	}
 	
 }

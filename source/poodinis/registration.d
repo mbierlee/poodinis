@@ -85,3 +85,8 @@ class ExistingInstanceScope : RegistrationScope {
 		return instance;
 	}
 }
+
+public Registration existingInstance(Registration registration, Object instance) {
+	registration.registationScope = new ExistingInstanceScope(instance);
+	return registration;
+}

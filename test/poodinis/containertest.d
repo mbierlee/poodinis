@@ -100,7 +100,7 @@ version(unittest) {
 		container.register!(TestClass)().singleInstance();
 		auto instance1 = container.resolve!(TestClass);
 		auto instance2 = container.resolve!(TestClass);
-		assert(instance1 is instance2);
+		assert(instance1 is instance2, "Resolved instance from single instance scope is not the each time it is resolved");
 	}
 	
 	// Test resolve new instance for type
@@ -109,7 +109,16 @@ version(unittest) {
 		container.register!(TestClass)().newInstance();
 		auto instance1 = container.resolve!(TestClass);
 		auto instance2 = container.resolve!(TestClass);
-		assert(instance1 !is instance2);
+		assert(instance1 !is instance2, "Resolved instance from new instance scope is the same each time it is resolved");
+	}
+	
+	// Test resolve existing instance for type
+	unittest {
+		auto container = new Container();
+		auto expectedInstance = new TestClass();
+		container.register!(TestClass)().existingInstance(expectedInstance);
+		auto actualInstance = container.resolve!(TestClass);
+		assert(expectedInstance is actualInstance, "Resolved instance from existing instance scope is not the same as the registered instance");
 	}
 	
 }
