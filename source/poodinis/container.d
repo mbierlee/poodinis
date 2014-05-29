@@ -4,6 +4,7 @@ import std.string;
 import std.array;
 
 public import poodinis.registration;
+public import poodinis.autowire;
 
 class RegistrationException : Exception {
 	this(string message, TypeInfo registeredType, TypeInfo_Class instantiatableType) {
@@ -64,7 +65,10 @@ class Container {
 		if (!registration) {
 			throw new ResolveException("Type not registered.", resolveType);
 		}
-		return cast(ClassType) registration.getInstance();
+		
+		ClassType instance = cast(ClassType) registration.getInstance();
+		this.autowire!(ClassType)(instance); 
+		return instance;
 	}
 	
 	public void clearRegistrations() {

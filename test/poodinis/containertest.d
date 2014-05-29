@@ -18,6 +18,14 @@ version(unittest) {
 		}
 	}
 	
+	class AutowiredClass {
+	}
+	
+	class ComponentClass {
+		@Autowire
+		public AutowiredClass autowiredClass;
+	}
+	
 	// Test register concrete type
 	unittest {
 		auto container = new Container();
@@ -119,6 +127,16 @@ version(unittest) {
 		container.register!(TestClass)().existingInstance(expectedInstance);
 		auto actualInstance = container.resolve!(TestClass);
 		assert(expectedInstance is actualInstance, "Resolved instance from existing instance scope is not the same as the registered instance");
+	}
+	
+	// Test autowire resolved instances
+	unittest {
+		auto container = new Container();
+		container.register!AutowiredClass;
+		container.register!ComponentClass;
+		auto componentInstance = container.resolve!ComponentClass;
+		auto autowiredInstance = container.resolve!AutowiredClass;
+		assert(componentInstance.autowiredClass is autowiredInstance, "Member is not autowired upon resolving");
 	}
 	
 }
