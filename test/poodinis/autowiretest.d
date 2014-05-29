@@ -1,5 +1,7 @@
 import poodinis.autowire;
 
+import std.exception;
+
 version(unittest) {
 	class ComponentA {
 	}
@@ -54,5 +56,12 @@ version(unittest) {
 		container.autowire!(ComponentD)(componentD);
 		auto actualComponent = componentD.componentC;
 		assert(expectedComponent is actualComponent, "Autowiring the second time wired a different instance");
+	}
+	
+	// Test autowiring unregistered type
+	unittest {
+		auto container = new Container();
+		ComponentD componentD = new ComponentD();
+		assertThrown!(ResolveException)(container.autowire!(ComponentD)(componentD), "Autowiring unregistered type should throw ResolveException");
 	}
 }
