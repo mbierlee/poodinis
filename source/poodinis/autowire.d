@@ -2,7 +2,7 @@ module poodinis.autowire;
 
 public import poodinis.container;
 
-enum Autowire;
+class Autowire{};
 
 public void autowire(Type)(Container container, Type instance) {
 	import std.stdio;
