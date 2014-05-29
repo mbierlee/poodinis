@@ -28,6 +28,13 @@ version(unittest) {
 		}
 	}
 	
+	class DummyAttribute{};
+	
+	class ComponentE {
+		@DummyAttribute
+		public ComponentC componentC;
+	}
+	
 	// Test autowiring concrete type to existing instance
 	unittest {
 		auto container = new Container();
@@ -63,5 +70,13 @@ version(unittest) {
 		auto container = new Container();
 		ComponentD componentD = new ComponentD();
 		assertThrown!(ResolveException)(container.autowire!(ComponentD)(componentD), "Autowiring unregistered type should throw ResolveException");
+	}
+	
+	// Test autowiring member with non-autowire attribute does not autowire
+	unittest {
+		auto container = new Container();
+		ComponentE componentE = new ComponentE();
+		container.autowire!ComponentE(componentE);
+		assert(componentE.componentC is null, "Autowiring should not occur for members with attributes other than @Autowire");
 	}
 }
