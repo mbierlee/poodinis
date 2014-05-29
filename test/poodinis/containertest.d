@@ -26,6 +26,16 @@ version(unittest) {
 		public AutowiredClass autowiredClass;
 	}
 	
+	class ComponentCat {
+		@Autowire
+		public ComponentMouse mouse;
+	}
+	
+	class ComponentMouse {
+		@Autowire
+		public ComponentMouse cat;
+	}
+	
 	// Test register concrete type
 	unittest {
 		auto container = new Container();
@@ -138,5 +148,14 @@ version(unittest) {
 		auto autowiredInstance = container.resolve!AutowiredClass;
 		assert(componentInstance.autowiredClass is autowiredInstance, "Member is not autowired upon resolving");
 	}
-	
+
+	// Test circular autowiring
+	unittest {
+		auto container = new Container();
+		container.register!ComponentMouse;
+		container.register!ComponentCat;
+		auto mouse = container.resolve!ComponentMouse;
+		auto cat = container.resolve!ComponentCat;
+		assert(mouse.cat is cat && cat.mouse is mouse, "Circular dependencies should be autowirable");
+	}	
 }
