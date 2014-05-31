@@ -90,7 +90,7 @@ version(unittest) {
 	unittest {
 		auto container = new Container();
 		container.register!(TestClass)();
-		container.clearRegistrations();
+		container.clearAllRegistrations();
 		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving cleared type does not fail");
 	}
 	
@@ -157,5 +157,13 @@ version(unittest) {
 		auto mouse = container.resolve!ComponentMouse;
 		auto cat = container.resolve!ComponentCat;
 		assert(mouse.cat is cat && cat.mouse is mouse, "Circular dependencies should be autowirable");
-	}	
+	}
+	
+	// Test remove registration
+	unittest {
+		auto container = new Container();
+		container.register!TestClass;
+		container.removeRegistration!TestClass;
+		assertThrown!ResolveException(container.resolve!TestClass);
+	}
 }

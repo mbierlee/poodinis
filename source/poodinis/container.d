@@ -59,20 +59,24 @@ class Container {
 		}
 	}
 	
-	public ClassType resolve(ClassType)() {
-		TypeInfo resolveType = typeid(ClassType);
+	public RegistrationType resolve(RegistrationType)() {
+		TypeInfo resolveType = typeid(RegistrationType);
 		Registration* registration = resolveType in registrations;
 		if (!registration) {
 			throw new ResolveException("Type not registered.", resolveType);
 		}
 		
-		ClassType instance = cast(ClassType) registration.getInstance();
-		this.autowire!(ClassType)(instance); 
+		RegistrationType instance = cast(RegistrationType) registration.getInstance();
+		this.autowire!(RegistrationType)(instance); 
 		return instance;
 	}
 	
-	public void clearRegistrations() {
+	public void clearAllRegistrations() {
 		registrations.clear();
+	}
+	
+	public void removeRegistration(RegistrationType)() {
+		registrations.remove(typeid(RegistrationType));
 	}
 	
 	public static Container getInstance() {
