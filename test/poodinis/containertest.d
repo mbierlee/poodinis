@@ -61,29 +61,10 @@ version(unittest) {
 		assert(cast(TestInterface) actualInstance, "Resolved class is not the same type as expected");
 	}
 	
-	// Test register unrelated types fails
-	unittest {
-		auto container = new Container();
-		assertThrown!RegistrationException(container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types does not fail");
-	}
-	
-	// Test register unrelated types with disabled check on registration
-	unittest {
-		auto container = new Container();
-		assertNotThrown!RegistrationException(container.register!(UnrelatedClass, TestClass)(false), "Registering unrelated types while disabling type validity fails");
-	}
-	
 	// Test resolve non-registered type
 	unittest {
 		auto container = new Container();
 		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving non-registered type does not fail");
-	}
-	
-	// Test register unrelated class with disable global type validity disabled
-	unittest {
-		auto container = new Container();
-		container.typeValidityCheckEnabled = false;
-		assertNotThrown!RegistrationException(container.register!(UnrelatedClass, TestClass)(), "Registering unrelated types while disabling global type validity fails");
 	}
 	
 	// Test clear registrations
@@ -99,17 +80,6 @@ version(unittest) {
 		auto instance1 = Container.getInstance();
 		auto instance2 = Container.getInstance();
 		assert(instance1 is instance2, "getInstance does not return the same instance");
-	}
-	
-	// Test registering concrete type does not do a validity check
-	unittest {
-		auto container = new Container();
-		assert(container.typeValidityCheckEnabled);
-		try {
-			container.register!(FailOnCreationClass)();
-		} catch (Exception)  {
-			assert(false, "Registering concrete type executed a validity check");
-		}
 	}
 	
 	// Test resolve single instance for type

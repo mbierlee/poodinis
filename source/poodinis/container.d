@@ -23,40 +23,19 @@ class Container {
 	private static Container instance;
 	
 	private Registration[TypeInfo] registrations;
-	private bool _typeValidityCheckEnabled = true;
-	
-	@property public void typeValidityCheckEnabled(bool enabled) {
-		_typeValidityCheckEnabled = enabled;
-	}
-	
-	@property public bool typeValidityCheckEnabled() {
-		return _typeValidityCheckEnabled;
-	}
 	
 	public Registration register(ConcreteType)() {
-		return register!(ConcreteType, ConcreteType)(false);
+		return register!(ConcreteType, ConcreteType)();
 	}
 	
-	public Registration register(InterfaceType, ConcreteType)(bool checkTypeValidity = true) {
+	public Registration register(InterfaceType, ConcreteType : InterfaceType)() {
 		TypeInfo registeredType = typeid(InterfaceType);
 		TypeInfo_Class instantiatableType = typeid(ConcreteType);
-		
-		if (typeValidityCheckEnabled && checkTypeValidity) {
-			checkValidity!(InterfaceType)(registeredType, instantiatableType);
-		}
 		
 		Registration newRegistration = new Registration(registeredType, instantiatableType);
 		newRegistration.singleInstance();
 		registrations[registeredType] = newRegistration;
 		return newRegistration;
-	}
-	
-	private void checkValidity(InterfaceType)(TypeInfo registeredType, TypeInfo_Class instanceType) {
-		InterfaceType instanceCanBeCastToInterface = cast(InterfaceType) instanceType.create(); 
-		if (!instanceCanBeCastToInterface) {
-			string errorMessage = format("%s cannot be cast to %s.", instanceType.name, registeredType.toString());
-			throw new RegistrationException(errorMessage, registeredType, instanceType);
-		}
 	}
 	
 	public RegistrationType resolve(RegistrationType)() {
