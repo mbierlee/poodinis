@@ -2,8 +2,8 @@
 	"name" : "poodinis",
 	"description" : "A dependency injection framework.",
 	"homepage": "http://lostmoment.com",
-	"authors": ["Lostmoment", "Mike Bierlee"],
-	"copyright": "Copyright 2014 Lostmoment",
+	"authors": ["Mike Bierlee"],
+	"copyright": "Copyright 2014 Mike Bierlee",
 	"license": "proprietary",
 	"configurations": [
 		{
