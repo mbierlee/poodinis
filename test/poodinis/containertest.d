@@ -43,6 +43,21 @@ version(unittest) {
 		public ComponentCat cat;
 	}
 	
+	class Eenie {
+		@Autowire
+		public Meenie meenie;
+	}
+	
+	class Meenie {
+		@Autowire
+		public Moe moe;
+	}
+	
+	class Moe {
+		@Autowire
+		public Eenie eenie;
+	}
+	
 	// Test register concrete type
 	unittest {
 		auto container = new Container();
@@ -157,5 +172,17 @@ version(unittest) {
 		auto resolvedB = container.resolve!ComponentClass;
 		
 		assert(resolvedB.autowiredClass is existingA && resolvedA !is existingA, "Autowiring shouldn't rewire member when it is already wired to an instance");
+	}
+	
+	// Test autowiring circular dependency by third-degree
+	unittest {
+		auto container = new Container();
+		container.register!Eenie;
+		container.register!Meenie;
+		container.register!Moe;
+		
+		auto eenie = container.resolve!Eenie;
+		
+		assert(eenie.meenie.moe.eenie is eenie, "Autowiring third-degree circular dependency failed");
 	}
 }
