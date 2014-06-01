@@ -4,7 +4,7 @@
 	"homepage": "http://lostmoment.com",
 	"authors": ["Mike Bierlee"],
 	"copyright": "Copyright 2014 Mike Bierlee",
-	"license": "proprietary",
+	"license": "MIT",
 	"configurations": [
 		{
 			"name": "debug-build",
