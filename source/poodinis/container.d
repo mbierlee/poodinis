@@ -31,6 +31,8 @@ class Container {
 	
 	private Registration[TypeInfo] registrations;
 	
+	private Registration* registrationBeingResolved;
+	
 	public Registration register(ConcreteType)() {
 		return register!(ConcreteType, ConcreteType)();
 	}
@@ -52,8 +54,20 @@ class Container {
 			throw new ResolveException("Type not registered.", resolveType);
 		}
 		
+		auto initialResolve = false;
+		if (registrationBeingResolved is null) {
+			registrationBeingResolved = registration;
+			initialResolve = true;
+		}
+		
 		RegistrationType instance = cast(RegistrationType) registration.getInstance();
-		this.autowire!(RegistrationType)(instance); 
+		if (initialResolve || registrationBeingResolved !is registration) {
+			this.autowire!(RegistrationType)(instance);
+		}
+		if (initialResolve) {
+			registrationBeingResolved = null;
+		}
+		
 		return instance;
 	}
 	

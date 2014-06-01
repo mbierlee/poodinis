@@ -40,7 +40,7 @@ version(unittest) {
 	
 	class ComponentMouse {
 		@Autowire
-		public ComponentMouse cat;
+		public ComponentCat cat;
 	}
 	
 	// Test register concrete type
@@ -133,7 +133,7 @@ version(unittest) {
 		container.register!ComponentCat;
 		auto mouse = container.resolve!ComponentMouse;
 		auto cat = container.resolve!ComponentCat;
-		assert(mouse.cat is cat && cat.mouse is mouse, "Circular dependencies should be autowirable");
+		assert(mouse.cat is cat && cat.mouse is mouse && mouse !is cat, "Circular dependencies should be autowirable");
 	}
 	
 	// Test remove registration
