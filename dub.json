@@ -1,6 +1,6 @@
 {
 	"name" : "poodinis",
-	"description" : "A dependency injection framework.",
+	"description" : "A dependency injection framework with support for autowiring.",
 	"homepage": "http://lostmoment.com",
 	"authors": ["Mike Bierlee"],
 	"copyright": "Copyright 2014 Mike Bierlee",
