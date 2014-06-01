@@ -143,4 +143,19 @@ version(unittest) {
 		container.removeRegistration!TestClass;
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
+	
+	// Test autowiring does not autowire member where instance is non-null
+	unittest {
+		auto container = new Container();
+		auto existingA = new AutowiredClass();
+		auto existingB = new ComponentClass();
+		existingB.autowiredClass = existingA;
+		
+		container.register!AutowiredClass;
+		container.register!(ComponentClass).existingInstance(existingB);
+		auto resolvedA = container.resolve!AutowiredClass;
+		auto resolvedB = container.resolve!ComponentClass;
+		
+		assert(resolvedB.autowiredClass is existingA && resolvedA !is existingA, "Autowiring shouldn't rewire member when it is already wired to an instance");
+	}
 }
