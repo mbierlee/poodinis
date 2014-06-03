@@ -58,6 +58,21 @@ version(unittest) {
 		public Eenie eenie;
 	}
 	
+	class Ittie {
+		@Autowire
+		public Bittie bittie;
+	}
+	
+	class Bittie {
+		@Autowire
+		public Banana banana;
+	}
+	
+	class Banana {
+		@Autowire
+		public Bittie bittie;
+	}
+	
 	// Test register concrete type
 	unittest {
 		auto container = new Container();
@@ -184,5 +199,29 @@ version(unittest) {
 		auto eenie = container.resolve!Eenie;
 		
 		assert(eenie.meenie.moe.eenie is eenie, "Autowiring third-degree circular dependency failed");
+	}
+	
+	// Test autowiring deep circular dependencies
+	unittest {
+		auto container = new Container();
+		container.register!Ittie;
+		container.register!Bittie;
+		container.register!Banana;
+		
+		auto ittie = container.resolve!Ittie;
+		
+		assert(ittie.bittie is ittie.bittie.banana.bittie, "Autowiring deep dependencies failed.");
+	}
+	
+	// Test autowiring deep circular dependencies with newInstance scope does not autowire new instance second time
+	unittest {
+		auto container = new Container();
+		container.register!(Ittie).newInstance();
+		container.register!(Bittie).newInstance();
+		container.register!(Banana).newInstance();
+		
+		auto ittie = container.resolve!Ittie;
+		
+		assert(ittie.bittie.banana.bittie.banana is null, "Autowiring deep dependencies with newInstance scope autowired a reoccuring type.");
 	}
 }

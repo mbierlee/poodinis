@@ -123,12 +123,11 @@ assert(instance.dependency !is null);
 If an interface is to be autowired, you must register a concrete class by interface. Any class registered by concrete type can only be injected when a dependency on a concrete type is autowired.
 
 ###Circular dependencies
-Poodinis can autowire circular dependencies to a certain degree. See known issues for current limitations on this. For now you might want to consider if your design really needs circular dependencies.
+Poodinis can autowire circular dependencies when they are registered with singleInstance or existingInstance registration scopes. See Known issues for the limitations on newInstance scopes. 
 
 Known issues
 ------------
-* Circular dependencies down the dependency tree still fails if the dependencies don't refer to the type being resolved initially.
-* Due to preventive measures of recursion issues in circular dependencies, registrations which are supposed to yield new instances will not autowire classes for which a recursive resolve is detected.
+* Due to preventive measures of recursion issues in circular dependencies, registrations which are supposed to yield new instances will not autowire classes for which a circular dependency is detected. A new instance will be resolved but the instance's members will not be autowired. 
 
 Future Work
 -----------

@@ -9,6 +9,7 @@ module poodinis.container;
 
 import std.string;
 import std.array;
+import std.algorithm;
 
 public import poodinis.registration;
 public import poodinis.autowire;
@@ -31,7 +32,7 @@ class Container {
 	
 	private Registration[TypeInfo] registrations;
 	
-	private Registration* registrationBeingResolved;
+	private Registration*[] autowireStack;
 	
 	public Registration register(ConcreteType)() {
 		return register!(ConcreteType, ConcreteType)();
@@ -54,18 +55,12 @@ class Container {
 			throw new ResolveException("Type not registered.", resolveType);
 		}
 		
-		auto initialResolve = false;
-		if (registrationBeingResolved is null) {
-			registrationBeingResolved = registration;
-			initialResolve = true;
-		}
-		
 		RegistrationType instance = cast(RegistrationType) registration.getInstance();
-		if (initialResolve || registrationBeingResolved !is registration) {
+		
+		if (!autowireStack.canFind(registration)) {
+			autowireStack ~= registration;
 			this.autowire!(RegistrationType)(instance);
-		}
-		if (initialResolve) {
-			registrationBeingResolved = null;
+			autowireStack.popBack();
 		}
 		
 		return instance;
