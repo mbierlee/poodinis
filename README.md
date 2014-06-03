@@ -15,14 +15,8 @@ For a full overview of changes, see [CHANGES.md](CHANGES.md)
 Getting started
 ---------------
 ###DUB Dependency
-Poodinis can be included in a project using [DUB]:
-```json
-{
-  "dependencies": {
-    "poodinis": "0.1"
-  }
-}
-```
+See the Poodinis [DUB project page] for instructions on how to include Poodinis into your project.
+
 ###Quickstart
 The following example shows the typical usage of Poodinis:
 ```d
@@ -137,3 +131,4 @@ Future Work
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://code.google.com/p/hypodermic/
 [DUB]: http://code.dlang.org/
+[DUB project page]: http://code.dlang.org/packages/poodinis
