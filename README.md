@@ -17,11 +17,11 @@ Getting started
 ###DUB Dependency
 Poodinis can be included in a project using [DUB]:
 ```json
-...
-"dependencies": {
-  "poodinis": "0.1"
+{
+  "dependencies": {
+    "poodinis": "0.1"
+  }
 }
-...
 ```
 ###Quickstart
 The following example shows the typical usage of Poodinis:
@@ -133,7 +133,6 @@ Future Work
 -----------
 * Thread safety
 * Component scan (auto-registration)
-* More robust detection and resolve of circular dependencies.
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://code.google.com/p/hypodermic/
