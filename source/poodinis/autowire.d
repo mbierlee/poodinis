@@ -23,13 +23,16 @@ public void autowire(Type)(Container container, Type instance) {
 		foreach (attribute; mixin(`__traits(getAttributes, Type.` ~ member ~ `)`) ) {
 			if (is(attribute : Autowire) && __traits(getMember, instance, member) is null){
 				alias TypeTuple!(__traits(getMember, instance, member)) memberReference;
+				auto autowirableInstance = container.resolve!(typeof(memberReference));
 				debug {
-					auto autoWireType = typeid(typeof(memberReference));
-					auto memberQualifier = typeid(Type).toString();
-					writeln(format("Autowire %s to %s.%s", autoWireType, memberQualifier, member));
+					auto autowirableType = typeid(typeof(memberReference[0]));
+					auto autowireableAddress = &autowirableInstance;
+					auto memberType = typeid(Type);
+					auto instanceAddress = &instance;
+					writeln(format("DEBUG: Autowire instance [%s@%s] to [%s@%s].%s", autowirableType, autowireableAddress, memberType, instanceAddress, member));
 				}
 				
-				__traits(getMember, instance, member) = container.resolve!(typeof(memberReference));
+				__traits(getMember, instance, member) = autowirableInstance;
 			}
 		}
 	}
