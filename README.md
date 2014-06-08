@@ -127,6 +127,7 @@ Future Work
 -----------
 * Thread safety
 * Component scan (auto-registration)
+* Registering multiple concrete classes to the same interface
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://code.google.com/p/hypodermic/
