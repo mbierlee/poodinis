@@ -9,6 +9,8 @@ module poodinis.autowire;
 
 public import poodinis.container;
 
+import std.typetuple;
+
 debug {
 	import std.stdio;
 	import std.string;
@@ -20,13 +22,14 @@ public void autowire(Type)(Container container, Type instance) {
 	foreach (member ; __traits(derivedMembers, Type)) {
 		foreach (attribute; mixin(`__traits(getAttributes, Type.` ~ member ~ `)`) ) {
 			if (is(attribute : Autowire) && __traits(getMember, instance, member) is null){
+				alias TypeTuple!(__traits(getMember, instance, member)) memberReference;
 				debug {
-					auto autoWireType = typeid(typeof(__traits(getMember, instance, member)));
+					auto autoWireType = typeid(typeof(memberReference));
 					auto memberQualifier = typeid(Type).toString();
 					writeln(format("Autowire %s to %s.%s", autoWireType, memberQualifier, member));
 				}
 				
-				__traits(getMember, instance, member) = container.resolve!(typeof(__traits(getMember, instance, member)));
+				__traits(getMember, instance, member) = container.resolve!(typeof(memberReference));
 			}
 		}
 	}
