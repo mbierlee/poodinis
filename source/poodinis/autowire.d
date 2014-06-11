@@ -19,7 +19,7 @@ debug {
 class Autowire{};
 
 public void autowire(Type)(Container container, Type instance) {
-	foreach (member ; __traits(derivedMembers, Type)) {
+	foreach (member ; __traits(allMembers, Type)) {
 		foreach (attribute; mixin(`__traits(getAttributes, Type.` ~ member ~ `)`) ) {
 			if (is(attribute : Autowire) && __traits(getMember, instance, member) is null){
 				alias TypeTuple!(__traits(getMember, instance, member)) memberReference;
