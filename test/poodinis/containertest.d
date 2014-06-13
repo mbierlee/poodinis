@@ -73,6 +73,14 @@ version(unittest) {
 		public Bittie bittie;
 	}
 	
+	interface SuperInterface {
+	}
+	
+	class SuperImplementation : SuperInterface {
+		@Autowire
+		public Banana banana;
+	}
+	
 	// Test register concrete type
 	unittest {
 		auto container = new Container();
@@ -223,5 +231,16 @@ version(unittest) {
 		auto ittie = container.resolve!Ittie;
 		
 		assert(ittie.bittie.banana.bittie.banana is null, "Autowiring deep dependencies with newInstance scope autowired a reoccuring type.");
+	}
+	
+	// Test autowiring type registered by interface
+	unittest {
+		auto container = new Container();
+		container.register!Banana;
+		container.register!(SuperInterface, SuperImplementation);
+		
+		SuperImplementation superInstance = cast(SuperImplementation) container.resolve!SuperInterface;
+		
+		assert(superInstance.banana is null, "Autowire instance which was resolved by interface type, which was not expected to be possible");
 	}
 }

@@ -107,7 +107,7 @@ assert(exampleInstance.dependency !is null);
 ```
 At the moment, it is only possible to autowire public members or properties.
 
-Dependencies are automatically autowired when a class is resolved. So when you register ExampleClassB, its member, *dependency*, is automatically injected:
+Dependencies are automatically autowired when a class is resolved. So when you register ExampleClassB, its member, *dependency*, is automatically autowired:
 ```d
 container.register!ExampleClassA;
 container.register!ExampleClassB;
@@ -121,7 +121,8 @@ Poodinis can autowire circular dependencies when they are registered with single
 
 Known issues
 ------------
-* Due to preventive measures of recursion issues in circular dependencies, registrations which are supposed to yield new instances will not autowire classes for which a circular dependency is detected. A new instance will be resolved but the instance's members will not be autowired. 
+* Due to preventive measures of recursion issues in circular dependencies, registrations which are supposed to yield new instances will not autowire classes for which a circular dependency is detected. A new instance will be resolved but the instance's members will not be autowired.
+* Resolving a class registered by supertype or interface will only autowire the members inherited from its supertype and in the case of interfaces nothing at all.
 
 Future Work
 -----------
