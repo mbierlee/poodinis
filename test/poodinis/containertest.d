@@ -233,7 +233,7 @@ version(unittest) {
 		assert(ittie.bittie.banana.bittie.banana is null, "Autowiring deep dependencies with newInstance scope autowired a reoccuring type.");
 	}
 	
-	// Test autowiring type registered by interface
+	// Test autowiring type registered by interface fails (BUG test case)
 	unittest {
 		auto container = new Container();
 		container.register!Banana;
