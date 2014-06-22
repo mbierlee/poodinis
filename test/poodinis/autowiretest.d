@@ -46,7 +46,7 @@ version(unittest) {
 	unittest {
 		auto container = new Container();
 		container.register!ComponentA;
-		ComponentB componentB = new ComponentB();
+		auto componentB = new ComponentB();
 		container.autowire!(ComponentB)(componentB);
 		assert(!componentB.componentIsNull(), "Autowirable dependency failed to autowire");
 	}
@@ -55,7 +55,7 @@ version(unittest) {
 	unittest {
 		auto container = new Container();
 		container.register!(InterfaceA, ComponentC);
-		ComponentD componentD = new ComponentD();
+		auto componentD = new ComponentD();
 		container.autowire!(ComponentD)(componentD);
 		assert(!componentD.componentIsNull(), "Autowirable dependency failed to autowire");
 	}
@@ -64,7 +64,7 @@ version(unittest) {
 	unittest {
 		auto container = new Container();
 		container.register!(InterfaceA, ComponentC).newInstance();
-		ComponentD componentD = new ComponentD();
+		auto componentD = new ComponentD();
 		container.autowire!(ComponentD)(componentD);
 		auto expectedComponent = componentD.componentC;
 		container.autowire!(ComponentD)(componentD);
@@ -75,14 +75,14 @@ version(unittest) {
 	// Test autowiring unregistered type
 	unittest {
 		auto container = new Container();
-		ComponentD componentD = new ComponentD();
+		auto componentD = new ComponentD();
 		assertThrown!(ResolveException)(container.autowire!(ComponentD)(componentD), "Autowiring unregistered type should throw ResolveException");
 	}
 	
 	// Test autowiring member with non-autowire attribute does not autowire
 	unittest {
 		auto container = new Container();
-		ComponentE componentE = new ComponentE();
+		auto componentE = new ComponentE();
 		container.autowire!ComponentE(componentE);
 		assert(componentE.componentC is null, "Autowiring should not occur for members with attributes other than @Autowire");
 	}
