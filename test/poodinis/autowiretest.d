@@ -46,10 +46,7 @@ version(unittest) {
 		@Autowire
 		public ComponentA componentA;
 		
-		public this() {
-			auto container = Container.getInstance();
-			container.autowire!(typeof(this))(this);
-		}
+		mixin AutowireConstructor;
 	}
 	
 	// Test autowiring concrete type to existing instance

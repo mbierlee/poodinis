@@ -37,3 +37,10 @@ public void autowire(Type)(Container container, Type instance) {
 		}
 	}
 }
+
+mixin template AutowireConstructor() {
+	public this() {
+		auto __container = Container.getInstance();
+		__container.autowire!(typeof(this))(this);
+	}
+}
