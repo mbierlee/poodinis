@@ -42,6 +42,16 @@ version(unittest) {
 		public ComponentC componentC;
 	}
 	
+	class ComponentF {
+		@Autowire
+		public ComponentA componentA;
+		
+		public this() {
+			auto container = Container.getInstance();
+			container.autowire!ComponentF(this);
+		}
+	}
+	
 	// Test autowiring concrete type to existing instance
 	unittest {
 		auto container = new Container();
@@ -85,5 +95,18 @@ version(unittest) {
 		auto componentE = new ComponentE();
 		container.autowire!ComponentE(componentE);
 		assert(componentE.componentC is null, "Autowiring should not occur for members with attributes other than @Autowire");
+	}
+	
+	// Test autowire in constructor
+	unittest {
+		auto container = Container.getInstance();
+		container.register!ComponentA;
+		auto componentF = new ComponentF();
+		auto autowiredComponentA = componentF.componentA;
+		container.register!(ComponentF).existingInstance(componentF);
+		assert(componentF.componentA !is null, "Constructor did not autowire component F");
+		
+		auto resolvedComponentF = container.resolve!ComponentF;
+		assert(resolvedComponentF.componentA is autowiredComponentA, "Resolving instance of ComponentF rewired members");
 	}
 }
