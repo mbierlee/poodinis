@@ -105,5 +105,7 @@ version(unittest) {
 		
 		auto resolvedComponentF = container.resolve!ComponentF;
 		assert(resolvedComponentF.componentA is autowiredComponentA, "Resolving instance of ComponentF rewired members");
+		
+		container.clearAllRegistrations();
 	}
 }
