@@ -48,7 +48,7 @@ version(unittest) {
 		
 		public this() {
 			auto container = Container.getInstance();
-			container.autowire!ComponentF(this);
+			container.autowire!(typeof(this))(this);
 		}
 	}
 	
