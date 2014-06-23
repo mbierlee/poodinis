@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 0.1.2**
+* ADD workaround for failing to autowire types registered by supertype or interface
+
 **Version 0.1.1**
 * FIX: Also auto-wire members from base classes
 
