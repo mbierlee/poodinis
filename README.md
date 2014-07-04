@@ -133,8 +133,7 @@ class ComponentF {
 	public ComponentA componentA;
 	
 	public this() {
-		auto container = Container.getInstance();
-		container.autowire!(typeof(this))(this);
+		globalAutowire!(typeof(this))(this);
 	}
 	
 	// or use:

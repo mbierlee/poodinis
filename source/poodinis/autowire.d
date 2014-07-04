@@ -40,7 +40,10 @@ public void autowire(Type)(Container container, Type instance) {
 
 mixin template AutowireConstructor() {
 	public this() {
-		auto __container = Container.getInstance();
-		__container.autowire!(typeof(this))(this);
+		globalAutowire!(typeof(this))(this);
 	}
+}
+
+public void globalAutowire(Type)(Type instance) {
+	Container.getInstance().autowire!(typeof(instance))(instance);
 }
