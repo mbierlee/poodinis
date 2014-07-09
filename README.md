@@ -104,7 +104,7 @@ class ExampleClassB {
 
 container.register!ExampleClassA;
 auto exampleInstance = new ExampleClassB();
-container.autowire!ExampleClassB(exampleInstance);
+container.autowire(exampleInstance);
 assert(exampleInstance.dependency !is null);
 ```
 At the moment, it is only possible to autowire public members or properties.
@@ -133,7 +133,7 @@ class ComponentF {
 	public ComponentA componentA;
 	
 	public this() {
-		globalAutowire!(typeof(this))(this);
+		globalAutowire(this);
 	}
 	
 	// or use:
