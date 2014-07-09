@@ -123,7 +123,6 @@ Poodinis can autowire circular dependencies when they are registered with single
 
 Known issues
 ------------
-* Due to preventive measures of recursion issues in circular dependencies, registrations which are supposed to yield new instances will not autowire classes for which a circular dependency is detected. A new instance will be resolved but the instance's members will not be autowired.
 * Resolving a class registered by supertype or interface will only autowire the members inherited from its supertypes and in the case of interfaces none at all. A workaround for this issue is to autowire members in the constructor of a class:
 ```d
 import poodinis.autowire;
