@@ -49,6 +49,19 @@ version(unittest) {
 		mixin AutowireConstructor;
 	}
 	
+	class ComponentDeclarationCocktail {
+		alias noomer = int;
+		
+		@Autowire
+		public ComponentA componentA;
+		
+		public void doesNothing() {
+		}
+		
+		~this(){
+		}
+	}
+	
 	// Test autowiring concrete type to existing instance
 	unittest {
 		auto container = new Container();
@@ -107,5 +120,16 @@ version(unittest) {
 		assert(resolvedComponentF.componentA is autowiredComponentA, "Resolving instance of ComponentF rewired members");
 		
 		container.clearAllRegistrations();
+	}
+	
+	// Test autowire class with alias declaration
+	unittest {
+		auto container = new Container();
+		container.register!ComponentA;
+		auto componentDeclarationCocktail = new ComponentDeclarationCocktail();
+		
+		container.autowire(componentDeclarationCocktail);
+		
+		assert(componentDeclarationCocktail.componentA !is null, "Autowiring class with non-assignable declarations failed");
 	}
 }
