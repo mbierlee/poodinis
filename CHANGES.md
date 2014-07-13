@@ -3,7 +3,7 @@ Poodinis Changelog
 **Version 0.1.3**
 * ADD global autowire function for convinience
 * CHANGE workaround to be more simple
-* FIX autowiring classes which container non-symbolic declarations such as aliases. As a result, only variables are attempted to be autowired.
+* FIX autowiring classes which contain non-symbolic declarations such as aliases. As a result, only variables are attempted to be autowired.
 
 **Version 0.1.2**
 * ADD workaround for failing to autowire types registered by supertype or interface
