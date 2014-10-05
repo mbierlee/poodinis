@@ -67,7 +67,7 @@ class Container {
 	}
 	
 	public void clearAllRegistrations() {
-		registrations.clear();
+		registrations = null;
 	}
 	
 	public void removeRegistration(RegistrationType)() {

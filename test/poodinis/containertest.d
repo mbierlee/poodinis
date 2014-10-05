@@ -243,4 +243,18 @@ version(unittest) {
 		
 		assert(superInstance.banana is null, "Autowire instance which was resolved by interface type, which was not expected to be possible");
 	}
+	
+	// Test reusing a container after clearing all registrations
+	unittest {
+		auto container = new Container();
+		container.register!Banana;
+		container.clearAllRegistrations();
+		try {
+			container.resolve!Banana;
+		} catch (ResolveException e) {
+			container.register!Banana;
+			return;
+		}
+		assert(false);
+	}
 }
