@@ -1,5 +1,11 @@
 Poodinis Changelog
 ==================
+**Version 0.1.4**
+* Make Poodinis compatible with D 2.066.0 and DUB 0.9.22
+* FIX incorrect clearing of registrations
+This release should be backwards compatible with the previous versions of D and DUB, but please note that there are no more separate
+configurations for release and debug builds. You have to specify a build type in DUB.
+
 **Version 0.1.3**
 * ADD global autowire function for convinience
 * CHANGE workaround to be more simple
