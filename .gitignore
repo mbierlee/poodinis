@@ -3,3 +3,4 @@ poodinis.lib
 poodinis.obj
 /.settings
 /.dub
+/dub.selections.json
