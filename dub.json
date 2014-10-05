@@ -7,30 +7,12 @@
 	"license": "MIT",
 	"configurations": [
 		{
-			"name": "release-build",
-			"targetType": "library",
-			"buildOptions": [
-				"releaseMode",
-				"optimize",
-				"inline"
-			]
-		},
-		{
-			"name": "debug-build",
-			"targetType": "library",
-			"buildOptions": [
-				"debugMode",
-				"debugInfo"
-			]
+			"name": "build",
+			"targetType": "library"
 		},
 		{
 			"name": "unittest",
 			"targetType": "executable",
-			"buildOptions": [
-				"debugMode",
-				"debugInfo",
-				"unittests"
-			],
 			"sourcePaths": [
 				"test"
 			],
