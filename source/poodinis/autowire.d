@@ -21,6 +21,12 @@ class Autowire{};
 alias Autowired = Autowire;
 
 public void autowire(Type)(Container container, Type instance) {
+	debug {
+		auto memberType = typeid(Type);
+		auto instanceAddress = &instance;
+		writeln(format("DEBUG: Autowiring members of [%s@%s]", memberType, instanceAddress));
+	}
+	
 	foreach (member ; __traits(allMembers, Type)) {
 		static if(__traits(compiles, __traits( getMember, Type, member )) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member )))) {
 			foreach(attribute; __traits(getAttributes, __traits(getMember, Type, member))) {
@@ -30,8 +36,6 @@ public void autowire(Type)(Container container, Type instance) {
 					debug {
 						auto autowirableType = typeid(typeof(memberReference[0]));
 						auto autowireableAddress = &autowirableInstance;
-						auto memberType = typeid(Type);
-						auto instanceAddress = &instance;
 						writeln(format("DEBUG: Autowire instance [%s@%s] to [%s@%s].%s", autowirableType, autowireableAddress, memberType, instanceAddress, member));
 					}
 					

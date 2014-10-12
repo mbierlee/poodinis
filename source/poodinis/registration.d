@@ -7,6 +7,11 @@
 
 module poodinis.registration;
 
+debug {
+	import std.stdio;
+	import std.string;
+}
+
 class Registration {
 	TypeInfo registeredType = null;
 	TypeInfo_Class instantiatableType = null;
@@ -38,6 +43,9 @@ interface CreationScope {
 
 class NullScope : CreationScope {
 	public Object getInstance() {
+		debug {
+			writeln("DEBUG: No instance created (NullScope)");
+		}
 		return null;
 	}
 }
@@ -52,8 +60,16 @@ class SingleInstanceScope : CreationScope {
 	
 	public Object getInstance() {
 		if (instance is null) {
+			debug {
+				writeln(format("DEBUG: Creating new instance of type %s (SingleInstanceScope)", instantiatableType.toString()));
+			}
 			instance = instantiatableType.create();
+		} else {
+			debug {
+				writeln(format("DEBUG: Existing instance returned of type %s (SingleInstanceScope)", instantiatableType.toString()));
+			}
 		}
+		
 		
 		return instance;
 	}
@@ -72,6 +88,9 @@ class NewInstanceScope : CreationScope {
 	}
 	
 	public Object getInstance() {
+		debug {
+			writeln(format("DEBUG: Creating new instance of type %s (SingleInstanceScope)", instantiatableType.toString()));
+		}
 		return instantiatableType.create();
 	}
 }
@@ -89,6 +108,9 @@ class ExistingInstanceScope : CreationScope {
 	}
 	
 	public Object getInstance() {
+		debug {
+			writeln("DEBUG: Existing instance returned (ExistingInstanceScope)");
+		}
 		return instance;
 	}
 }

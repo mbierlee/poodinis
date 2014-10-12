@@ -11,6 +11,10 @@ import std.string;
 import std.array;
 import std.algorithm;
 
+debug {
+	import std.stdio;
+}
+
 public import poodinis.registration;
 public import poodinis.autowire;
 
@@ -42,6 +46,10 @@ class Container {
 		TypeInfo registeredType = typeid(InterfaceType);
 		TypeInfo_Class instantiatableType = typeid(ConcreteType);
 		
+		debug {
+			writeln(format("DEBUG: Register type %s (as %s)", instantiatableType.toString(), registeredType.toString()));
+		}
+		
 		Registration newRegistration = new Registration(registeredType, instantiatableType);
 		newRegistration.singleInstance();
 		registrations[registeredType] = newRegistration;
@@ -50,6 +58,10 @@ class Container {
 	
 	public RegistrationType resolve(RegistrationType)() {
 		TypeInfo resolveType = typeid(RegistrationType);
+		debug {
+			writeln("DEBUG: Resolving type " ~ resolveType.toString());
+		}
+		
 		Registration* registration = resolveType in registrations;
 		if (!registration) {
 			throw new ResolveException("Type not registered.", resolveType);
