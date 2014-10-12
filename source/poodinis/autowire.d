@@ -18,6 +18,8 @@ debug {
 
 class Autowire{};
 
+alias Autowired = Autowire;
+
 public void autowire(Type)(Container container, Type instance) {
 	foreach (member ; __traits(allMembers, Type)) {
 		static if(__traits(compiles, __traits( getMember, Type, member )) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member )))) {

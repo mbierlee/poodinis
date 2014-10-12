@@ -43,7 +43,7 @@ version(unittest) {
 	}
 	
 	class ComponentF {
-		@Autowire
+		@Autowired
 		public ComponentA componentA;
 		
 		mixin AutowireConstructor;
