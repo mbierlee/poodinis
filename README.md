@@ -23,7 +23,7 @@ See the Poodinis [DUB project page] for instructions on how to include Poodinis 
 ###Quickstart
 The following example shows the typical usage of Poodinis:
 ```d
-import poodinis.container; // The only import needed for now
+import poodinis.dependency;
 
 interface Database{};
 class RelationalDatabase : Database {}
@@ -34,7 +34,7 @@ class DataWriter {
 }
 
 void main() {
-	auto container = Container.getInstance();
+	auto container = DependencyContainer.getInstance();
 	container.register!DataWriter;
 	container.register!(Database, RelationalDatabase);
 	
@@ -46,12 +46,12 @@ void main() {
 To register a class, a new dependency container must be instantiated:
 ```d
 // Register a private container
-auto container = new Container();
+auto container = new DependencyContainer();
 // Or use the singleton container
-container = Container.getInstance();
+container = DependencyContainer.getInstance();
 ```
 ###Registering dependencies
-They make dependencies available, they have to be registered:
+To make dependencies available, they have to be registered:
 ```d
 // Register concrete class
 container.register!ExampleClass;
