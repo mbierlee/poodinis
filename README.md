@@ -141,6 +141,7 @@ class ComponentF {
 	// which adds the constructor above
 }
 ```
+This method will not work for circular dependencies registered with a singleInstance scope: new instances will still be created and assigned to these dependencies.
 
 Future Work
 -----------
