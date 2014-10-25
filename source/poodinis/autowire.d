@@ -7,7 +7,7 @@
 
 module poodinis.autowire;
 
-public import poodinis.container;
+public import poodinis.dependency;
 
 import std.typetuple;
 

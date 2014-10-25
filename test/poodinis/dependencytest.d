@@ -5,7 +5,7 @@
  * The full terms of the license can be found in the LICENSE file.
  */
 
-import poodinis.container;
+import poodinis.dependency;
 
 import std.exception;
 
