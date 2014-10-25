@@ -83,14 +83,14 @@ version(unittest) {
 	
 	// Test register concrete type
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		auto registration = container.register!(TestClass)();
 		assert(registration.registeredType == typeid(TestClass), "Type of registered type not the same");
 	}
 	
 	// Test resolve registered type
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(TestClass)();
 		TestClass actualInstance = container.resolve!(TestClass)();
 		assert(actualInstance !is null, "Resolved type is null");
@@ -99,7 +99,7 @@ version(unittest) {
 	
 	// Test register interface
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(TestInterface, TestClass)();
 		TestInterface actualInstance = container.resolve!(TestInterface)();
 		assert(actualInstance !is null, "Resolved type is null");
@@ -108,13 +108,13 @@ version(unittest) {
 	
 	// Test resolve non-registered type
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving non-registered type does not fail");
 	}
 	
 	// Test clear registrations
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(TestClass)();
 		container.clearAllRegistrations();
 		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving cleared type does not fail");
@@ -122,14 +122,14 @@ version(unittest) {
 	
 	// Test get singleton of container
 	unittest {
-		auto instance1 = Container.getInstance();
-		auto instance2 = Container.getInstance();
+		auto instance1 = DependencyContainer.getInstance();
+		auto instance2 = DependencyContainer.getInstance();
 		assert(instance1 is instance2, "getInstance does not return the same instance");
 	}
 	
 	// Test resolve single instance for type
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(TestClass)().singleInstance();
 		auto instance1 = container.resolve!(TestClass);
 		auto instance2 = container.resolve!(TestClass);
@@ -138,7 +138,7 @@ version(unittest) {
 	
 	// Test resolve new instance for type
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(TestClass)().newInstance();
 		auto instance1 = container.resolve!(TestClass);
 		auto instance2 = container.resolve!(TestClass);
@@ -147,7 +147,7 @@ version(unittest) {
 	
 	// Test resolve existing instance for type
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		auto expectedInstance = new TestClass();
 		container.register!(TestClass)().existingInstance(expectedInstance);
 		auto actualInstance = container.resolve!(TestClass);
@@ -156,7 +156,7 @@ version(unittest) {
 	
 	// Test autowire resolved instances
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!AutowiredClass;
 		container.register!ComponentClass;
 		auto componentInstance = container.resolve!ComponentClass;
@@ -166,7 +166,7 @@ version(unittest) {
 
 	// Test circular autowiring
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!ComponentMouse;
 		container.register!ComponentCat;
 		auto mouse = container.resolve!ComponentMouse;
@@ -176,7 +176,7 @@ version(unittest) {
 	
 	// Test remove registration
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!TestClass;
 		container.removeRegistration!TestClass;
 		assertThrown!ResolveException(container.resolve!TestClass);
@@ -184,7 +184,7 @@ version(unittest) {
 	
 	// Test autowiring does not autowire member where instance is non-null
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		auto existingA = new AutowiredClass();
 		auto existingB = new ComponentClass();
 		existingB.autowiredClass = existingA;
@@ -199,7 +199,7 @@ version(unittest) {
 	
 	// Test autowiring circular dependency by third-degree
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!Eenie;
 		container.register!Meenie;
 		container.register!Moe;
@@ -211,7 +211,7 @@ version(unittest) {
 	
 	// Test autowiring deep circular dependencies
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!Ittie;
 		container.register!Bittie;
 		container.register!Banana;
@@ -223,7 +223,7 @@ version(unittest) {
 	
 	// Test autowiring deep circular dependencies with newInstance scope does not autowire new instance second time
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(Ittie).newInstance();
 		container.register!(Bittie).newInstance();
 		container.register!(Banana).newInstance();
@@ -235,7 +235,7 @@ version(unittest) {
 	
 	// Test autowiring type registered by interface fails (BUG test case)
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!Banana;
 		container.register!(SuperInterface, SuperImplementation);
 		
@@ -246,7 +246,7 @@ version(unittest) {
 	
 	// Test reusing a container after clearing all registrations
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!Banana;
 		container.clearAllRegistrations();
 		try {

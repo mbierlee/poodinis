@@ -20,7 +20,7 @@ class Autowire{};
 
 alias Autowired = Autowire;
 
-public void autowire(Type)(Container container, Type instance) {
+public void autowire(Type)(DependencyContainer container, Type instance) {
 	debug {
 		auto memberType = typeid(Type);
 		auto instanceAddress = &instance;
@@ -53,5 +53,5 @@ mixin template AutowireConstructor() {
 }
 
 public void globalAutowire(Type)(Type instance) {
-	Container.getInstance().autowire(instance);
+	DependencyContainer.getInstance().autowire(instance);
 }

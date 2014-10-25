@@ -30,9 +30,12 @@ class ResolveException : Exception {
 	}
 }
 
-class Container {
+deprecated("Container has been renamed to DependencyContainer")
+alias Container = DependencyContainer;
 
-	private static Container instance;
+class DependencyContainer {
+
+	private static DependencyContainer instance;
 	
 	private Registration[TypeInfo] registrations;
 	
@@ -86,9 +89,9 @@ class Container {
 		registrations.remove(typeid(RegistrationType));
 	}
 	
-	public static Container getInstance() {
+	public static DependencyContainer getInstance() {
 		if (instance is null) {
-			instance = new Container();
+			instance = new DependencyContainer();
 		}
 		return instance;
 	}

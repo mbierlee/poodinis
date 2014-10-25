@@ -64,7 +64,7 @@ version(unittest) {
 	
 	// Test autowiring concrete type to existing instance
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!ComponentA;
 		auto componentB = new ComponentB();
 		container.autowire!(ComponentB)(componentB);
@@ -73,7 +73,7 @@ version(unittest) {
 	
 	// Test autowiring interface type to existing instance
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		auto componentD = new ComponentD();
 		container.autowire!(ComponentD)(componentD);
@@ -82,7 +82,7 @@ version(unittest) {
 	
 	// Test autowiring will only happen once
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!(InterfaceA, ComponentC).newInstance();
 		auto componentD = new ComponentD();
 		container.autowire!(ComponentD)(componentD);
@@ -94,14 +94,14 @@ version(unittest) {
 	
 	// Test autowiring unregistered type
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		auto componentD = new ComponentD();
 		assertThrown!(ResolveException)(container.autowire!(ComponentD)(componentD), "Autowiring unregistered type should throw ResolveException");
 	}
 	
 	// Test autowiring member with non-autowire attribute does not autowire
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		auto componentE = new ComponentE();
 		container.autowire!ComponentE(componentE);
 		assert(componentE.componentC is null, "Autowiring should not occur for members with attributes other than @Autowire");
@@ -109,7 +109,7 @@ version(unittest) {
 	
 	// Test autowire in constructor
 	unittest {
-		auto container = Container.getInstance();
+		auto container = DependencyContainer.getInstance();
 		container.register!ComponentA;
 		auto componentF = new ComponentF();
 		auto autowiredComponentA = componentF.componentA;
@@ -124,7 +124,7 @@ version(unittest) {
 	
 	// Test autowire class with alias declaration
 	unittest {
-		auto container = new Container();
+		auto container = new DependencyContainer();
 		container.register!ComponentA;
 		auto componentDeclarationCocktail = new ComponentDeclarationCocktail();
 		
