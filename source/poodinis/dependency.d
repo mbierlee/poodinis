@@ -111,7 +111,7 @@ class DependencyContainer {
 		if (resolveType == qualifierType) {
 			if (candidates.length > 1) {
 				string candidateList = candidates.toConcreteTypeListString();
-				throw new ResolveException("Multiple qualified candidates available: " ~ candidateList ~ ". Please specify qualifier.", resolveType);
+				throw new ResolveException("Multiple qualified candidates available: " ~ candidateList ~ ". Please use a qualifier.", resolveType);
 			}
 			
 			return candidates[0];

@@ -123,7 +123,7 @@ public Registration existingInstance(Registration registration, Object instance)
 public string toConcreteTypeListString(Registration[] registrations) {
 	auto concreteTypeListString = "";
 	foreach (registration ; registrations) {
-		if (!concreteTypeListString.length) {
+		if (concreteTypeListString.length > 0) {
 			concreteTypeListString ~= ", ";
 		}
 		concreteTypeListString ~= registration.instantiatableType.toString();
