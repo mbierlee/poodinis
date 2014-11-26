@@ -125,6 +125,7 @@ Poodinis can autowire circular dependencies when they are registered with single
 ###Registering and resolving using qualifiers
 You can register multiple concrete types to a super type. When doing so, you will need to specify a qualifier when resolving that type:
 ```d
+// Color is an interface, Blue and Red are classes implementing that interface
 container.register!(Color, Blue);
 container.register!(Color, Red);
 auto blueInstance = container.resolve!(Color, Blue);
