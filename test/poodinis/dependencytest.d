@@ -281,4 +281,13 @@ version(unittest) {
 		container.register!(Color, Red);
 		container.removeRegistration!Color;
 	}
+	
+	// Test registering same registration again
+	unittest {
+		auto container = new DependencyContainer();
+		auto firstRegistration = container.register!(Color, Blue);
+		auto secondRegistration = container.register!(Color, Blue);
+		
+		assert(firstRegistration is secondRegistration, "First registration is not the same as the second of equal types");
+	}
 }
