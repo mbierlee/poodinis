@@ -19,8 +19,8 @@ public import poodinis.registration;
 public import poodinis.autowire;
 
 class RegistrationException : Exception {
-	this(string message, TypeInfo registeredType, TypeInfo_Class instantiatableType) {
-		super(format("Exception while registering type %s to %s: %s", registeredType.toString(), instantiatableType.name, message));
+	this(string message, TypeInfo registeredType, TypeInfo_Class concreteType) {
+		super(format("Exception while registering type %s to %s: %s", registeredType.toString(), concreteType.name, message));
 	}
 }
 
@@ -47,13 +47,13 @@ class DependencyContainer {
 	
 	public Registration register(InterfaceType, ConcreteType : InterfaceType)() {
 		TypeInfo registeredType = typeid(InterfaceType);
-		TypeInfo_Class instantiatableType = typeid(ConcreteType);
+		TypeInfo_Class concreteType = typeid(ConcreteType);
 		
 		debug {
-			writeln(format("DEBUG: Register type %s (as %s)", instantiatableType.toString(), registeredType.toString()));
+			writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
 		}
 		
-		Registration newRegistration = new Registration(registeredType, instantiatableType);
+		Registration newRegistration = new Registration(registeredType, concreteType);
 		newRegistration.singleInstance();
 		registrations[registeredType] = newRegistration;
 		return newRegistration;
