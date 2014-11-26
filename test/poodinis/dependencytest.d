@@ -172,7 +172,7 @@ version(unittest) {
 		auto autowiredInstance = container.resolve!AutowiredClass;
 		assert(componentInstance.autowiredClass is autowiredInstance, "Member is not autowired upon resolving");
 	}
-
+	
 	// Test circular autowiring
 	unittest {
 		auto container = new DependencyContainer();
@@ -289,5 +289,31 @@ version(unittest) {
 		auto secondRegistration = container.register!(Color, Blue);
 		
 		assert(firstRegistration is secondRegistration, "First registration is not the same as the second of equal types");
+	}
+	
+	// Test resolve registration with multiple qualifiers
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!(Color, Blue);
+		container.register!(Color, Red);
+		try {
+			container.resolve!Color;
+		} catch (ResolveException e) {
+			return;
+		}
+		assert(false);
+	}
+	
+	// Test resolve registration with multiple qualifiers using a qualifier
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!(Color, Blue);
+		container.register!(Color, Red);
+		auto blueInstance = container.resolve!(Color, Blue);
+		auto redInstance = container.resolve!(Color, Red);
+		
+		assert(blueInstance !is redInstance, "Resolving type with multiple, different registrations yielded the same instance");
+		assert(blueInstance !is null, "Resolved blue instance to null");
+		assert(redInstance !is null, "Resolved red instance to null");
 	}
 }

@@ -53,9 +53,12 @@ class DependencyContainer {
 			writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
 		}
 		
-		auto existingRegistration = getRegistration(registeredType, concreteType);
-		if (existingRegistration) {
-			return existingRegistration;
+		auto existingCandidates = registeredType in registrations;
+		if (existingCandidates) {
+			auto existingRegistration = getRegistration(*existingCandidates, concreteType);
+			if (existingRegistration) {
+				return existingRegistration;
+			}
 		}
 		
 		Registration newRegistration = new Registration(registeredType, concreteType);
@@ -64,13 +67,11 @@ class DependencyContainer {
 		return newRegistration;
 	}
 	
-	private Registration getRegistration(TypeInfo registeredType, TypeInfo_Class concreteType) {
-		auto existingCandidates = registeredType in registrations;
-		if (existingCandidates) {
-			foreach(existingRegistration ; *existingCandidates) {
-				if (existingRegistration.instantiatableType == concreteType) {
-					return existingRegistration;
-				}
+	private Registration getRegistration(Registration[] candidates, TypeInfo concreteType) {
+		foreach(existingRegistration ; candidates) {
+			writeln("DEBUG: Test type " ~ existingRegistration.instantiatableType.toString() ~ " with " ~ concreteType.toString());
+			if (existingRegistration.instantiatableType == concreteType) {
+				return existingRegistration;
 			}
 		}
 		
@@ -78,9 +79,15 @@ class DependencyContainer {
 	}
 	
 	public RegistrationType resolve(RegistrationType)() {
+		return resolve!(RegistrationType, RegistrationType)();
+	}
+	
+	public RegistrationType resolve(RegistrationType, QualifierType : RegistrationType)() {
 		TypeInfo resolveType = typeid(RegistrationType);
+		TypeInfo qualifierType = typeid(QualifierType);
+		
 		debug {
-			writeln("DEBUG: Resolving type " ~ resolveType.toString());
+			writeln("DEBUG: Resolving type " ~ resolveType.toString() ~ " with qualifier " ~ qualifierType.toString());
 		}
 		
 		auto candidates = resolveType in registrations;
@@ -88,8 +95,7 @@ class DependencyContainer {
 			throw new ResolveException("Type not registered.", resolveType);
 		}
 		
-		auto registration = (*candidates)[0];
-		
+		Registration registration = getQualifiedRegistration(resolveType, qualifierType, *candidates);
 		RegistrationType instance = cast(RegistrationType) registration.getInstance();
 		
 		if (!autowireStack.canFind(registration)) {
@@ -99,6 +105,19 @@ class DependencyContainer {
 		}
 		
 		return instance;
+	}
+	
+	private Registration getQualifiedRegistration(TypeInfo resolveType, TypeInfo qualifierType, Registration[] candidates) {
+		if (resolveType == qualifierType) {
+			if (candidates.length > 1) {
+				string candidateList = candidates.toConcreteTypeListString();
+				throw new ResolveException("Multiple qualified candidates available: " ~ candidateList ~ ". Please specify qualifier.", resolveType);
+			}
+			
+			return candidates[0];
+		}
+		
+		return getRegistration(candidates, qualifierType);
 	}
 	
 	public void clearAllRegistrations() {

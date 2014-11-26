@@ -119,3 +119,14 @@ public Registration existingInstance(Registration registration, Object instance)
 	registration.registationScope = new ExistingInstanceScope(instance);
 	return registration;
 }
+
+public string toConcreteTypeListString(Registration[] registrations) {
+	auto concreteTypeListString = "";
+	foreach (registration ; registrations) {
+		if (!concreteTypeListString.length) {
+			concreteTypeListString ~= ", ";
+		}
+		concreteTypeListString ~= registration.instantiatableType.toString();
+	}
+	return concreteTypeListString;
+}
