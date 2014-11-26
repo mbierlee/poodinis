@@ -130,7 +130,7 @@ container.register!(Color, Blue);
 container.register!(Color, Red);
 auto blueInstance = container.resolve!(Color, Blue);
 ```
-If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException exception is throw stating that there are multiple candidates for the type to be resolved.
+If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException is throw stating that there are multiple candidates for the type to be resolved.
 
 Known issues
 ------------
