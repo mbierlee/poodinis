@@ -1,6 +1,6 @@
 Poodinis Dependency Injection Framework
 =======================================
-Version 0.1.4  
+Version 0.2.0  
 Copyright 2014 Mike Bierlee  
 Licensed under the terms of the MIT license - See [LICENSE.txt](LICENSE.txt)
 
@@ -122,6 +122,15 @@ If an interface is to be autowired, you must register a concrete class by interf
 ###Circular dependencies
 Poodinis can autowire circular dependencies when they are registered with singleInstance or existingInstance registration scopes. Circular dependencies in registrations with newInstance scopes will not be autowired, as this would cause an endless loop.
 
+###Registering and resolving using qualifiers
+You can register multiple concrete types to a super type. When doing so, you will need to specify a qualifier when resolving that type:
+```d
+container.register!(Color, Blue);
+container.register!(Color, Red);
+auto blueInstance = container.resolve!(Color, Blue);
+```
+If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException exception is throw stating that there are multiple candidates for the type to be resolved.
+
 Known issues
 ------------
 * Resolving a class registered by supertype or interface will only autowire the members inherited from its supertypes and in the case of interfaces none at all. A workaround for this issue is to autowire members in the constructor of a class:
@@ -147,7 +156,7 @@ Future Work
 -----------
 * Thread safety
 * Component scan (auto-registration)
-* Registering multiple concrete classes to the same interface
+* Allow specification of qualifier when autowiring
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://code.google.com/p/hypodermic/
