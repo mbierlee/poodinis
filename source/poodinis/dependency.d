@@ -37,9 +37,9 @@ class DependencyContainer {
 
 	private static DependencyContainer instance;
 	
-	private Registration[TypeInfo] registrations;
+	private Registration[][TypeInfo] registrations;
 	
-	private Registration*[] autowireStack;
+	private Registration[] autowireStack;
 	
 	public Registration register(ConcreteType)() {
 		return register!(ConcreteType, ConcreteType)();
@@ -55,7 +55,7 @@ class DependencyContainer {
 		
 		Registration newRegistration = new Registration(registeredType, concreteType);
 		newRegistration.singleInstance();
-		registrations[registeredType] = newRegistration;
+		registrations[registeredType] ~= newRegistration;
 		return newRegistration;
 	}
 	
@@ -65,10 +65,12 @@ class DependencyContainer {
 			writeln("DEBUG: Resolving type " ~ resolveType.toString());
 		}
 		
-		Registration* registration = resolveType in registrations;
-		if (!registration) {
+		auto candidates = resolveType in registrations;
+		if (!candidates) {
 			throw new ResolveException("Type not registered.", resolveType);
 		}
+		
+		auto registration = (*candidates)[0];
 		
 		RegistrationType instance = cast(RegistrationType) registration.getInstance();
 		

@@ -81,6 +81,15 @@ version(unittest) {
 		public Banana banana;
 	}
 	
+	interface Color {
+	}
+	
+	class Blue : Color {
+	}
+	
+	class Red : Color {
+	}
+	
 	// Test register concrete type
 	unittest {
 		auto container = new DependencyContainer();
@@ -256,5 +265,20 @@ version(unittest) {
 			return;
 		}
 		assert(false);
+	}
+	
+	// Test register multiple concrete classess to same interface type
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!(Color, Blue);
+		container.register!(Color, Red);
+	}
+	
+	// Test removing all registrations for type with multiple registrations.
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!(Color, Blue);
+		container.register!(Color, Red);
+		container.removeRegistration!Color;
 	}
 }
