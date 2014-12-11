@@ -30,16 +30,18 @@ public void autowire(Type)(DependencyContainer container, Type instance) {
 	foreach (member ; __traits(allMembers, Type)) {
 		static if(__traits(compiles, __traits( getMember, Type, member )) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member )))) {
 			foreach(attribute; __traits(getAttributes, __traits(getMember, Type, member))) {
-				if (is(attribute : Autowire) && __traits(getMember, instance, member) is null){
-					alias TypeTuple!(__traits(getMember, instance, member)) memberReference;
-					auto autowirableInstance = container.resolve!(typeof(memberReference));
-					debug {
-						auto autowirableType = typeid(typeof(memberReference[0]));
-						auto autowireableAddress = &autowirableInstance;
-						writeln(format("DEBUG: Autowire instance [%s@%s] to [%s@%s].%s", autowirableType, autowireableAddress, memberType, instanceAddress, member));
+				static if (is(attribute : Autowire)) {
+					if (__traits(getMember, instance, member) is null) {
+						alias TypeTuple!(__traits(getMember, instance, member)) memberReference;
+						auto autowirableInstance = container.resolve!(typeof(memberReference));
+						debug {
+							auto autowirableType = typeid(typeof(memberReference[0]));
+							auto autowireableAddress = &autowirableInstance;
+							writeln(format("DEBUG: Autowire instance [%s@%s] to [%s@%s].%s", autowirableType, autowireableAddress, memberType, instanceAddress, member));
+						}
+						
+						__traits(getMember, instance, member) = autowirableInstance;
 					}
-					
-					__traits(getMember, instance, member) = autowirableInstance;
 				}
 			}
 		}
