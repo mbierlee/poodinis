@@ -10,8 +10,7 @@ import poodinis.autowire;
 import std.exception;
 
 version(unittest) {
-	class ComponentA {
-	}
+	class ComponentA {}
 	
 	class ComponentB {
 		public @Autowire ComponentA componentA;
@@ -21,11 +20,9 @@ version(unittest) {
 		}
 	}
 	
-	interface InterfaceA {
-	}
+	interface InterfaceA {}
 	
-	class ComponentC : InterfaceA {
-	}
+	class ComponentC : InterfaceA {}
 	
 	class ComponentD {
 		public @Autowire InterfaceA componentC = null;
@@ -60,6 +57,24 @@ version(unittest) {
 		
 		~this(){
 		}
+	}
+	
+	class ComponentX : InterfaceA {}
+	
+	class MonkeyShine {
+		@Autowire
+		@Qualifier!ComponentX
+		public InterfaceA component;
+	}
+	
+	class BootstrapBootstrap {
+		@Autowire
+		@Qualifier!ComponentX
+		public InterfaceA componentX;
+		
+		@Autowire
+		@Qualifier!ComponentC
+		public InterfaceA componentC;
 	}
 	
 	// Test autowiring concrete type to existing instance
@@ -131,5 +146,33 @@ version(unittest) {
 		container.autowire(componentDeclarationCocktail);
 		
 		assert(componentDeclarationCocktail.componentA !is null, "Autowiring class with non-assignable declarations failed");
+	}
+	
+	// Test autowire class with qualifier
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!(InterfaceA, ComponentC);
+		container.register!(InterfaceA, ComponentX);
+		auto componentX = container.resolve!(InterfaceA, ComponentX);
+		
+		auto monkeyShine = new MonkeyShine();
+		container.autowire(monkeyShine);
+		
+		assert(monkeyShine.component is componentX, "Autowiring class with qualifier failed");
+	}
+	
+	// Test autowire class with multiple qualifiers
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!(InterfaceA, ComponentC);
+		container.register!(InterfaceA, ComponentX);
+		auto componentC = container.resolve!(InterfaceA, ComponentC);
+		auto componentX = container.resolve!(InterfaceA, ComponentX);
+		
+		auto bootstrapBootstrap = new BootstrapBootstrap();
+		container.autowire(bootstrapBootstrap);
+		
+		assert(bootstrapBootstrap.componentX is componentX, "Autowiring class with multiple qualifiers failed");
+		assert(bootstrapBootstrap.componentC is componentC, "Autowiring class with multiple qualifiers failed");
 	}
 }

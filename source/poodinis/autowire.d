@@ -18,30 +18,61 @@ debug {
 
 class Autowire{};
 
+struct Qualifier(T) {
+	T qualifier;
+}
+
 alias Autowired = Autowire;
 
 public void autowire(Type)(DependencyContainer container, Type instance) {
+	// For the love of god, refactor this!
+	
 	debug {
-		auto memberType = typeid(Type);
+		auto instanceType = typeid(Type);
 		auto instanceAddress = &instance;
-		writeln(format("DEBUG: Autowiring members of [%s@%s]", memberType, instanceAddress));
+		writeln(format("DEBUG: Autowiring members of [%s@%s]", instanceType, instanceAddress));
 	}
 	
 	foreach (member ; __traits(allMembers, Type)) {
-		static if(__traits(compiles, __traits( getMember, Type, member )) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member )))) {
-			foreach(attribute; __traits(getAttributes, __traits(getMember, Type, member))) {
-				static if (is(attribute : Autowire)) {
+		static if(__traits(compiles, __traits(getMember, Type, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member)))) {
+			foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, Type, member))) {
+				static if (is(autowireAttribute : Autowire)) {
 					if (__traits(getMember, instance, member) is null) {
 						alias TypeTuple!(__traits(getMember, instance, member)) memberReference;
-						auto autowirableInstance = container.resolve!(typeof(memberReference));
+						alias MemberType = typeof(memberReference)[0];
 						debug {
-							auto autowirableType = typeid(typeof(memberReference[0]));
-							auto autowireableAddress = &autowirableInstance;
-							writeln(format("DEBUG: Autowire instance [%s@%s] to [%s@%s].%s", autowirableType, autowireableAddress, memberType, instanceAddress, member));
+							string qualifiedInstanceTypeString = typeid(MemberType).toString;
 						}
 						
-						__traits(getMember, instance, member) = autowirableInstance;
+						MemberType qualifiedInstance;
+						auto resolvedThroughQualifier = false;
+						foreach (qualifierAttribute; __traits(getAttributes, __traits(getMember, Type, member))) {
+							static if (is(qualifierAttribute == Qualifier!T, T)) {
+								alias QualifierType = typeof(qualifierAttribute.qualifier);
+								qualifiedInstance = container.resolve!(typeof(memberReference), QualifierType);
+								
+								debug {
+									qualifiedInstanceTypeString = typeid(QualifierType).toString;
+								}
+								
+								resolvedThroughQualifier = true;
+								break;
+							}
+						}
+						
+						if (!resolvedThroughQualifier) {
+							qualifiedInstance = container.resolve!(typeof(memberReference));
+						}
+						
+						__traits(getMember, instance, member) = qualifiedInstance;
+						
+						debug {
+							auto qualifiedInstanceAddress = &qualifiedInstance;
+							writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", qualifiedInstanceTypeString, qualifiedInstanceAddress, instanceType, instanceAddress, member));
+						}
 					}
+					
+					break;
 				}
 			}
 		}
