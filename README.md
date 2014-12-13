@@ -130,15 +130,14 @@ container.register!(Color, Blue);
 container.register!(Color, Red);
 auto blueInstance = container.resolve!(Color, Blue);
 ```
-If you want to autowire a type registered to multiple concrete types, use the @Qualifier UDA:
+If you want to autowire a type registered to multiple concrete types, specify a qualified type as template argument:
 ```d
 class BluePaint {
-	@Autowire
-	@Qualifier!Blue
+	@Autowire!Blue
 	public Color color;
 }
 ```
-If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException is throw stating that there are multiple candidates for the type to be resolved.
+If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException is thrown stating that there are multiple candidates for the type to be resolved.
 
 Known issues
 ------------
@@ -165,7 +164,6 @@ Future Work
 -----------
 * Thread safety
 * Component scan (auto-registration)
-* Allow specification of qualifier when autowiring
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://code.google.com/p/hypodermic/
