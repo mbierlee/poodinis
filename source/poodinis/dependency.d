@@ -69,7 +69,6 @@ class DependencyContainer {
 	
 	private Registration getRegistration(Registration[] candidates, TypeInfo concreteType) {
 		foreach(existingRegistration ; candidates) {
-			writeln("DEBUG: Test type " ~ existingRegistration.instantiatableType.toString() ~ " with " ~ concreteType.toString());
 			if (existingRegistration.instantiatableType == concreteType) {
 				return existingRegistration;
 			}
