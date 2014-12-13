@@ -16,11 +16,11 @@ debug {
 	import std.string;
 }
 
-class Autowire{};
+struct UseMemberType {};
 
-struct Qualifier(T) {
-	T qualifier;
-}
+struct Autowire(QualifierType = UseMemberType) {
+	QualifierType qualifier;
+};
 
 alias Autowired = Autowire;
 
@@ -36,31 +36,22 @@ public void autowire(Type)(DependencyContainer container, Type instance) {
 	foreach (member ; __traits(allMembers, Type)) {
 		static if(__traits(compiles, __traits(getMember, Type, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member)))) {
 			foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, Type, member))) {
-				static if (is(autowireAttribute : Autowire)) {
+				static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
 					if (__traits(getMember, instance, member) is null) {
-						alias TypeTuple!(__traits(getMember, instance, member)) memberReference;
+						alias memberReference = TypeTuple!(__traits(getMember, instance, member));
 						alias MemberType = typeof(memberReference)[0];
 						debug {
 							string qualifiedInstanceTypeString = typeid(MemberType).toString;
 						}
 						
 						MemberType qualifiedInstance;
-						auto resolvedThroughQualifier = false;
-						foreach (qualifierAttribute; __traits(getAttributes, __traits(getMember, Type, member))) {
-							static if (is(qualifierAttribute == Qualifier!T, T)) {
-								alias QualifierType = typeof(qualifierAttribute.qualifier);
-								qualifiedInstance = container.resolve!(typeof(memberReference), QualifierType);
-								
-								debug {
-									qualifiedInstanceTypeString = typeid(QualifierType).toString;
-								}
-								
-								resolvedThroughQualifier = true;
-								break;
+						static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
+							alias QualifierType = typeof(autowireAttribute.qualifier);
+							qualifiedInstance = container.resolve!(typeof(memberReference), QualifierType);
+							debug {
+								qualifiedInstanceTypeString = typeid(QualifierType).toString;
 							}
-						}
-						
-						if (!resolvedThroughQualifier) {
+						} else {
 							qualifiedInstance = container.resolve!(typeof(memberReference));
 						}
 						

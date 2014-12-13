@@ -62,18 +62,15 @@ version(unittest) {
 	class ComponentX : InterfaceA {}
 	
 	class MonkeyShine {
-		@Autowire
-		@Qualifier!ComponentX
+		@Autowire!ComponentX
 		public InterfaceA component;
 	}
 	
 	class BootstrapBootstrap {
-		@Autowire
-		@Qualifier!ComponentX
+		@Autowire!ComponentX
 		public InterfaceA componentX;
 		
-		@Autowire
-		@Qualifier!ComponentC
+		@Autowire!ComponentC
 		public InterfaceA componentC;
 	}
 	
