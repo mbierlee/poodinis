@@ -99,7 +99,7 @@ class DependencyContainer {
 		
 		if (!autowireStack.canFind(registration)) {
 			autowireStack ~= registration;
-			this.autowire!(RegistrationType)(instance);
+			this.autowire!(QualifierType)(cast(QualifierType)instance);
 			autowireStack.popBack();
 		}
 		
