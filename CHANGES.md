@@ -2,6 +2,7 @@ Poodinis Changelog
 ==================
 **Version 0.2.0**
 * ADD ability to register type with multiple concrete types. They can be correctly resolved using qualifiers.
+* DEPRECATE template for autowiring in constructor. This workaround is buggy. Use qualifiers instead.
 
 **Version 0.1.4**
 * Make Poodinis compatible with D 2.066.0 and DUB 0.9.22

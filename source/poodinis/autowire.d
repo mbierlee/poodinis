@@ -70,6 +70,7 @@ public void autowire(Type)(DependencyContainer container, Type instance) {
 	}
 }
 
+deprecated("Please use qualifiers instead")
 mixin template AutowireConstructor() {
 	public this() {
 		globalAutowire(this);

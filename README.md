@@ -141,24 +141,7 @@ If you registered multiple concrete types to the same supertype and you do not r
 
 Known issues
 ------------
-* Resolving a class registered by supertype or interface will only autowire the members inherited from its supertypes and in the case of interfaces none at all. A workaround for this issue is to autowire members in the constructor of a class:
-```d
-import poodinis.autowire;
-
-class ComponentF {
-	@Autowire
-	public ComponentA componentA;
-	
-	public this() {
-		globalAutowire(this);
-	}
-	
-	// or use:
-	// mixin AutowireConstructor;
-	// which adds the constructor above
-}
-```
-This method will not work for circular dependencies registered with a singleInstance scope: new instances will still be created and assigned to these dependencies.
+* Resolving a class registered by supertype or interface will only autowire the members inherited from its supertypes and in the case of interfaces none at all. To work around this issue, use a qualifier. See "[Registering and resolving using qualifiers](#Registering and resolving using qualifiers)".
 
 Future Work
 -----------
