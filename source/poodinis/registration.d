@@ -43,7 +43,7 @@ interface CreationScope {
 
 class NullScope : CreationScope {
 	public Object getInstance() {
-		debug {
+		debug(poodinisVerbose) {
 			writeln("DEBUG: No instance created (NullScope)");
 		}
 		return null;
@@ -60,12 +60,12 @@ class SingleInstanceScope : CreationScope {
 	
 	public Object getInstance() {
 		if (instance is null) {
-			debug {
+			debug(poodinisVerbose) {
 				writeln(format("DEBUG: Creating new instance of type %s (SingleInstanceScope)", instantiatableType.toString()));
 			}
 			instance = instantiatableType.create();
 		} else {
-			debug {
+			debug(poodinisVerbose) {
 				writeln(format("DEBUG: Existing instance returned of type %s (SingleInstanceScope)", instantiatableType.toString()));
 			}
 		}
@@ -88,7 +88,7 @@ class NewInstanceScope : CreationScope {
 	}
 	
 	public Object getInstance() {
-		debug {
+		debug(poodinisVerbose) {
 			writeln(format("DEBUG: Creating new instance of type %s (SingleInstanceScope)", instantiatableType.toString()));
 		}
 		return instantiatableType.create();
@@ -108,7 +108,7 @@ class ExistingInstanceScope : CreationScope {
 	}
 	
 	public Object getInstance() {
-		debug {
+		debug(poodinisVerbose) {
 			writeln("DEBUG: Existing instance returned (ExistingInstanceScope)");
 		}
 		return instance;

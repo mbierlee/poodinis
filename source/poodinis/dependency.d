@@ -49,7 +49,7 @@ class DependencyContainer {
 		TypeInfo registeredType = typeid(InterfaceType);
 		TypeInfo_Class concreteType = typeid(ConcreteType);
 		
-		debug {
+		debug(poodinisVerbose) {
 			writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
 		}
 		
@@ -85,7 +85,7 @@ class DependencyContainer {
 		TypeInfo resolveType = typeid(RegistrationType);
 		TypeInfo qualifierType = typeid(QualifierType);
 		
-		debug {
+		debug(poodinisVerbose) {
 			writeln("DEBUG: Resolving type " ~ resolveType.toString() ~ " with qualifier " ~ qualifierType.toString());
 		}
 		

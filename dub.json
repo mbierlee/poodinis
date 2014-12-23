@@ -19,6 +19,17 @@
 			"dflags-dmd": [
 				"-main"
 			]
+		},
+		{
+			"name": "unittestVerbose",
+			"targetType": "executable",
+			"debugVersions": ["poodinisVerbose"],
+			"sourcePaths": [
+				"test"
+			],
+			"dflags-dmd": [
+				"-main"
+			]
 		}
 	]
 }
