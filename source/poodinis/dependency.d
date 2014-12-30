@@ -81,7 +81,7 @@ class DependencyContainer {
 		return resolve!(RegistrationType, RegistrationType)();
 	}
 	
-	public RegistrationType resolve(RegistrationType, QualifierType : RegistrationType)() {
+	public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)() {
 		TypeInfo resolveType = typeid(RegistrationType);
 		TypeInfo qualifierType = typeid(QualifierType);
 		
@@ -95,11 +95,11 @@ class DependencyContainer {
 		}
 		
 		Registration registration = getQualifiedRegistration(resolveType, qualifierType, *candidates);
-		RegistrationType instance = cast(RegistrationType) registration.getInstance();
+		QualifierType instance = cast(QualifierType) registration.getInstance();
 		
 		if (!autowireStack.canFind(registration)) {
 			autowireStack ~= registration;
-			this.autowire!(QualifierType)(cast(QualifierType)instance);
+			this.autowire!(QualifierType)(instance);
 			autowireStack.popBack();
 		}
 		
