@@ -141,7 +141,7 @@ If you registered multiple concrete types to the same supertype and you do not r
 
 Known issues
 ------------
-* Resolving a class registered by supertype or interface will only autowire the members inherited from its supertypes and in the case of interfaces none at all. To work around this issue, use a qualifier. See "[Registering and resolving using qualifiers](#Registering and resolving using qualifiers)".
+* Resolving a class registered by supertype or interface will only autowire the members inherited from its supertypes and in the case of interfaces none at all. To work around this issue, use a qualifier. Alternatively you could immediately resolve all registrations once by qualifiers after registering everything. See "[Registering and resolving using qualifiers](#Registering and resolving using qualifiers)".
 
 Future Work
 -----------
