@@ -1,5 +1,10 @@
 Poodinis Changelog
 ==================
+**Version 0.3.0**
+* ADD alternative workaround to readme for autowire limitation
+* CHANGE returning of resolved instances by returning them by qualifier type instead
+* ADD debug specifier to reduce verbosity of debug output
+
 **Version 0.2.0**
 * ADD ability to register type with multiple concrete types. They can be correctly resolved using qualifiers.
 * DEPRECATE template for autowiring in constructor. This workaround is buggy. Use qualifiers instead.
