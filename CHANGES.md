@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 0.3.1**
+* FIX issue where autowiring members which are declared by interface or supertype would get autowired incorrectly.
+
 **Version 0.3.0**
 * ADD alternative workaround to readme for autowire limitation
 * CHANGE returning of resolved instances by returning them by qualifier type instead
