@@ -16,17 +16,17 @@ class Registration {
 	TypeInfo registeredType = null;
 	TypeInfo_Class instantiatableType = null;
 	CreationScope registationScope = null;
-	
+
 	this(TypeInfo registeredType, TypeInfo_Class instantiatableType) {
 		this.registeredType = registeredType;
 		this.instantiatableType = instantiatableType;
 	}
-	
-	public Object getInstance() {
+
+	public Object getInstance(InstantiationContext context = new InstantiationContext()) {
 		if (registationScope is null) {
 			throw new NoScopeDefinedException(registeredType);
 		}
-		
+
 		return registationScope.getInstance();
 	}
 }
@@ -53,11 +53,11 @@ class NullScope : CreationScope {
 class SingleInstanceScope : CreationScope {
 	TypeInfo_Class instantiatableType = null;
 	Object instance = null;
-	
+
 	this(TypeInfo_Class instantiatableType) {
 		this.instantiatableType = instantiatableType;
 	}
-	
+
 	public Object getInstance() {
 		if (instance is null) {
 			debug(poodinisVerbose) {
@@ -69,8 +69,8 @@ class SingleInstanceScope : CreationScope {
 				writeln(format("DEBUG: Existing instance returned of type %s (SingleInstanceScope)", instantiatableType.toString()));
 			}
 		}
-		
-		
+
+
 		return instance;
 	}
 }
@@ -82,11 +82,11 @@ public Registration singleInstance(Registration registration) {
 
 class NewInstanceScope : CreationScope {
 	TypeInfo_Class instantiatableType = null;
-	
+
 	this(TypeInfo_Class instantiatableType) {
 		this.instantiatableType = instantiatableType;
 	}
-	
+
 	public Object getInstance() {
 		debug(poodinisVerbose) {
 			writeln(format("DEBUG: Creating new instance of type %s (SingleInstanceScope)", instantiatableType.toString()));
@@ -102,11 +102,11 @@ public Registration newInstance(Registration registration) {
 
 class ExistingInstanceScope : CreationScope {
 	Object instance = null;
-	
+
 	this(Object instance) {
 		this.instance = instance;
 	}
-	
+
 	public Object getInstance() {
 		debug(poodinisVerbose) {
 			writeln("DEBUG: Existing instance returned (ExistingInstanceScope)");
@@ -130,3 +130,5 @@ public string toConcreteTypeListString(Registration[] registrations) {
 	}
 	return concreteTypeListString;
 }
+
+class InstantiationContext {}

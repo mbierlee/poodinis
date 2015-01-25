@@ -92,9 +92,20 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
 		super(registeredType, typeid(RegistrationType));
 	}
 
-	public override Object getInstance() {
-		RegistrationType instance = cast(RegistrationType) super.getInstance();
-		container.autowire(instance);
+	public override Object getInstance(InstantiationContext context = new AutowireInstantiationContext()) {
+		RegistrationType instance = cast(RegistrationType) super.getInstance(context);
+
+		AutowireInstantiationContext autowireContext = cast(AutowireInstantiationContext) context;
+		enforce(!(autowireContext is null), "Given instantiation context type could not be cast to an AutowireInstantiationContext. If you relied on using the default assigned context: make sure you're calling getInstance() on an instance of type AutowiredRegistration!");
+		if (autowireContext.autowireInstance) {
+			container.autowire(instance);
+		}
+
 		return instance;
 	}
+
+}
+
+class AutowireInstantiationContext : InstantiationContext {
+	public bool autowireInstance = true;
 }

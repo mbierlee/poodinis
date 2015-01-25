@@ -179,7 +179,7 @@ version(unittest) {
 		container.register!ComponentA;
 
 		auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB), container).singleInstance();
-		auto instance = cast(ComponentB) registration.getInstance();
+		auto instance = cast(ComponentB) registration.getInstance(new AutowireInstantiationContext());
 
 		assert(!instance.componentIsNull());
 	}
