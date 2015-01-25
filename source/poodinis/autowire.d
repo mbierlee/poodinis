@@ -10,6 +10,7 @@ module poodinis.autowire;
 public import poodinis.container;
 
 import std.typetuple;
+import std.exception;
 
 debug {
 	import std.stdio;
@@ -80,4 +81,20 @@ mixin template AutowireConstructor() {
 
 public void globalAutowire(Type)(Type instance) {
 	DependencyContainer.getInstance().autowire(instance);
+}
+
+class AutowiredRegistration(RegistrationType : Object) : Registration {
+	private DependencyContainer container;
+
+	public this(TypeInfo registeredType, DependencyContainer container) {
+		enforce(!(container is null), "Argument 'container' is null. Autowired registrations need to autowire using a container.");
+		this.container = container;
+		super(registeredType, typeid(RegistrationType));
+	}
+
+	public override Object getInstance() {
+		RegistrationType instance = cast(RegistrationType) super.getInstance();
+		container.autowire(instance);
+		return instance;
+	}
 }
