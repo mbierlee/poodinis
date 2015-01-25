@@ -90,6 +90,11 @@ version(unittest) {
 	class Red : Color {
 	}
 
+	class Spiders {
+		@Autowire
+		public TestInterface testMember;
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new DependencyContainer();
@@ -242,15 +247,16 @@ version(unittest) {
 		assert(ittie.bittie.banana.bittie.banana is null, "Autowiring deep dependencies with newInstance scope autowired a reoccuring type.");
 	}
 
-	// Test autowiring type registered by interface fails (BUG test case)
+	// Test autowiring type registered by interface
 	unittest {
 		auto container = new DependencyContainer();
 		container.register!Banana;
+		container.register!Bittie;
 		container.register!(SuperInterface, SuperImplementation);
 
 		SuperImplementation superInstance = cast(SuperImplementation) container.resolve!SuperInterface;
 
-		assert(superInstance.banana is null, "Autowire instance which was resolved by interface type, which was not expected to be possible");
+		assert(!(superInstance.banana is null), "Instance which was resolved by interface type was not autowired.");
 	}
 
 	// Test reusing a container after clearing all registrations
@@ -315,5 +321,16 @@ version(unittest) {
 		assert(blueInstance !is redInstance, "Resolving type with multiple, different registrations yielded the same instance");
 		assert(blueInstance !is null, "Resolved blue instance to null");
 		assert(redInstance !is null, "Resolved red instance to null");
+	}
+
+	// Test autowire of unqualified member typed by interface.
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!Spiders;
+		container.register!(TestInterface, TestClass);
+
+		auto instance = container.resolve!Spiders;
+
+		assert(!(instance is null), "Container failed to autowire member by interface");
 	}
 }

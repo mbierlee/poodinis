@@ -37,7 +37,7 @@ void main() {
 	auto container = DependencyContainer.getInstance();
 	container.register!DataWriter;
 	container.register!(Database, RelationalDatabase);
-	
+
 	auto writer = container.resolve!DataWriter;
 }
 ```
@@ -79,7 +79,7 @@ With dependency scopes, you can control how a dependency is resolved. The scope 
 * Resolve a dependency using a single instance (default):
 
 ```d
-container.register!(ExampleClass).singleInstance(); 
+container.register!(ExampleClass).singleInstance();
 ```
 * Resolve a dependency with a new instance each time it is resolved:
 
@@ -141,7 +141,7 @@ If you registered multiple concrete types to the same supertype and you do not r
 
 Known issues
 ------------
-* Resolving a class registered by supertype or interface will only autowire the members inherited from its supertypes and in the case of interfaces none at all. To work around this issue, use a qualifier. Alternatively you could immediately resolve all registrations once by qualifiers after registering everything. See "[Registering and resolving using qualifiers](#Registering and resolving using qualifiers)".
+None! Found one? Let us know on github.
 
 Future Work
 -----------

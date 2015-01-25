@@ -61,7 +61,7 @@ class DependencyContainer {
 			}
 		}
 
-		Registration newRegistration = new Registration(registeredType, concreteType);
+		AutowiredRegistration!ConcreteType newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 		registrations[registeredType] ~= newRegistration;
 		return newRegistration;
@@ -95,12 +95,16 @@ class DependencyContainer {
 		}
 
 		Registration registration = getQualifiedRegistration(resolveType, qualifierType, *candidates);
-		QualifierType instance = cast(QualifierType) registration.getInstance();
+		QualifierType instance;
 
 		if (!autowireStack.canFind(registration)) {
 			autowireStack ~= registration;
-			this.autowire!(QualifierType)(instance);
+			instance = cast(QualifierType) registration.getInstance(new AutowireInstantiationContext());
 			autowireStack.popBack();
+		} else {
+			auto autowireContext = new AutowireInstantiationContext();
+			autowireContext.autowireInstance = false;
+			instance = cast(QualifierType) registration.getInstance(autowireContext);
 		}
 
 		return instance;
