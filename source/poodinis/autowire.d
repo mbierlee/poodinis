@@ -72,13 +72,6 @@ public void autowire(Type)(DependencyContainer container, Type instance) {
 	}
 }
 
-deprecated("Please use qualifiers instead")
-mixin template AutowireConstructor() {
-	public this() {
-		globalAutowire(this);
-	}
-}
-
 public void globalAutowire(Type)(Type instance) {
 	DependencyContainer.getInstance().autowire(instance);
 }
