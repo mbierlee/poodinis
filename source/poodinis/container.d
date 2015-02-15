@@ -30,9 +30,6 @@ class ResolveException : Exception {
 	}
 }
 
-deprecated("Container has been renamed to DependencyContainer")
-alias Container = DependencyContainer;
-
 class DependencyContainer {
 
 	private static DependencyContainer instance;
