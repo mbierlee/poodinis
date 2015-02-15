@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 1.0.0**
+This version introduces changes which are incompatible with previous versions
+
 **Version 0.3.1**
 * FIX issue where autowiring members which are declared by interface or supertype would get autowired incorrectly.
 
