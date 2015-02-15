@@ -63,7 +63,7 @@ struct Autowire(QualifierType = UseMemberType) {
 };
 
 /**
- * Alias to "Autowire" UDA for those used to Spring.
+ * Alias to "Autowire" UDA for those used to Spring's @Autowired annotation.
  */
 alias Autowired = Autowire;
 
@@ -74,7 +74,8 @@ alias Autowired = Autowire;
  * All members are resolved using the given container. Qualifiers are used to determine the type of class to
  * resolve for any member of instance.
  *
- * Note that private members will not be autowired.
+ * Note that private members will not be autowired because the autowiring mechanism is not able to by-pass
+ * member visibility protection.
  *
  * See_Also: Autowire
  */
