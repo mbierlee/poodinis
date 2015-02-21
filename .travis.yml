@@ -2,3 +2,4 @@ language: d
 
 script:
   - dub test --build=unittest --config=unittest
+  - dub build --build=release --config=quickstartExample

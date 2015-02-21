@@ -30,6 +30,19 @@
 			"dflags-dmd": [
 				"-main"
 			]
+		},
+		{
+			"name" : "quickstartExample",
+			"description" : "Quickstart example from the Poodinis readme.",
+			"license": "MIT",
+			"targetType": "executable",
+			"targetName": "quickstartExample",
+			"sourcePaths": [
+				"example/quickstart"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }

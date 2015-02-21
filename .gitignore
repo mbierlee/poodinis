@@ -1,6 +1,7 @@
-poodinis.exe
-poodinis.lib
-poodinis.obj
+/poodinis.exe
+/poodinis.lib
+/poodinis.obj
+/quickstartExample.exe
 /.settings
 /.dub
 /dub.selections.json
