@@ -65,6 +65,7 @@ struct Autowire(QualifierType = UseMemberType) {
 /**
  * Alias to "Autowire" UDA for those used to Spring's @Autowired annotation.
  */
+deprecated("Please use the Autowire UDA instead.")
 alias Autowired = Autowire;
 
 /**
