@@ -98,8 +98,8 @@ class DependencyContainer {
 	 *
 	 * See_Also: singleInstance, newInstance, existingInstance
 	 */
-	public Registration register(InterfaceType, ConcreteType : InterfaceType)() {
-		TypeInfo registeredType = typeid(InterfaceType);
+	public Registration register(SuperType, ConcreteType : SuperType)() {
+		TypeInfo registeredType = typeid(SuperType);
 		TypeInfo_Class concreteType = typeid(ConcreteType);
 
 		debug(poodinisVerbose) {
