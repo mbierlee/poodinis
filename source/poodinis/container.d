@@ -63,7 +63,7 @@ class DependencyContainer {
 	 * Examples:
 	 * Register and resolve a class by concrete type:
 	 * ---
-	 * class Cat : Animal {}
+	 * class Cat : Animal { ... }
 	 *
 	 * container.register!Cat;
 	 *
@@ -88,7 +88,7 @@ class DependencyContainer {
 	 * Examples:
 	 * Register and resolve by super type
 	 * ---
-	 * class Cat : Animal {}
+	 * class Cat : Animal { ... }
 	 *
 	 * container.register!(Animal, Cat);
 	 *
@@ -147,8 +147,8 @@ class DependencyContainer {
 	 * Examples:
 	 * Resolve dependencies registered by super type and concrete type:
 	 * ---
-	 * class Cat : Animal {}
-	 * class Dog : Animal {}
+	 * class Cat : Animal { ... }
+	 * class Dog : Animal { ... }
 	 *
 	 * container.register!(Animal, Cat);
 	 * container.register!Dog;
@@ -158,8 +158,8 @@ class DependencyContainer {
 	 * ---
 	 * You cannot resolve a dependency when it is registered by multiple super types:
 	 * ---
-	 * class Cat : Animal {}
-	 * class Dog : Animal {}
+	 * class Cat : Animal { ... }
+	 * class Dog : Animal { ... }
 	 *
 	 * container.register!(Animal, Cat);
 	 * container.register!(Animal, Dog);
@@ -189,8 +189,8 @@ class DependencyContainer {
 	 * Examples:
 	 * Resolve dependencies registered by super type:
 	 * ---
-	 * class Cat : Animal {}
-	 * class Dog : Animal {}
+	 * class Cat : Animal { ... }
+	 * class Dog : Animal { ... }
 	 *
 	 * container.register!(Animal, Cat);
 	 * container.register!(Animal, Dog);
