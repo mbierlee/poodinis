@@ -23,15 +23,6 @@ public import poodinis.registration;
 public import poodinis.autowire;
 
 /**
- * Exception thrown when errors occur while registering a type in a dependency container.
- */
-class RegistrationException : Exception {
-	this(string message, TypeInfo registeredType, TypeInfo_Class concreteType) {
-		super(format("Exception while registering type %s to %s: %s", registeredType.toString(), concreteType.name, message));
-	}
-}
-
-/**
  * Exception thrown when errors occur while resolving a type in a dependency container.
  */
 class ResolveException : Exception {
