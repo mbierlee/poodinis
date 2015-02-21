@@ -34,11 +34,22 @@
 		{
 			"name" : "quickstartExample",
 			"description" : "Quickstart example from the Poodinis readme.",
-			"license": "MIT",
 			"targetType": "executable",
 			"targetName": "quickstartExample",
 			"sourcePaths": [
 				"example/quickstart"
+			],
+			"importPaths": [
+				"source"
+			]
+		},
+		{
+			"name" : "qualifiersExample",
+			"description" : "Quickstart example where qualifiers are used.",
+			"targetType": "executable",
+			"targetName": "qualifiersExample",
+			"sourcePaths": [
+				"example/qualifiers"
 			],
 			"importPaths": [
 				"source"
