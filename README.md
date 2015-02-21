@@ -12,6 +12,8 @@ Developed for D 2.066.1
 Uses the Phobos standard library.  
 Can be built with DUB 0.9.22.
 
+You can find the Public API Documentation on [ddocs.org]
+
 History
 -------
 For a full overview of changes, see [CHANGES.md](CHANGES.md)
@@ -153,3 +155,4 @@ Future Work
 [Hypodermic]: https://code.google.com/p/hypodermic/
 [DUB]: http://code.dlang.org/
 [DUB project page]: http://code.dlang.org/packages/poodinis
+[ddocs.org]: http://ddocs.org/poodinis/~master/index.html
