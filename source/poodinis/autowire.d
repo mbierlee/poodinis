@@ -30,12 +30,9 @@ struct UseMemberType {};
 /**
  * UDA for annotating class members as candidates for autowiring.
  *
- * Annotate member declarations in classes with this UDA to make them eligable for autowiring.
- *
- * Optionally a type as template parameter can be suplied to specify a qualifier. Qualifiers are used
- * to autowire members according the the type given. If class X, which inherits class Y, is given a qualifier
- * of type Y, then only class X's members inherited from type Y are autowired. If no qualifier is supplied, the
- * type of the member is used as qualifier.
+ * Optionally a template parameter can be supplied to specify the type of a qualified class. The qualified type
+ * of a concrete class is used to autowire members declared by supertype. If no qualifier is supplied, the type
+ * of the member is used as qualifier.
  *
  * Examples:
  * Annotate member of class to be autowired:
@@ -48,15 +45,20 @@ struct UseMemberType {};
  *
  * Annotate member of class with qualifier:
  * ---
- * class V8Engine : Engine { ... }
+ * class FuelEngine : Engine { ... }
+ * class ElectricEngine : Engine { ... }
  *
- * class Car {
- *    @Autowire!V8Engine
- *    public Engine engine;
+ * class HybridCar {
+ *    @Autowire!FuelEngine
+ *    public Engine fuelEngine;
+ *
+ *    @Autowire!ElectricEngine
+ *    public Engine electricEngine;
  * }
  * ---
- * The members of member "engine" will now be autowired properly, because the autowire mechanism will
- * autowire member "engine" as if it's of type "V8Engine".
+ * The members of an instance of "HybridCar" will now be autowired properly, because the autowire mechanism will
+ * autowire member "fuelEngine" as if it's of type "FuelEngine". This means that the members of instance "fuelEngine"
+ * will also be autowired because the autowire mechanism knows that member "fuelEngine" is an instance of "FuelEngine"
  */
 struct Autowire(QualifierType = UseMemberType) {
 	QualifierType qualifier;
@@ -128,7 +130,7 @@ public void autowire(Type)(DependencyContainer container, Type instance) {
 }
 
 /**
- * Autowire the given instance using the global dependency container.
+ * Autowire the given instance using the globally available dependency container.
  *
  * See_Also: DependencyContainer
  */
