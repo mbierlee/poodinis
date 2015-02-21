@@ -1,8 +1,14 @@
 /**
- * Poodinis Dependency Injection Framework
- * Copyright 2014-2015 Mike Bierlee
- * This software is licensed under the terms of the MIT license.
- * The full terms of the license can be found in the LICENSE file.
+ * Main module for typical inclusion into client applications.
+ *
+ * This module publicly imports all Poodinis modules.
+ *
+ * Authors:
+ *  Mike Bierlee, m.bierlee@lostmoment.com
+ * Copyright: 2014-2015 Mike Bierlee
+ * License:
+ *  This software is licensed under the terms of the MIT license.
+ *  The full terms of the license can be found in the LICENSE file.
  */
 
 module poodinis.dependency;
