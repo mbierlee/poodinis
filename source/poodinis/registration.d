@@ -1,8 +1,12 @@
 /**
- * Poodinis Dependency Injection Framework
- * Copyright 2014-2015 Mike Bierlee
- * This software is licensed under the terms of the MIT license.
- * The full terms of the license can be found in the LICENSE file.
+ * This module contains objects for defining and scoping dependency registrations.
+ *
+ * Authors:
+ *  Mike Bierlee, m.bierlee@lostmoment.com
+ * Copyright: 2014-2015 Mike Bierlee
+ * License:
+ *  This software is licensed under the terms of the MIT license.
+ *  The full terms of the license can be found in the LICENSE file.
  */
 
 module poodinis.registration;
@@ -75,6 +79,11 @@ class SingleInstanceScope : CreationScope {
 	}
 }
 
+/**
+ * Scopes registrations to return the same instance every time a given registration is resolved.
+ *
+ * Effectively makes the given registration a singleton.
+ */
 public Registration singleInstance(Registration registration) {
 	registration.registationScope = new SingleInstanceScope(registration.instantiatableType);
 	return registration;
@@ -95,6 +104,9 @@ class NewInstanceScope : CreationScope {
 	}
 }
 
+/**
+ * Scopes registrations to return a new instance every time the given registration is resolved.
+ */
 public Registration newInstance(Registration registration) {
 	registration.registationScope = new NewInstanceScope(registration.instantiatableType);
 	return registration;
@@ -115,6 +127,9 @@ class ExistingInstanceScope : CreationScope {
 	}
 }
 
+/**
+ * Scopes registrations to return the given instance every time the given registration is resolved.
+ */
 public Registration existingInstance(Registration registration, Object instance) {
 	registration.registationScope = new ExistingInstanceScope(instance);
 	return registration;
