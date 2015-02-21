@@ -44,6 +44,7 @@ void main() {
 	auto writer = container.resolve!DataWriter;
 }
 ```
+For more examples, see the [examples](example) directory.
 
 ### The container
 To register a class, a new dependency container must be instantiated:
