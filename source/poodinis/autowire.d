@@ -65,12 +65,6 @@ struct Autowire(QualifierType = UseMemberType) {
 };
 
 /**
- * Alias to "Autowire" UDA for those used to Spring's @Autowired annotation.
- */
-deprecated("Please use the Autowire UDA instead.")
-alias Autowired = Autowire;
-
-/**
  * Autowires members of a given instance using dependencies registered in the given container.
  *
  * All public members of the given instance, which are annotated using the "Autowire" UDA, are autowired.
