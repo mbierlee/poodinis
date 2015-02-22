@@ -106,18 +106,24 @@ class DependencyContainer {
 			writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
 		}
 
-		auto existingCandidates = registeredType in registrations;
-		if (existingCandidates) {
-			auto existingRegistration = getRegistration(*existingCandidates, concreteType);
-			if (existingRegistration) {
-				return existingRegistration;
-			}
+		auto existingRegistration = getExistingRegistration(registeredType, concreteType);
+		if (existingRegistration) {
+			return existingRegistration;
 		}
 
 		AutowiredRegistration!ConcreteType newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 		registrations[registeredType] ~= newRegistration;
 		return newRegistration;
+	}
+
+	private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType) {
+		auto existingCandidates = registrationType in registrations;
+		if (existingCandidates) {
+			return getRegistration(*existingCandidates, qualifierType);
+		}
+
+		return null;
 	}
 
 	private Registration getRegistration(Registration[] candidates, TypeInfo concreteType) {

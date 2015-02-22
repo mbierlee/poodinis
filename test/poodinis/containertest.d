@@ -333,4 +333,24 @@ version(unittest) {
 
 		assert(!(instance is null), "Container failed to autowire member by interface");
 	}
+
+	// Register existing registration
+	unittest {
+		auto container = new DependencyContainer();
+
+		auto firstRegistration = container.register!TestClass;
+		auto secondRegistration = container.register!TestClass;
+
+		assert(firstRegistration is secondRegistration, "Registering the same registration twice registers the dependencies twice.");
+	}
+
+	// Register existing registration by supertype
+	unittest {
+		auto container = new DependencyContainer();
+
+		auto firstRegistration = container.register!(TestInterface, TestClass);
+		auto secondRegistration = container.register!(TestInterface, TestClass);
+
+		assert(firstRegistration is secondRegistration, "Registering the same registration by super type twice registers the dependencies twice.");
+	}
 }
