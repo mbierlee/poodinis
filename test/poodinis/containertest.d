@@ -95,6 +95,11 @@ version(unittest) {
 		public TestInterface testMember;
 	}
 
+	class Recursive {
+		@Autowire
+		public Recursive recursive;
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new DependencyContainer();
@@ -352,5 +357,16 @@ version(unittest) {
 		auto secondRegistration = container.register!(TestInterface, TestClass);
 
 		assert(firstRegistration is secondRegistration, "Registering the same registration by super type twice registers the dependencies twice.");
+	}
+
+	// Resolve dependency depending on itself
+	unittest {
+		auto container = new DependencyContainer();
+		container.register!Recursive;
+
+		auto instance = container.resolve!Recursive;
+
+		assert(instance.recursive is instance, "Resolving dependency that depends on itself fails.");
+		assert(instance.recursive.recursive is instance, "Resolving dependency that depends on itself fails.");
 	}
 }
