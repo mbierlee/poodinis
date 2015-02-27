@@ -145,7 +145,7 @@ If you registered multiple concrete types to the same supertype and you do not r
 
 Known issues
 ------------
-None! Found one? Let us know on github.
+None! Found one? Let us know on the [Github issue tracker].
 
 Future Work
 -----------
@@ -157,3 +157,4 @@ Future Work
 [DUB]: http://code.dlang.org/
 [DUB project page]: http://code.dlang.org/packages/poodinis
 [ddocs.org]: http://ddocs.org/poodinis/~master/index.html
+[Github issue tracker]: https://github.com/mbierlee/poodinis/issues
