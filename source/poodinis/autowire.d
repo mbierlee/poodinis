@@ -100,8 +100,7 @@ private void autowireMember(string member, Type)(DependencyContainer container, 
 		foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, instance, member))) {
 			static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
 				if (__traits(getMember, instance, member) is null) {
-					alias memberReference = TypeTuple!(__traits(getMember, instance, member));
-					alias MemberType = typeof(memberReference)[0];
+					alias MemberType = typeof(__traits(getMember, instance, member));
 
 					debug(poodinisVerbose) {
 						TypeInfo qualifiedInstanceType = typeid(MemberType);
@@ -110,12 +109,12 @@ private void autowireMember(string member, Type)(DependencyContainer container, 
 					MemberType qualifiedInstance;
 					static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
 						alias QualifierType = typeof(autowireAttribute.qualifier);
-						qualifiedInstance = container.resolve!(typeof(memberReference), QualifierType);
+						qualifiedInstance = container.resolve!(MemberType, QualifierType);
 						debug(poodinisVerbose) {
 							qualifiedInstanceType = typeid(QualifierType);
 						}
 					} else {
-						qualifiedInstance = container.resolve!(typeof(memberReference));
+						qualifiedInstance = container.resolve!(MemberType);
 					}
 
 					__traits(getMember, instance, member) = qualifiedInstance;
