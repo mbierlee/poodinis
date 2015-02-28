@@ -86,7 +86,7 @@ public void autowire(Type)(DependencyContainer container, Type instance) {
 	}
 
 	foreach (member ; __traits(allMembers, Type)) {
-		autowireMember!(member)(container, instance);
+		autowireMember!member(container, instance);
 	}
 }
 
