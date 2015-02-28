@@ -64,6 +64,10 @@ struct Autowire(QualifierType = UseMemberType) {
 	QualifierType qualifier;
 };
 
+private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAddress) {
+	writeln(format("DEBUG: Autowiring members of [%s@%s]", instanceType, instanceAddress));
+}
+
 /**
  * Autowires members of a given instance using dependencies registered in the given container.
  *
@@ -78,14 +82,16 @@ struct Autowire(QualifierType = UseMemberType) {
  */
 public void autowire(Type)(DependencyContainer container, Type instance) {
 	debug(poodinisVerbose) {
-		auto instanceType = typeid(Type);
-		auto instanceAddress = &instance;
-		writeln(format("DEBUG: Autowiring members of [%s@%s]", instanceType, instanceAddress));
+		printDebugAutowiredInstance(typeid(Type), &instance);
 	}
 
 	foreach (member ; __traits(allMembers, Type)) {
 		autowireMember!(member)(container, instance);
 	}
+}
+
+private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType, void* candidateInstanceAddress, TypeInfo instanceType, void* instanceAddress, string member) {
+	writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", candidateInstanceType, candidateInstanceAddress, instanceType, instanceAddress, member));
 }
 
 private void autowireMember(string member, Type)(DependencyContainer container, Type instance) {
@@ -98,7 +104,7 @@ private void autowireMember(string member, Type)(DependencyContainer container, 
 					alias MemberType = typeof(memberReference)[0];
 
 					debug(poodinisVerbose) {
-						string qualifiedInstanceTypeString = typeid(MemberType).toString;
+						TypeInfo qualifiedInstanceType = typeid(MemberType);
 					}
 
 					MemberType qualifiedInstance;
@@ -106,7 +112,7 @@ private void autowireMember(string member, Type)(DependencyContainer container, 
 						alias QualifierType = typeof(autowireAttribute.qualifier);
 						qualifiedInstance = container.resolve!(typeof(memberReference), QualifierType);
 						debug(poodinisVerbose) {
-							qualifiedInstanceTypeString = typeid(QualifierType).toString;
+							qualifiedInstanceType = typeid(QualifierType);
 						}
 					} else {
 						qualifiedInstance = container.resolve!(typeof(memberReference));
@@ -115,10 +121,7 @@ private void autowireMember(string member, Type)(DependencyContainer container, 
 					__traits(getMember, instance, member) = qualifiedInstance;
 
 					debug(poodinisVerbose) {
-						auto instanceType = typeid(Type);
-						auto instanceAddress = &instance;
-						auto qualifiedInstanceAddress = &qualifiedInstance;
-						writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", qualifiedInstanceTypeString, qualifiedInstanceAddress, instanceType, instanceAddress, member));
+						printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
 					}
 				}
 
