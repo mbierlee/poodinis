@@ -77,8 +77,6 @@ struct Autowire(QualifierType = UseMemberType) {
  * See_Also: Autowire
  */
 public void autowire(Type)(DependencyContainer container, Type instance) {
-	// For the love of god, refactor this!
-
 	debug(poodinisVerbose) {
 		auto instanceType = typeid(Type);
 		auto instanceAddress = &instance;
@@ -86,38 +84,45 @@ public void autowire(Type)(DependencyContainer container, Type instance) {
 	}
 
 	foreach (member ; __traits(allMembers, Type)) {
-		static if(__traits(compiles, __traits(getMember, Type, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member)))) {
-			foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, Type, member))) {
-				static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
-					if (__traits(getMember, instance, member) is null) {
-						alias memberReference = TypeTuple!(__traits(getMember, instance, member));
-						alias MemberType = typeof(memberReference)[0];
+		autowireMember!(member)(container, instance);
+	}
+}
 
-						debug(poodinisVerbose) {
-							string qualifiedInstanceTypeString = typeid(MemberType).toString;
-						}
+private void autowireMember(string member, Type)(DependencyContainer container, Type instance) {
+	// For the love of god, refactor this!   <-- Doing it, bro!
+	static if(__traits(compiles, __traits(getMember, Type, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, Type, member)))) {
+		foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, Type, member))) {
+			static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
+				if (__traits(getMember, instance, member) is null) {
+					alias memberReference = TypeTuple!(__traits(getMember, instance, member));
+					alias MemberType = typeof(memberReference)[0];
 
-						MemberType qualifiedInstance;
-						static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
-							alias QualifierType = typeof(autowireAttribute.qualifier);
-							qualifiedInstance = container.resolve!(typeof(memberReference), QualifierType);
-							debug(poodinisVerbose) {
-								qualifiedInstanceTypeString = typeid(QualifierType).toString;
-							}
-						} else {
-							qualifiedInstance = container.resolve!(typeof(memberReference));
-						}
-
-						__traits(getMember, instance, member) = qualifiedInstance;
-
-						debug(poodinisVerbose) {
-							auto qualifiedInstanceAddress = &qualifiedInstance;
-							writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", qualifiedInstanceTypeString, qualifiedInstanceAddress, instanceType, instanceAddress, member));
-						}
+					debug(poodinisVerbose) {
+						string qualifiedInstanceTypeString = typeid(MemberType).toString;
 					}
 
-					break;
+					MemberType qualifiedInstance;
+					static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
+						alias QualifierType = typeof(autowireAttribute.qualifier);
+						qualifiedInstance = container.resolve!(typeof(memberReference), QualifierType);
+						debug(poodinisVerbose) {
+							qualifiedInstanceTypeString = typeid(QualifierType).toString;
+						}
+					} else {
+						qualifiedInstance = container.resolve!(typeof(memberReference));
+					}
+
+					__traits(getMember, instance, member) = qualifiedInstance;
+
+					debug(poodinisVerbose) {
+						auto instanceType = typeid(Type);
+						auto instanceAddress = &instance;
+						auto qualifiedInstanceAddress = &qualifiedInstance;
+						writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", qualifiedInstanceTypeString, qualifiedInstanceAddress, instanceType, instanceAddress, member));
+					}
 				}
+
+				break;
 			}
 		}
 	}
