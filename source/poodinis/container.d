@@ -1,6 +1,8 @@
 /**
  * Contains the implementation of the dependency container.
  *
+ * Part of the Poodinis Dependency Injection framework.
+ *
  * Authors:
  *  Mike Bierlee, m.bierlee@lostmoment.com
  * Copyright: 2014-2015 Mike Bierlee

@@ -3,6 +3,8 @@
  *
  * This module publicly imports all Poodinis modules.
  *
+ * Part of the Poodinis Dependency Injection framework.
+ *
  * Authors:
  *  Mike Bierlee, m.bierlee@lostmoment.com
  * Copyright: 2014-2015 Mike Bierlee

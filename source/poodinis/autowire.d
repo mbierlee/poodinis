@@ -5,6 +5,8 @@
  * You typically only need this module if you want inject dependencies into a class instance not
  * managed by a dependency container.
  *
+ * Part of the Poodinis Dependency Injection framework.
+ *
  * Authors:
  *  Mike Bierlee, m.bierlee@lostmoment.com
  * Copyright: 2014-2015 Mike Bierlee
