@@ -16,7 +16,7 @@
 			"sourcePaths": [
 				"test"
 			],
-			"dflags-dmd": [
+			"dflags": [
 				"-main"
 			]
 		},
