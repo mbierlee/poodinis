@@ -94,7 +94,6 @@ private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType, void*
 }
 
 private void autowireMember(string member, Type)(DependencyContainer container, Type instance) {
-	// For the love of god, refactor this!   <-- Doing it, bro!
 	static if(__traits(compiles, __traits(getMember, instance, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, instance, member)))) {
 		foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, instance, member))) {
 			static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
