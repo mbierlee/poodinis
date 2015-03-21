@@ -2,6 +2,12 @@ Poodinis Changelog
 ==================
 **Version 1.0.0**
 This version introduces changes which are incompatible with previous versions
+* REMOVE deprecated autowire constructor
+* REMOVE deprecated container alias
+* ADD documentation for public API
+* REMOVE @Autowired UDA. Use @Autowire instead.
+* ADD quickstart from readme to compilable example project.
+* ADD example project for the use of qualifiers
 
 **Version 0.3.1**
 * FIX issue where autowiring members which are declared by interface or supertype would get autowired incorrectly.
