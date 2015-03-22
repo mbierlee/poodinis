@@ -7,7 +7,7 @@
 	"license": "MIT",
 	"configurations": [
 		{
-			"name": "build",
+			"name": "library",
 			"targetType": "library"
 		},
 		{
