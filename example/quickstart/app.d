@@ -9,9 +9,9 @@ class DataWriter {
 }
 
 void main() {
-	auto container = DependencyContainer.getInstance();
-	container.register!DataWriter;
-	container.register!(Database, RelationalDatabase);
+	auto dependencies = DependencyContainer.getInstance();
+	dependencies.register!DataWriter;
+	dependencies.register!(Database, RelationalDatabase);
 
-	auto writer = container.resolve!DataWriter;
+	auto writer = dependencies.resolve!DataWriter;
 }

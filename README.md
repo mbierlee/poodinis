@@ -37,11 +37,11 @@ class DataWriter {
 }
 
 void main() {
-	auto container = DependencyContainer.getInstance();
-	container.register!DataWriter;
-	container.register!(Database, RelationalDatabase);
+	auto dependencies = DependencyContainer.getInstance();
+	dependencies.register!DataWriter;
+	dependencies.register!(Database, RelationalDatabase);
 
-	auto writer = container.resolve!DataWriter;
+	auto writer = dependencies.resolve!DataWriter;
 }
 ```
 For more examples, see the [examples](example) directory.
@@ -50,30 +50,30 @@ For more examples, see the [examples](example) directory.
 To register a class, a new dependency container must be instantiated:
 ```d
 // Register a private container
-auto container = new DependencyContainer();
+auto dependencies = new DependencyContainer();
 // Or use the singleton container
-container = DependencyContainer.getInstance();
+dependencies = DependencyContainer.getInstance();
 ```
 ###Registering dependencies
 To make dependencies available, they have to be registered:
 ```d
 // Register concrete class
-container.register!ExampleClass;
+dependencies.register!ExampleClass;
 // Register by interface
-container.register!(ExampleInterface, ExampleClass);
+dependencies.register!(ExampleInterface, ExampleClass);
 ```
 In the above example, dependencies on the concrete class and interface will resolve an instance of class ExampleClass. Registering a class by interface does not automatically register by concrete type.
 
 ###Resolving dependencies
 To manually resolve a dependency, all you have to do is resolve the dependency's type using the container in which it is registered:
 ```d
-auto exampleClassInstance = container.resolve!ExampleClass;
+auto exampleClassInstance = dependencies.resolve!ExampleClass;
 ```
 If the class is registered by interface and not by concrete type, you cannot resolve the class by concrete type. Registration of both a concrete type and interface type will resolve different registrations, returning different instances:
 
 ```d
-auto exampleClassInstance = container.resolve!ExampleClass;
-auto exampleClassInstance2 = container.resolve!ExampleInterface;
+auto exampleClassInstance = dependencies.resolve!ExampleClass;
+auto exampleClassInstance2 = dependencies.resolve!ExampleInterface;
 assert(exampleClassInstance !is exampleClassInstance2);
 ```
 
@@ -83,18 +83,18 @@ With dependency scopes, you can control how a dependency is resolved. The scope 
 * Resolve a dependency using a single instance (default):
 
 ```d
-container.register!(ExampleClass).singleInstance();
+dependencies.register!(ExampleClass).singleInstance();
 ```
 * Resolve a dependency with a new instance each time it is resolved:
 
 ```d
-container.register!(ExampleClass).newInstance();
+dependencies.register!(ExampleClass).newInstance();
 ```
 * Resolve a dependency using a pre-existing instance
 
 ```d
 auto preExistingInstance = new ExampleClass();
-container.register!(ExampleClass).existingInstance(preExistingInstance);
+dependencies.register!(ExampleClass).existingInstance(preExistingInstance);
 ```
 
 ###Autowiring
@@ -107,18 +107,18 @@ class ExampleClassB {
 	public ExampleClassA dependency;
 }
 
-container.register!ExampleClassA;
+dependencies.register!ExampleClassA;
 auto exampleInstance = new ExampleClassB();
-container.autowire(exampleInstance);
+dependencies.autowire(exampleInstance);
 assert(exampleInstance.dependency !is null);
 ```
 At the moment, it is only possible to autowire public members or properties.
 
 Dependencies are automatically autowired when a class is resolved. So when you register ExampleClassB, its member, *dependency*, is automatically autowired:
 ```d
-container.register!ExampleClassA;
-container.register!ExampleClassB;
-auto instance = container.resolve!ExampleClassB;
+dependencies.register!ExampleClassA;
+dependencies.register!ExampleClassB;
+auto instance = dependencies.resolve!ExampleClassB;
 assert(instance.dependency !is null);
 ```
 If an interface is to be autowired, you must register a concrete class by interface. Any class registered by concrete type can only be injected when a dependency on a concrete type is autowired.
@@ -130,9 +130,9 @@ Poodinis can autowire circular dependencies when they are registered with single
 You can register multiple concrete types to a super type. When doing so, you will need to specify a qualifier when resolving that type:
 ```d
 // Color is an interface, Blue and Red are classes implementing that interface
-container.register!(Color, Blue);
-container.register!(Color, Red);
-auto blueInstance = container.resolve!(Color, Blue);
+dependencies.register!(Color, Blue);
+dependencies.register!(Color, Red);
+auto blueInstance = dependencies.resolve!(Color, Blue);
 ```
 If you want to autowire a type registered to multiple concrete types, specify a qualified type as template argument:
 ```d

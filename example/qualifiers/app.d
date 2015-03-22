@@ -37,13 +37,13 @@ class HybridCar {
 }
 
 void main() {
-	auto container = DependencyContainer.getInstance();
+	auto dependencies = DependencyContainer.getInstance();
 
-	container.register!HybridCar;
-	container.register!(Engine, FuelEngine);
-	container.register!(Engine, ElectricEngine);
+	dependencies.register!HybridCar;
+	dependencies.register!(Engine, FuelEngine);
+	dependencies.register!(Engine, ElectricEngine);
 
-	auto car = container.resolve!HybridCar;
+	auto car = dependencies.resolve!HybridCar;
 
 	car.moveAtSpeed(10); // Should print "hummmmmmmm...."
 	car.moveAtSpeed(50); // Should print "VROOOOOOM!"
