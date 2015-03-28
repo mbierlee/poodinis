@@ -100,6 +100,18 @@ version(unittest) {
 		public Recursive recursive;
 	}
 
+	class Moolah {}
+
+	class Wants {
+		@Autowire
+		public Moolah moolah;
+	}
+
+	class John {
+		@Autowire
+		public Wants wants;
+	}
+
 	// Test register concrete type
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
@@ -368,5 +380,18 @@ version(unittest) {
 
 		assert(instance.recursive is instance, "Resolving dependency that depends on itself fails.");
 		assert(instance.recursive.recursive is instance, "Resolving dependency that depends on itself fails.");
+	}
+
+	// Test autowire stack pop-back
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!Moolah;
+		container.register!Wants.newInstance();
+		container.register!John;
+
+		container.resolve!Wants;
+		auto john = container.resolve!John;
+
+		assert(john.wants.moolah !is null, "Autowire stack did not clear entries properly");
 	}
 }
