@@ -8,6 +8,7 @@
 import poodinis.container;
 
 import std.exception;
+import core.thread;
 
 version(unittest) {
 	interface TestInterface {
@@ -393,5 +394,36 @@ version(unittest) {
 		auto john = container.resolve!John;
 
 		assert(john.wants.moolah !is null, "Autowire stack did not clear entries properly");
+	}
+
+	// Test resolving registration registered in different thread
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+
+		auto thread = new Thread(delegate() {
+				container.register!TestClass;
+		});
+		thread.start();
+		thread.join();
+
+		container.resolve!TestClass;
+	}
+
+	// Test resolving instance previously resolved in different thread
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		shared(TestClass) actualTestClass;
+
+		container.register!TestClass;
+
+		auto thread = new Thread(delegate() {
+				actualTestClass = cast(shared(TestClass)) container.resolve!TestClass;
+		});
+		thread.start();
+		thread.join();
+
+		shared(TestClass) expectedTestClass = cast(shared(TestClass)) container.resolve!TestClass;
+
+		assert(expectedTestClass is actualTestClass, "Instance resolved in main thread is not the one resolved in thread");
 	}
 }
