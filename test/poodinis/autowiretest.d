@@ -14,10 +14,6 @@ version(unittest) {
 
 	class ComponentB {
 		public @Autowire ComponentA componentA;
-
-		public bool componentIsNull() {
-			return componentA is null;
-		}
 	}
 
 	interface InterfaceA {}
@@ -26,10 +22,6 @@ version(unittest) {
 
 	class ComponentD {
 		public @Autowire InterfaceA componentC = null;
-
-		public bool componentIsNull() {
-			return componentC is null;
-		}
 	}
 
 	class DummyAttribute{};
@@ -73,7 +65,7 @@ version(unittest) {
 		container.register!ComponentA;
 		auto componentB = new ComponentB();
 		container.autowire!(ComponentB)(componentB);
-		assert(!componentB.componentIsNull(), "Autowirable dependency failed to autowire");
+		assert(componentB !is null, "Autowirable dependency failed to autowire");
 	}
 
 	// Test autowiring interface type to existing instance
@@ -82,7 +74,7 @@ version(unittest) {
 		container.register!(InterfaceA, ComponentC);
 		auto componentD = new ComponentD();
 		container.autowire!(ComponentD)(componentD);
-		assert(!componentD.componentIsNull(), "Autowirable dependency failed to autowire");
+		assert(componentD.componentC !is null, "Autowirable dependency failed to autowire");
 	}
 
 	// Test autowiring will only happen once
@@ -159,6 +151,6 @@ version(unittest) {
 		auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB), container).singleInstance();
 		auto instance = cast(ComponentB) registration.getInstance(new AutowireInstantiationContext());
 
-		assert(!instance.componentIsNull());
+		assert(instance.componentA !is null);
 	}
 }
