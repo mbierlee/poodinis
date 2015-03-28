@@ -44,7 +44,7 @@ class ResolveException : Exception {
  * In most cases you want to use a global singleton dependency container provided by getInstance() to manage all dependencies.
  * You can still create new instances of this class for exceptional situations.
  */
-class DependencyContainer {
+synchronized class DependencyContainer {
 	private Registration[][TypeInfo] registrations;
 
 	private Registration[] autowireStack;
@@ -111,16 +111,16 @@ class DependencyContainer {
 			return existingRegistration;
 		}
 
-		AutowiredRegistration!ConcreteType newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
+		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
-		registrations[registeredType] ~= newRegistration;
+		registrations[registeredType] ~= cast(shared(Registration)) newRegistration;
 		return newRegistration;
 	}
 
 	private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType) {
 		auto existingCandidates = registrationType in registrations;
 		if (existingCandidates) {
-			return getRegistration(*existingCandidates, qualifierType);
+			return getRegistration(cast(Registration[]) *existingCandidates, qualifierType);
 		}
 
 		return null;
@@ -218,13 +218,13 @@ class DependencyContainer {
 			throw new ResolveException("Type not registered.", resolveType);
 		}
 
-		Registration registration = getQualifiedRegistration(resolveType, qualifierType, *candidates);
+		Registration registration = getQualifiedRegistration(resolveType, qualifierType, cast(Registration[]) *candidates);
 		QualifierType instance;
 
-		if (!autowireStack.canFind(registration)) {
-			autowireStack ~= registration;
+		if (!(cast(Registration[]) autowireStack).canFind(registration)) {
+			autowireStack ~= cast(shared(Registration)) registration;
 			instance = cast(QualifierType) registration.getInstance(new AutowireInstantiationContext());
-			autowireStack.popBack();
+			autowireStack = autowireStack[0 .. $-1];
 		} else {
 			auto autowireContext = new AutowireInstantiationContext();
 			autowireContext.autowireInstance = false;

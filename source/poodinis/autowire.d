@@ -79,7 +79,7 @@ private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAd
  *
  * See_Also: Autowire
  */
-public void autowire(Type)(DependencyContainer container, Type instance) {
+public void autowire(Type)(shared(DependencyContainer) container, Type instance) {
 	debug(poodinisVerbose) {
 		printDebugAutowiredInstance(typeid(Type), &instance);
 	}
@@ -93,7 +93,7 @@ private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType, void*
 	writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", candidateInstanceType, candidateInstanceAddress, instanceType, instanceAddress, member));
 }
 
-private void autowireMember(string member, Type)(DependencyContainer container, Type instance) {
+private void autowireMember(string member, Type)(shared(DependencyContainer) container, Type instance) {
 	static if(__traits(compiles, __traits(getMember, instance, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, instance, member)))) {
 		foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, instance, member))) {
 			static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
@@ -138,9 +138,9 @@ public void globalAutowire(Type)(Type instance) {
 }
 
 class AutowiredRegistration(RegistrationType : Object) : Registration {
-	private DependencyContainer container;
+	private shared(DependencyContainer) container;
 
-	public this(TypeInfo registeredType, DependencyContainer container) {
+	public this(TypeInfo registeredType, shared(DependencyContainer) container) {
 		enforce(!(container is null), "Argument 'container' is null. Autowired registrations need to autowire using a container.");
 		this.container = container;
 		super(registeredType, typeid(RegistrationType));
