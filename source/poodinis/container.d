@@ -273,6 +273,9 @@ synchronized class DependencyContainer {
 	 */
 	public static shared(DependencyContainer) getInstance() {
 		static shared DependencyContainer instance;
-		return initOnce!instance(new DependencyContainer());
+		if (instance is null) {
+			instance = new DependencyContainer();
+		}
+		return instance;
 	}
 }
