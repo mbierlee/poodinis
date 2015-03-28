@@ -19,7 +19,6 @@ module poodinis.autowire;
 
 public import poodinis.container;
 
-import std.typetuple;
 import std.exception;
 import std.stdio;
 import std.string;

@@ -14,7 +14,6 @@
 module poodinis.container;
 
 import std.string;
-import std.array;
 import std.algorithm;
 import std.concurrency;
 
