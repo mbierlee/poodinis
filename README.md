@@ -145,7 +145,6 @@ If you registered multiple concrete types to the same supertype and you do not r
 
 Future Work
 -----------
-* Thread safety
 * Component scan (auto-registration)
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
