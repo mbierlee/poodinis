@@ -16,6 +16,7 @@ module poodinis.container;
 import std.string;
 import std.array;
 import std.algorithm;
+import std.concurrency;
 
 debug {
 	import std.stdio;
@@ -44,9 +45,6 @@ class ResolveException : Exception {
  * You can still create new instances of this class for exceptional situations.
  */
 class DependencyContainer {
-
-	private static DependencyContainer instance;
-
 	private Registration[][TypeInfo] registrations;
 
 	private Registration[] autowireStack;
@@ -273,10 +271,8 @@ class DependencyContainer {
 	/**
 	 * Returns a global singleton instance of a dependency container.
 	 */
-	public static DependencyContainer getInstance() {
-		if (instance is null) {
-			instance = new DependencyContainer();
-		}
-		return instance;
+	public static shared(DependencyContainer) getInstance() {
+		static shared DependencyContainer instance;
+		return initOnce!instance(new DependencyContainer());
 	}
 }
