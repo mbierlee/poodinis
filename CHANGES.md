@@ -1,6 +1,7 @@
 Poodinis Changelog
 ==================
-**Version 2.0.0**
+**Version 2.0.0**  
+This version introduces changes which might be incompatible with your current codebase
 * CHANGE dependency container to be synchronized. Sharing a dependency container between threads is now possible.
 The implication is that all dependency container instances must be shared now.
 You don't have to change anything if you were only using the singleton dependency container.
