@@ -1,6 +1,6 @@
 Poodinis Dependency Injection Framework
 =======================================
-Version 1.0.0 API documentation
+Version 2.0.0 API documentation
 
 Copyright 2014-2015 Mike Bierlee - Licensed under the terms of the MIT license - See [LICENSE.txt](https://github.com/mbierlee/poodinis/blob/master/LICENSE.txt)
 
