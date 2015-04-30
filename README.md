@@ -141,6 +141,14 @@ class BluePaint {
 ```
 If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException is thrown stating that there are multiple candidates for the type to be resolved.
 
+Documentation
+-------------
+You can generate Public API documentation from the source code using DUB:
+```
+dub build --build=ddox
+```
+The documentation can then be found in docs/
+
 Future Work
 -----------
 * Component scan (auto-registration)
