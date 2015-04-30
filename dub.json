@@ -45,7 +45,7 @@
 		},
 		{
 			"name" : "qualifiersExample",
-			"description" : "Quickstart example where qualifiers are used.",
+			"description" : "Example where qualifiers are used.",
 			"targetType": "executable",
 			"targetName": "qualifiersExample",
 			"sourcePaths": [
