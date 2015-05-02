@@ -18,8 +18,7 @@ version(unittest) {
 
 	// Test getting instance without scope defined throws exception
 	unittest {
-		Registration registration = new Registration(null, null);
-		registration.registeredType = typeid(TestType);
+		Registration registration = new Registration(typeid(TestType), null);
 		assertThrown!(NoScopeDefinedException)(registration.getInstance());
 	}
 

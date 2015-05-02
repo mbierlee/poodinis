@@ -19,14 +19,23 @@ debug {
 }
 
 class Registration {
-	TypeInfo registeredType = null;
-	TypeInfo_Class instantiatableType = null;
-	CreationScope registationScope = null;
+	private TypeInfo _registeredType = null;
+	private TypeInfo_Class _instantiatableType = null;
 	private Registration linkedRegistration;
 
+	public @property registeredType() {
+		return _registeredType;
+	}
+
+	public @property instantiatableType() {
+		return _instantiatableType;
+	}
+
+	public CreationScope registationScope = null;
+
 	this(TypeInfo registeredType, TypeInfo_Class instantiatableType) {
-		this.registeredType = registeredType;
-		this.instantiatableType = instantiatableType;
+		this._registeredType = registeredType;
+		this._instantiatableType = instantiatableType;
 	}
 
 	public Object getInstance(InstantiationContext context = new InstantiationContext()) {
