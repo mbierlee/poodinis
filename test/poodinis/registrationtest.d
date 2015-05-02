@@ -10,8 +10,11 @@ import poodinis.registration;
 import std.exception;
 
 version(unittest) {
-	class TestType {
-	}
+	class TestType {}
+
+	interface TestInterface {}
+
+	class TestImplementation : TestInterface {}
 
 	// Test getting instance without scope defined throws exception
 	unittest {
@@ -75,6 +78,17 @@ version(unittest) {
 		auto actualInstance = registration.getInstance();
 		assert(expectedInstance is expectedInstance, "Registration with existing instance scope did not return the same instance");
 		assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
+	}
+
+	// Test linking registrations
+	unittest {
+		Registration firstRegistration = new Registration(typeid(TestInterface), typeid(TestImplementation)).singleInstance();
+		Registration secondRegistration = new Registration(typeid(TestImplementation), typeid(TestImplementation)).singleInstance().linkTo(firstRegistration);
+
+		auto firstInstance = firstRegistration.getInstance();
+		auto secondInstance = secondRegistration.getInstance();
+
+		assert(firstInstance is secondInstance);
 	}
 
 }

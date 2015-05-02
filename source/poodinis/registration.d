@@ -22,6 +22,7 @@ class Registration {
 	TypeInfo registeredType = null;
 	TypeInfo_Class instantiatableType = null;
 	CreationScope registationScope = null;
+	private Registration linkedRegistration;
 
 	this(TypeInfo registeredType, TypeInfo_Class instantiatableType) {
 		this.registeredType = registeredType;
@@ -29,11 +30,21 @@ class Registration {
 	}
 
 	public Object getInstance(InstantiationContext context = new InstantiationContext()) {
+		if (linkedRegistration !is null) {
+			return linkedRegistration.getInstance(context);
+		}
+
+
 		if (registationScope is null) {
 			throw new NoScopeDefinedException(registeredType);
 		}
 
 		return registationScope.getInstance();
+	}
+
+	public Registration linkTo(Registration registration) {
+		this.linkedRegistration = registration;
+		return this;
 	}
 }
 
