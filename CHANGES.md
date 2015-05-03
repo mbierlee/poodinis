@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 2.1.0**
+* ADD option for registering a class by concrete type when registering that class by supertype.
+
 **Version 2.0.0**  
 This version introduces changes which might be incompatible with your current codebase
 * CHANGE dependency container to be synchronized. Sharing a dependency container between threads is now possible.

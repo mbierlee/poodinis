@@ -74,6 +74,13 @@ auto exampleClassInstance = dependencies.resolve!ExampleClass;
 auto exampleClassInstance2 = dependencies.resolve!ExampleInterface;
 assert(exampleClassInstance !is exampleClassInstance2);
 ```
+You can solve this by adding the ADD_CONCRETE_TYPE_REGISTRATION option when registering:
+```d
+dependencies.register!(ExampleInterface, ExampleClass)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION);
+auto exampleClassInstance = dependencies.resolve!ExampleClass;
+auto exampleClassInstance2 = dependencies.resolve!ExampleInterface;
+assert(exampleClassInstance is exampleClassInstance2);
+```
 
 ###Dependency scopes
 With dependency scopes, you can control how a dependency is resolved. The scope determines which instance is returned, be it the same each time or a new one. The following scopes are available:

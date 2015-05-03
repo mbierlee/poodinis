@@ -426,4 +426,21 @@ version(unittest) {
 
 		assert(expectedTestClass is actualTestClass, "Instance resolved in main thread is not the one resolved in thread");
 	}
+
+	// Test registering type with option ADD_CONCRETE_TYPE_REGISTRATION
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!(TestInterface, TestClass)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION);
+
+		auto firstInstance = container.resolve!TestInterface;
+		auto secondInstance = container.resolve!TestClass;
+
+		assert(firstInstance is secondInstance);
+	}
+
+	// Test registering concrete type with option ADD_CONCRETE_TYPE_REGISTRATION
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		assertThrown!RegistrationException(container.register!(TestClass, TestClass)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION));
+	}
 }

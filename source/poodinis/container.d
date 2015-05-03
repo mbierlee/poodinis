@@ -34,6 +34,41 @@ class ResolveException : Exception {
 }
 
 /**
+ * Exception thrown when errors occur while registering a type in a dependency container.
+ */
+class RegistrationException : Exception {
+	this(string message, TypeInfo registrationType) {
+		super(format("Exception while registering type %s: %s", registrationType.toString(), message));
+	}
+}
+
+/**
+ * Options which influence the process of registering dependencies
+ */
+public enum RegistrationOptions {
+	/**
+	 * When registering a type by its supertype, providing this option will also register
+	 * a linked registration to the type itself.
+	 *
+	 * This allows you to resolve that type both by super type and concrete type using the
+	 * same registration scope (and instance managed by this scope).
+	 *
+	 * Examples:
+	 * ---
+	 * class Cat : Animal { ... }
+	 *
+	 * container.register!(Animal, Cat)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION);
+	 *
+	 * auto firstCat = container.resolve!(Animal, Cat);
+	 * auto secondCat = container.resolve!Cat;
+	 *
+	 * assert(firstCat is secondCat);
+	 * ---
+	 */
+	ADD_CONCRETE_TYPE_REGISTRATION
+}
+
+/**
  * The dependency container maintains all dependencies registered with it.
  *
  * Dependencies registered by a container can be resolved as long as they are still registered with the container.
@@ -63,11 +98,7 @@ synchronized class DependencyContainer {
 	 * Register and resolve a class by concrete type:
 	 * ---
 	 * class Cat : Animal { ... }
-	 *
 	 * container.register!Cat;
-	 *
-	 * container.resolve!Cat;
-	 * container.resolve!(Animal, Cat); // Error! dependency is not registered by super type.
 	 * ---
 	 *
 	 * See_Also: singleInstance, newInstance, existingInstance
@@ -88,16 +119,12 @@ synchronized class DependencyContainer {
 	 * Register and resolve by super type
 	 * ---
 	 * class Cat : Animal { ... }
-	 *
 	 * container.register!(Animal, Cat);
-	 *
-	 * container.resolve!(Animal, Cat);
-	 * container.resolve!Cat; // Error! dependency is not registered by concrete type.
 	 * ---
 	 *
-	 * See_Also: singleInstance, newInstance, existingInstance
+	 * See_Also: singleInstance, newInstance, existingInstance, RegistrationOptions
 	 */
-	public Registration register(SuperType, ConcreteType : SuperType)() {
+	public Registration register(SuperType, ConcreteType : SuperType, RegistrationOptionsTuple...)(RegistrationOptionsTuple options) {
 		TypeInfo registeredType = typeid(SuperType);
 		TypeInfo_Class concreteType = typeid(ConcreteType);
 
@@ -112,8 +139,28 @@ synchronized class DependencyContainer {
 
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
+
+		if (hasOption(options, RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION)) {
+			static if (!is(SuperType == ConcreteType)) {
+				auto concreteTypeRegistration = register!ConcreteType;
+				concreteTypeRegistration.linkTo(newRegistration);
+			} else {
+				throw new RegistrationException("Option ADD_CONCRETE_TYPE_REGISTRATION cannot be used when registering a concrete type registration", concreteType);
+			}
+		}
+
 		registrations[registeredType] ~= cast(shared(Registration)) newRegistration;
 		return newRegistration;
+	}
+
+	private bool hasOption(RegistrationOptionsTuple...)(RegistrationOptionsTuple options, RegistrationOptions option) {
+		foreach(presentOption ; options) {
+			if (presentOption == option) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType) {
