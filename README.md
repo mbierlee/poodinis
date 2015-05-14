@@ -161,7 +161,7 @@ Future Work
 * Component scan (auto-registration)
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
-[Hypodermic]: https://code.google.com/p/hypodermic/
+[Hypodermic]: https://github.com/ybainier/hypodermic/
 [DUB]: http://code.dlang.org/
 [DUB project page]: http://code.dlang.org/packages/poodinis
 [Github issue tracker]: https://github.com/mbierlee/poodinis/issues
