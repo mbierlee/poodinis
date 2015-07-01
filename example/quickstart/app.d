@@ -1,4 +1,4 @@
-import poodinis.dependency;
+import poodinis;
 
 interface Database{};
 class RelationalDatabase : Database {}

@@ -1,9 +1,5 @@
 /**
- * Main module for typical inclusion into client applications.
- *
- * This module publicly imports all Poodinis modules.
- *
- * Part of the Poodinis Dependency Injection framework.
+ * Package module for the Poodinis Dependency Injection framework.
  *
  * Authors:
  *  Mike Bierlee, m.bierlee@lostmoment.com
@@ -13,9 +9,7 @@
  *  The full terms of the license can be found in the LICENSE file.
  */
 
-module poodinis.dependency;
-
-pragma(msg, "Module 'dependency' is deprecated. Please use the canonical package module. To do this, simply 'import poodinis;'");
+module poodinis;
 
 public import poodinis.autowire;
 public import poodinis.container;

@@ -1,4 +1,4 @@
-import poodinis.dependency;
+import poodinis;
 
 import std.stdio;
 

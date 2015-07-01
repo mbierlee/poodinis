@@ -24,7 +24,7 @@ See the Poodinis [DUB project page] for instructions on how to include Poodinis 
 ###Quickstart
 The following example shows the typical usage of Poodinis:
 ```d
-import poodinis.dependency;
+import poodinis;
 
 interface Database{};
 class RelationalDatabase : Database {}

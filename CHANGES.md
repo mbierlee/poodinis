@@ -1,5 +1,9 @@
 Poodinis Changelog
 ==================
+**Next Release**
+* ADD canonical package module "package.d". Use "import poodinis;" to import the project.
+* DEPRECATE module "dependency.d". Please use the canonical package module. See previous point.
+
 **Version 2.1.0**
 * ADD option for registering a class by concrete type when registering that class by supertype.
 
