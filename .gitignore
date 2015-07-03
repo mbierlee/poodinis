@@ -4,6 +4,7 @@
 /quickstartExample.exe
 /qualifiersExample.exe
 /arrayCompletionExample.exe
+/annotationsExample.exe
 /.settings
 /.dub
 /dub.selections.json
@@ -16,3 +17,4 @@
 /quickstartExample
 /qualifiersExample
 /arrayCompletionExample
+/annotationsExample

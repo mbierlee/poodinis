@@ -66,6 +66,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "annotationsExample",
+			"description" : "Example where several Poodinis autowire annotations are demonstrated.",
+			"targetType": "executable",
+			"targetName": "annotationsExample",
+			"sourcePaths": [
+				"example/annotations"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }
