@@ -63,6 +63,11 @@ version(unittest) {
 		@Autowire
 		public InterfaceA[] components;
 	}
+	class ComponentCharlie {
+		@Autowire
+		@AssignNewInstance
+		public ComponentA componentA;
+	}
 
 	// Test autowiring concrete type to existing instance
 	unittest {
@@ -169,5 +174,18 @@ version(unittest) {
 		container.autowire(lord);
 
 		assert(lord.components.length == 2, "Dynamic array was not autowired");
+	}
+
+	// Test autowiring new instance of singleinstance registration with newInstance UDA
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!ComponentA;
+
+		auto regularComponentA = container.resolve!ComponentA;
+		auto charlie = new ComponentCharlie();
+
+		container.autowire(charlie);
+
+		assert(charlie.componentA !is regularComponentA, "Autowiring class with AssignNewInstance did not yield a different instance");
 	}
 }

@@ -64,6 +64,21 @@ struct Autowire(QualifierType = UseMemberType) {
 	QualifierType qualifier;
 };
 
+/**
+ * UDA for annotating class members to be autowired with a new instance regardless of their registration scope.
+ *
+ * Examples:
+ *---
+ * class Car {
+ *     @Autowire
+ *     @AssignNewInstance
+ *     public Antenna antenna;
+ * }
+ *---
+ * antenna will always be assigned a new instance of class Antenna.
+ */
+struct AssignNewInstance {}
+
 private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAddress) {
 	writeln(format("DEBUG: Autowiring members of [%s@%s]", instanceType, instanceAddress));
 }
@@ -105,6 +120,8 @@ private void autowireMember(string member, Type)(shared(DependencyContainer) con
 				if (__traits(getMember, instance, member) is null) {
 					alias MemberType = typeof(__traits(getMember, instance, member));
 
+					enum assignNewInstance = hasUDA!(__traits(getMember, instance, member), AssignNewInstance);
+
 					static if (isDynamicArray!MemberType) {
 						alias MemberElementType = ElementType!MemberType;
 						auto instances = container.resolveAll!MemberElementType;
@@ -120,12 +137,12 @@ private void autowireMember(string member, Type)(shared(DependencyContainer) con
 						MemberType qualifiedInstance;
 						static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
 							alias QualifierType = typeof(autowireAttribute.qualifier);
-							qualifiedInstance = container.resolve!(MemberType, QualifierType);
+							qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance)(container);
 							debug(poodinisVerbose) {
 								qualifiedInstanceType = typeid(QualifierType);
 							}
 						} else {
-							qualifiedInstance = container.resolve!(MemberType);
+							qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance)(container);
 						}
 
 						__traits(getMember, instance, member) = qualifiedInstance;
@@ -139,6 +156,15 @@ private void autowireMember(string member, Type)(shared(DependencyContainer) con
 				break;
 			}
 		}
+	}
+}
+
+private QualifierType createOrResolveInstance(MemberType, QualifierType, bool createNew)(shared(DependencyContainer) container) {
+	static if (createNew) {
+		auto instanceFactory = new NewInstanceScope(typeid(MemberType));
+		return cast(MemberType) instanceFactory.getInstance();
+	} else {
+		return container.resolve!(MemberType, QualifierType);
 	}
 }
 
