@@ -1,5 +1,7 @@
 language: d
 
+d: dmd-2.068.0-b1
+
 script:
   - dub build --build=release --config=library
   - dub test --build=unittest --config=unittest
