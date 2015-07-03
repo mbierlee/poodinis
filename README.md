@@ -58,6 +58,8 @@ The documentation can then be found in docs/
 Future Work
 -----------
 * Component scan (auto-registration)
+* Custom instance factories (replaces registration scopes)
+* Collection autocompletion (Assign all variants to a collection)
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://github.com/ybainier/hypodermic/
