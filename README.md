@@ -59,7 +59,7 @@ Future Work
 -----------
 * Component scan (auto-registration)
 * Custom instance factories (replaces registration scopes)
-* Collection autocompletion (Assign all variants to a collection)
+* Phobos Collection autocompletion
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://github.com/ybainier/hypodermic/
