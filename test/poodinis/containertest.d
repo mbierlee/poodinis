@@ -17,6 +17,11 @@ version(unittest) {
 	class TestClass : TestInterface {
 	}
 
+	class TestClassDeux : TestInterface {
+		@Autowire
+		public UnrelatedClass unrelated;
+	}
+
 	class UnrelatedClass{
 	}
 
@@ -453,5 +458,17 @@ version(unittest) {
 		auto colors = container.resolveAll!Color;
 
 		assert(colors.length == 2, "resolveAll did not yield all instances of interface type");
+	}
+
+	// Test autowiring instances resolved in array
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!UnrelatedClass;
+		container.register!(TestInterface, TestClassDeux);
+
+		auto instances = container.resolveAll!TestInterface;
+		auto instance = cast(TestClassDeux) instances[0];
+
+		assert(instance.unrelated !is null);
 	}
 }
