@@ -23,6 +23,7 @@ import std.exception;
 import std.stdio;
 import std.string;
 import std.traits;
+import std.range;
 
 struct UseMemberType {};
 
@@ -105,11 +106,11 @@ private void autowireMember(string member, Type)(shared(DependencyContainer) con
 					alias MemberType = typeof(__traits(getMember, instance, member));
 
 					static if (isDynamicArray!MemberType) {
-						alias ElementType = typeof(__traits(getMember, instance, member)[0]);
-						auto instances = container.resolveAll!ElementType;
+						alias MemberElementType = ElementType!MemberType;
+						auto instances = container.resolveAll!MemberElementType;
 						__traits(getMember, instance, member) = instances;
 						debug(poodinisVerbose) {
-							printDebugAutowiringArray(typeid(ElementType), typeid(Type), &instance, member);
+							printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
 						}
 					} else {
 						debug(poodinisVerbose) {
