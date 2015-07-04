@@ -111,3 +111,20 @@ class BluePaint {
 }
 ```
 If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException is thrown stating that there are multiple candidates for the type to be resolved.
+
+Autowiring all registered instances to an array
+-----------------------------------------------
+If you have registered multiple concrete types to a super type, you can autowire them all to an array, in which case you can easily operate on them all:
+```d
+// Color is an interface, Blue and Red are classes implementing that interface
+
+class ColorMixer {
+	@Autowire
+	public Color[] colors;
+}
+
+dependencies.register!(Color, Blue);
+dependencies.register!(Color, Red);
+auto mixer = dependencies.resolve!ColorMixer;
+```
+Member mixer.colors will now contrain instances of Blue and Red. The order of the instances is not guarenteed to be that of the order in which they were registered.
