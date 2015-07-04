@@ -5,4 +5,5 @@ script:
   - dub test --build=unittest --config=unittest
   - dub build --build=release --config=quickstartExample
   - dub build --build=release --config=qualifiersExample
+  - dub build --build=release --config=arrayCompletionExample
   - dub build --build=ddox
