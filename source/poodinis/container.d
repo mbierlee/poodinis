@@ -265,8 +265,11 @@ synchronized class DependencyContainer {
 		}
 
 		Registration registration = getQualifiedRegistration(resolveType, qualifierType, cast(Registration[]) *candidates);
-		QualifierType instance;
+		return resolveAutowiredInstance!QualifierType(registration);
+	}
 
+	private QualifierType resolveAutowiredInstance(QualifierType)(Registration registration) {
+		QualifierType instance;
 		if (!(cast(Registration[]) autowireStack).canFind(registration)) {
 			autowireStack ~= cast(shared(Registration)) registration;
 			instance = cast(QualifierType) registration.getInstance(new AutowireInstantiationContext());
@@ -276,8 +279,40 @@ synchronized class DependencyContainer {
 			autowireContext.autowireInstance = false;
 			instance = cast(QualifierType) registration.getInstance(autowireContext);
 		}
-
 		return instance;
+	}
+
+	/**
+	 * Resolve all dependencies registered to a super type.
+	 *
+	 * Returns:
+	 * An array of autowired instances is returned. The order is undetermined.
+	 *
+	 * Examples:
+	 * ---
+	 * class Cat : Animal { ... }
+	 * class Dog : Animal { ... }
+	 *
+	 * container.register!(Animal, Cat);
+	 * container.register!(Animal, Dog);
+	 *
+	 * Animal[] animals = container.resolveAll!Animal;
+	 * ---
+	 */
+	public RegistrationType[] resolveAll(RegistrationType)() {
+		RegistrationType[] instances;
+		TypeInfo resolveType = typeid(RegistrationType);
+
+		auto qualifiedRegistrations = resolveType in registrations;
+		if (!qualifiedRegistrations) {
+			throw new ResolveException("Type not registered.", resolveType);
+		}
+
+		foreach(registration ; cast(Registration[]) *qualifiedRegistrations) {
+			instances ~= resolveAutowiredInstance!RegistrationType(registration);
+		}
+
+		return instances;
 	}
 
 	private Registration getQualifiedRegistration(TypeInfo resolveType, TypeInfo qualifierType, Registration[] candidates) {

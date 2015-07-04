@@ -443,4 +443,15 @@ version(unittest) {
 		shared(DependencyContainer) container = new DependencyContainer();
 		assertThrown!RegistrationException(container.register!(TestClass, TestClass)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION));
 	}
+
+	// Test resolving all registrations to an interface
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!(Color, Blue);
+		container.register!(Color, Red);
+
+		auto colors = container.resolveAll!Color;
+
+		assert(colors.length == 2, "resolveAll did not yield all instances of interface type");
+	}
 }
