@@ -127,4 +127,4 @@ dependencies.register!(Color, Blue);
 dependencies.register!(Color, Red);
 auto mixer = dependencies.resolve!ColorMixer;
 ```
-Member mixer.colors will now contrain instances of Blue and Red. The order of the instances is not guarenteed to be that of the order in which they were registered.
+Member mixer.colors will now contain instances of Blue and Red. The order of the instances is not guarenteed to be that of the order in which they were registered.
