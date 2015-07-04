@@ -3,6 +3,7 @@
 /poodinis.obj
 /quickstartExample.exe
 /qualifiersExample.exe
+/arrayCompletionExample.exe
 /.settings
 /.dub
 /dub.selections.json
@@ -14,3 +15,4 @@
 /.buildpath
 /quickstartExample
 /qualifiersExample
+/arrayCompletionExample

@@ -54,6 +54,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "arrayCompletionExample",
+			"description" : "Example where an array is autowired with all registered instances.",
+			"targetType": "executable",
+			"targetName": "arrayCompletionExample",
+			"sourcePaths": [
+				"example/arraycompletion"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }
