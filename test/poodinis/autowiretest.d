@@ -59,6 +59,11 @@ version(unittest) {
 		public InterfaceA componentC;
 	}
 
+	class LordOfTheComponents {
+		@Autowire
+		public InterfaceA[] components;
+	}
+
 	// Test autowiring concrete type to existing instance
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
@@ -152,5 +157,17 @@ version(unittest) {
 		auto instance = cast(ComponentB) registration.getInstance(new AutowireInstantiationContext());
 
 		assert(instance.componentA !is null);
+	}
+
+	// Test autowiring a dynamic array with all qualified types
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!(InterfaceA, ComponentC);
+		container.register!(InterfaceA, ComponentX);
+
+		auto lord = new LordOfTheComponents();
+		container.autowire(lord);
+
+		assert(lord.components.length == 2, "Dynamic array was not autowired");
 	}
 }

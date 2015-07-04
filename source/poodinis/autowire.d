@@ -22,6 +22,7 @@ public import poodinis.container;
 import std.exception;
 import std.stdio;
 import std.string;
+import std.traits;
 
 struct UseMemberType {};
 
@@ -92,6 +93,10 @@ private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType, void*
 	writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", candidateInstanceType, candidateInstanceAddress, instanceType, instanceAddress, member));
 }
 
+private void printDebugAutowiringArray(TypeInfo superTypeInfo, TypeInfo instanceType, void* instanceAddress, string member) {
+	writeln(format("DEBUG: Autowired all registered instances of super type %s to [%s@%s].%s", superTypeInfo, instanceType, instanceAddress, member));
+}
+
 private void autowireMember(string member, Type)(shared(DependencyContainer) container, Type instance) {
 	static if(__traits(compiles, __traits(getMember, instance, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, instance, member)))) {
 		foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, instance, member))) {
@@ -99,25 +104,34 @@ private void autowireMember(string member, Type)(shared(DependencyContainer) con
 				if (__traits(getMember, instance, member) is null) {
 					alias MemberType = typeof(__traits(getMember, instance, member));
 
-					debug(poodinisVerbose) {
-						TypeInfo qualifiedInstanceType = typeid(MemberType);
-					}
-
-					MemberType qualifiedInstance;
-					static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
-						alias QualifierType = typeof(autowireAttribute.qualifier);
-						qualifiedInstance = container.resolve!(MemberType, QualifierType);
+					static if (isDynamicArray!MemberType) {
+						alias ElementType = typeof(__traits(getMember, instance, member)[0]);
+						auto instances = container.resolveAll!ElementType;
+						__traits(getMember, instance, member) = instances;
 						debug(poodinisVerbose) {
-							qualifiedInstanceType = typeid(QualifierType);
+							printDebugAutowiringArray(typeid(ElementType), typeid(Type), &instance, member);
 						}
 					} else {
-						qualifiedInstance = container.resolve!(MemberType);
-					}
+						debug(poodinisVerbose) {
+							TypeInfo qualifiedInstanceType = typeid(MemberType);
+						}
 
-					__traits(getMember, instance, member) = qualifiedInstance;
+						MemberType qualifiedInstance;
+						static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
+							alias QualifierType = typeof(autowireAttribute.qualifier);
+							qualifiedInstance = container.resolve!(MemberType, QualifierType);
+							debug(poodinisVerbose) {
+								qualifiedInstanceType = typeid(QualifierType);
+							}
+						} else {
+							qualifiedInstance = container.resolve!(MemberType);
+						}
 
-					debug(poodinisVerbose) {
-						printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
+						__traits(getMember, instance, member) = qualifiedInstance;
+
+						debug(poodinisVerbose) {
+							printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
+						}
 					}
 				}
 
