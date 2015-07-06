@@ -1,6 +1,6 @@
 Poodinis Changelog
 ==================
-**Next Release**
+**Version 2.2.0**
 * ADD canonical package module "package.d". Use "import poodinis;" to import the project.
 * DEPRECATE module "dependency.d". Please use the canonical package module. See previous point.
 * ADD autowiring of dynamic arrays. All registered instances of the element type of the array will be assigned to it.
