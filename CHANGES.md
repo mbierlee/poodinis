@@ -1,10 +1,12 @@
 Poodinis Changelog
 ==================
+**Next Version**
+* ADD UDA which always resolved a new instance to an autowired member, regardless of registration scope.
+
 **Version 2.2.0**
 * ADD canonical package module "package.d". Use "import poodinis;" to import the project.
 * DEPRECATE module "dependency.d". Please use the canonical package module. See previous point.
 * ADD autowiring of dynamic arrays. All registered instances of the element type of the array will be assigned to it.
-* ADD UDA which always resolved a new instance to an autowired member, regardless of registration scope.
 
 **Version 2.1.0**
 * ADD option for registering a class by concrete type when registering that class by supertype.
