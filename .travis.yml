@@ -2,6 +2,8 @@ language: d
 
 d: dmd-2.068.0-b2
 
+sudo: false
+
 script:
   - dub build --build=release --config=library
   - dub test --build=unittest --config=unittest
