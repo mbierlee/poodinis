@@ -9,4 +9,4 @@ script:
   - dub build --build=release --config=qualifiersExample
   - dub build --build=release --config=arrayCompletionExample
   - dub build --build=release --config=annotationsExample
-  - dub build --build=ddox
+# - dub build --build=ddox
