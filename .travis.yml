@@ -1,6 +1,6 @@
 language: d
 
-d: dmd-2.068.0-b1
+d: dmd-2.068.0-b2
 
 script:
   - dub build --build=release --config=library
@@ -9,4 +9,4 @@ script:
   - dub build --build=release --config=qualifiersExample
   - dub build --build=release --config=arrayCompletionExample
   - dub build --build=release --config=annotationsExample
-#  - dub build --build=ddox
+  - dub build --build=ddox
