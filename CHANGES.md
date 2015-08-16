@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 4.0.0**
+* REMOVE deprecated module "dependency.d"
+
 **Version 3.0.0**  
 This version is only compatible with DMD 2.068.0 or higher!
 * ADD UDA which always resolved a new instance to an autowired member, regardless of registration scope.
