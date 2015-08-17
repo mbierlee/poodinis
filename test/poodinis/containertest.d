@@ -443,10 +443,24 @@ version(unittest) {
 		assert(firstInstance is secondInstance);
 	}
 
-	// Test registering concrete type with option ADD_CONCRETE_TYPE_REGISTRATION
+	// Test registering type with option DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		assertThrown!RegistrationException(container.register!(TestClass, TestClass)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION));
+		container.register!(TestInterface, TestClass)(RegistrationOptions.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
+
+		auto firstInstance = container.resolve!TestInterface;
+		assertThrown!ResolveException(container.resolve!TestClass);
+	}
+
+	// Test registering type will register by contrete type by default
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!(TestInterface, TestClass);
+
+		auto firstInstance = container.resolve!TestInterface;
+		auto secondInstance = container.resolve!TestClass;
+
+		assert(firstInstance is secondInstance);
 	}
 
 	// Test resolving all registrations to an interface

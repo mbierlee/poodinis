@@ -64,8 +64,17 @@ public enum RegistrationOptions {
 	 *
 	 * assert(firstCat is secondCat);
 	 * ---
+	 *
+	 * Deprecated: ADD_CONCRETE_TYPE_REGISTRATION behaviour is default now. If you want to reverse to happen, use DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION.
 	 */
-	ADD_CONCRETE_TYPE_REGISTRATION
+
+	ADD_CONCRETE_TYPE_REGISTRATION,
+
+	/**
+	 * Prevent a concrete type being registered on itself. With this option you will always need
+	 * to use the supertype as the type of the dependency.
+	 */
+	DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION
 }
 
 /**
@@ -140,12 +149,10 @@ synchronized class DependencyContainer {
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 
-		if (hasOption(options, RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION)) {
+		if (!hasOption(options, RegistrationOptions.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION)) {
 			static if (!is(SuperType == ConcreteType)) {
 				auto concreteTypeRegistration = register!ConcreteType;
 				concreteTypeRegistration.linkTo(newRegistration);
-			} else {
-				throw new RegistrationException("Option ADD_CONCRETE_TYPE_REGISTRATION cannot be used when registering a concrete type registration", concreteType);
 			}
 		}
 
