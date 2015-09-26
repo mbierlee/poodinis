@@ -27,19 +27,18 @@ To manually resolve a dependency, all you have to do is resolve the dependency's
 ```d
 auto exampleClassInstance = dependencies.resolve!ExampleClass;
 ```
-If the class is registered by interface and not by concrete type, you cannot resolve the class by concrete type. Registration of both a concrete type and interface type will resolve different registrations, returning different instances:
+If the class is registered by interface and not by concrete type, you can still resolve the class by concrete type:
 
 ```d
-auto exampleClassInstance = dependencies.resolve!ExampleClass;
-auto exampleClassInstance2 = dependencies.resolve!ExampleInterface;
-assert(exampleClassInstance !is exampleClassInstance2);
-```
-You can solve this by adding the ADD_CONCRETE_TYPE_REGISTRATION option when registering:
-```d
-dependencies.register!(ExampleInterface, ExampleClass)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION);
-auto exampleClassInstance = dependencies.resolve!ExampleClass;
-auto exampleClassInstance2 = dependencies.resolve!ExampleInterface;
+auto exampleClassInstance = dependencies.resolve!ExampleInterface;
+auto exampleClassInstance2 = dependencies.resolve!ExampleClass;
 assert(exampleClassInstance is exampleClassInstance2);
+```
+If you want to prevent registrations from being both registered by interface and concrete type, use the DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION option when registering:
+```d
+dependencies.register!(ExampleInterface, ExampleClass)(RegistrationOptions.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
+auto exampleClassInstance = dependencies.resolve!ExampleInterface;
+auto exampleClassInstance2 = dependencies.resolve!ExampleClass; // A ResolveException is thrown
 ```
 
 Dependency scopes
