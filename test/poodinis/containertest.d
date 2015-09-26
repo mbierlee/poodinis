@@ -435,7 +435,7 @@ version(unittest) {
 	// Test registering type with option ADD_CONCRETE_TYPE_REGISTRATION
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION);
+		container.register!(TestInterface, TestClass)(RegistrationOption.ADD_CONCRETE_TYPE_REGISTRATION);
 
 		auto firstInstance = container.resolve!TestInterface;
 		auto secondInstance = container.resolve!TestClass;
@@ -446,7 +446,7 @@ version(unittest) {
 	// Test registering type with option DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)(RegistrationOptions.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
+		container.register!(TestInterface, TestClass)(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
 
 		auto firstInstance = container.resolve!TestInterface;
 		assertThrown!ResolveException(container.resolve!TestClass);

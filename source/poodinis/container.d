@@ -45,7 +45,7 @@ class RegistrationException : Exception {
 /**
  * Options which influence the process of registering dependencies
  */
-public enum RegistrationOptions {
+public enum RegistrationOption {
 	/**
 	 * When registering a type by its supertype, providing this option will also register
 	 * a linked registration to the type itself.
@@ -76,6 +76,11 @@ public enum RegistrationOptions {
 	 */
 	DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION
 }
+
+/**
+ * Deprecated: Use enum RegistrationOption instead
+ */
+alias RegistrationOptions = RegistrationOption;
 
 /**
  * The dependency container maintains all dependencies registered with it.
@@ -149,7 +154,7 @@ synchronized class DependencyContainer {
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 
-		if (!hasOption(options, RegistrationOptions.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION)) {
+		if (!hasOption(options, RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION)) {
 			static if (!is(SuperType == ConcreteType)) {
 				auto concreteTypeRegistration = register!ConcreteType;
 				concreteTypeRegistration.linkTo(newRegistration);
@@ -160,7 +165,7 @@ synchronized class DependencyContainer {
 		return newRegistration;
 	}
 
-	private bool hasOption(RegistrationOptionsTuple...)(RegistrationOptionsTuple options, RegistrationOptions option) {
+	private bool hasOption(RegistrationOptionsTuple...)(RegistrationOptionsTuple options, RegistrationOption option) {
 		foreach(presentOption ; options) {
 			if (presentOption == option) {
 				return true;
