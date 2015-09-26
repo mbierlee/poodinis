@@ -1,6 +1,6 @@
 Poodinis Dependency Injection Framework
 =======================================
-Version 4.0.0  
+Version 5.0.0  
 Copyright 2014-2015 Mike Bierlee  
 Licensed under the terms of the MIT license - See [LICENSE.txt](LICENSE.txt)
 
@@ -60,6 +60,7 @@ Future Work
 * Component scan (auto-registration)
 * Custom instance factories (replaces registration scopes)
 * Phobos collections autowiring
+* Constructor injection
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://github.com/ybainier/hypodermic/

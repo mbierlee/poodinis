@@ -1,6 +1,6 @@
 Poodinis Changelog
 ==================
-** Next version**
+**Version 5.0.0**
 * DEPRECATE ADD_CONCRETE_TYPE_REGISTRATION registration option. It basically does nothing anymore. See next point.
 * CHANGE adding registrations by super type always registers them by concrete type as well now. (Previously done with ADD_CONCRETE_TYPE_REGISTRATION). See DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION for the reverse behaviour.
 
