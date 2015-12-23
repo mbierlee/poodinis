@@ -58,7 +58,6 @@ The documentation can then be found in docs/
 Future Work
 -----------
 * Component scan (auto-registration)
-* Custom instance factories (replaces registration scopes)
 * Phobos collections autowiring
 * Constructor injection
 
