@@ -13,9 +13,18 @@
 
 module poodinis.registration;
 
+import std.typecons;
+import std.exception;
+
 debug {
 	import std.stdio;
 	import std.string;
+}
+
+class InstanceCreationException : Exception {
+	this(string message, string file = __FILE__, size_t line = __LINE__) {
+		super(message, file, line);
+	}
 }
 
 class Registration {
@@ -31,7 +40,7 @@ class Registration {
 		return _instantiatableType;
 	}
 
-	public CreationScope registationScope = null;
+	public InstanceFactory instanceFactory = null;
 
 	this(TypeInfo registeredType, TypeInfo_Class instantiatableType) {
 		this._registeredType = registeredType;
@@ -44,11 +53,11 @@ class Registration {
 		}
 
 
-		if (registationScope is null) {
-			throw new NoScopeDefinedException(registeredType);
+		if (instanceFactory is null) {
+			throw new InstanceCreationException("No instance factory defined for registration of type " ~ registeredType.toString());
 		}
 
-		return registationScope.getInstance();
+		return instanceFactory.getInstance();
 	}
 
 	public Registration linkTo(Registration registration) {
@@ -57,46 +66,34 @@ class Registration {
 	}
 }
 
-class NoScopeDefinedException : Exception {
-	this(TypeInfo type) {
-		super("No scope defined for registration of type " ~ type.toString());
+alias CreatesSingleton = Flag!"CreatesSingleton";
+
+class InstanceFactory {
+	private TypeInfo_Class instanceType = null;
+	private Object instance = null;
+	private CreatesSingleton createsSingleton;
+
+	this(TypeInfo_Class instanceType, CreatesSingleton createsSingleton = CreatesSingleton.yes, Object existingInstance = null) {
+		this.instanceType = instanceType;
+		this.createsSingleton = existingInstance !is null ? CreatesSingleton.yes : createsSingleton;
+		this.instance = existingInstance;
 	}
-}
 
-interface CreationScope {
-	public Object getInstance();
-}
-
-class NullScope : CreationScope {
 	public Object getInstance() {
+		if (createsSingleton && instance !is null) {
+			debug(poodinisVerbose) {
+				writeln(format("DEBUG: Existing instance returned of type %s", instanceType.toString()));
+			}
+
+			return instance;
+		}
+
+		enforce!InstanceCreationException(instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
 		debug(poodinisVerbose) {
-			writeln("DEBUG: No instance created (NullScope)");
-		}
-		return null;
-	}
-}
-
-class SingleInstanceScope : CreationScope {
-	TypeInfo_Class instantiatableType = null;
-	Object instance = null;
-
-	this(TypeInfo_Class instantiatableType) {
-		this.instantiatableType = instantiatableType;
-	}
-
-	public Object getInstance() {
-		if (instance is null) {
-			debug(poodinisVerbose) {
-				writeln(format("DEBUG: Creating new instance of type %s (SingleInstanceScope)", instantiatableType.toString()));
-			}
-			instance = instantiatableType.create();
-		} else {
-			debug(poodinisVerbose) {
-				writeln(format("DEBUG: Existing instance returned of type %s (SingleInstanceScope)", instantiatableType.toString()));
-			}
+			writeln(format("DEBUG: Creating new instance of type %s", instanceType.toString()));
 		}
 
-
+		instance = instanceType.create();
 		return instance;
 	}
 }
@@ -107,53 +104,23 @@ class SingleInstanceScope : CreationScope {
  * Effectively makes the given registration a singleton.
  */
 public Registration singleInstance(Registration registration) {
-	registration.registationScope = new SingleInstanceScope(registration.instantiatableType);
+	registration.instanceFactory = new InstanceFactory(registration.instantiatableType, CreatesSingleton.yes, null);
 	return registration;
-}
-
-class NewInstanceScope : CreationScope {
-	TypeInfo_Class instantiatableType = null;
-
-	this(TypeInfo_Class instantiatableType) {
-		this.instantiatableType = instantiatableType;
-	}
-
-	public Object getInstance() {
-		debug(poodinisVerbose) {
-			writeln(format("DEBUG: Creating new instance of type %s (SingleInstanceScope)", instantiatableType.toString()));
-		}
-		return instantiatableType.create();
-	}
 }
 
 /**
  * Scopes registrations to return a new instance every time the given registration is resolved.
  */
 public Registration newInstance(Registration registration) {
-	registration.registationScope = new NewInstanceScope(registration.instantiatableType);
+	registration.instanceFactory = new InstanceFactory(registration.instantiatableType, CreatesSingleton.no, null);
 	return registration;
-}
-
-class ExistingInstanceScope : CreationScope {
-	Object instance = null;
-
-	this(Object instance) {
-		this.instance = instance;
-	}
-
-	public Object getInstance() {
-		debug(poodinisVerbose) {
-			writeln("DEBUG: Existing instance returned (ExistingInstanceScope)");
-		}
-		return instance;
-	}
 }
 
 /**
  * Scopes registrations to return the given instance every time the given registration is resolved.
  */
 public Registration existingInstance(Registration registration, Object instance) {
-	registration.registationScope = new ExistingInstanceScope(instance);
+	registration.instanceFactory = new InstanceFactory(registration.instantiatableType, CreatesSingleton.yes, instance);
 	return registration;
 }
 

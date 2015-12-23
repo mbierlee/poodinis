@@ -19,16 +19,7 @@ version(unittest) {
 	// Test getting instance without scope defined throws exception
 	unittest {
 		Registration registration = new Registration(typeid(TestType), null);
-		assertThrown!(NoScopeDefinedException)(registration.getInstance());
-	}
-
-	// Test getting instance from single instance scope
-	unittest {
-		Registration registration = new Registration(null, null);
-		registration.registationScope = new SingleInstanceScope(typeid(TestType));
-		auto instance1 = registration.getInstance();
-		auto instance2 = registration.getInstance();
-		assert(instance1 is instance2, "Registration with single instance scope did not return the same instance");
+		assertThrown!(InstanceCreationException)(registration.getInstance());
 	}
 
 	// Test set single instance scope using scope setter
@@ -41,15 +32,6 @@ version(unittest) {
 		assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
 	}
 
-	// Test getting instance from new instance scope
-	unittest {
-		Registration registration = new Registration(null, null);
-		registration.registationScope = new NewInstanceScope(typeid(TestType));
-		auto instance1 = registration.getInstance();
-		auto instance2 = registration.getInstance();
-		assert(instance1 !is instance2, "Registration with new instance scope did not return a different instance");
-	}
-
 	// Test set new instance scope using scope setter
 	unittest {
 		Registration registration = new Registration(null, typeid(TestType));
@@ -58,15 +40,6 @@ version(unittest) {
 		auto instance2 = registration.getInstance();
 		assert(instance1 !is instance2, "Registration with new instance scope did not return a different instance");
 		assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
-	}
-
-	// Test getting instance from existing instance scope
-	unittest {
-		Registration registration = new Registration(null, null);
-		TestType expectedInstance = new TestType();
-		registration.registationScope = new ExistingInstanceScope(expectedInstance);
-		auto actualInstance = registration.getInstance();
-		assert(expectedInstance is actualInstance, "Registration with existing instance did not return given instance");
 	}
 
 	// Test set existing instance scope using scope setter
@@ -88,6 +61,46 @@ version(unittest) {
 		auto secondInstance = secondRegistration.getInstance();
 
 		assert(firstInstance is secondInstance);
+	}
+
+	// Test instance factory with singletons
+	unittest {
+		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.yes, null);
+		auto instanceOne = factory.getInstance();
+		auto instanceTwo = factory.getInstance();
+
+		assert(instanceOne !is null, "Created factory instance is null");
+		assert(instanceOne is instanceTwo, "Created factory instance is not the same");
+	}
+
+	// Test instance factory with new instances
+	unittest {
+		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.no, null);
+		auto instanceOne = factory.getInstance();
+		auto instanceTwo = factory.getInstance();
+
+		assert(instanceOne !is null, "Created factory instance is null");
+		assert(instanceOne !is instanceTwo, "Created factory instance is the same");
+	}
+
+	// Test instance factory with existing instances
+	unittest {
+		auto existingInstance = new TestImplementation();
+		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.yes, existingInstance);
+		auto instanceOne = factory.getInstance();
+		auto instanceTwo = factory.getInstance();
+
+		assert(instanceOne is existingInstance, "Created factory instance is not the existing instance");
+		assert(instanceTwo is existingInstance, "Created factory instance is not the existing instance when called again");
+	}
+
+	// Test instance factory with existing instances when setting singleton flag to "no"
+	unittest {
+		auto existingInstance = new TestImplementation();
+		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.no, existingInstance);
+		auto instance = factory.getInstance();
+
+		assert(instance is existingInstance, "Created factory instance is not the existing instance");
 	}
 
 }

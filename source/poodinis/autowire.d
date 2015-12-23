@@ -161,7 +161,7 @@ private void autowireMember(string member, Type)(shared(DependencyContainer) con
 
 private QualifierType createOrResolveInstance(MemberType, QualifierType, bool createNew)(shared(DependencyContainer) container) {
 	static if (createNew) {
-		auto instanceFactory = new NewInstanceScope(typeid(MemberType));
+		auto instanceFactory = new InstanceFactory(typeid(MemberType), CreatesSingleton.no, null);
 		return cast(MemberType) instanceFactory.getInstance();
 	} else {
 		return container.resolve!(MemberType, QualifierType);
