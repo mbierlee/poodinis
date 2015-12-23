@@ -14,7 +14,9 @@ version(unittest) {
 
 	interface TestInterface {}
 
-	class TestImplementation : TestInterface {}
+	class TestImplementation : TestInterface {
+		public string someContent = "";
+	}
 
 	// Test getting instance without scope defined throws exception
 	unittest {
@@ -101,6 +103,21 @@ version(unittest) {
 		auto instance = factory.getInstance();
 
 		assert(instance is existingInstance, "Created factory instance is not the existing instance");
+	}
+
+	// Test creating instance using custom factory method
+	unittest {
+		Object factoryMethod() {
+			auto instance = new TestImplementation();
+			instance.someContent = "Ducks!";
+			return instance;
+		}
+
+		auto factory = new InstanceFactory(null, CreatesSingleton.yes, null, &factoryMethod);
+		auto instance = cast(TestImplementation) factory.getInstance();
+
+		assert(instance !is null, "No instance was created by factory or could not be cast to expected type");
+		assert(instance.someContent == "Ducks!");
 	}
 
 }

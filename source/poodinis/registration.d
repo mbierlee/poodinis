@@ -67,16 +67,19 @@ class Registration {
 }
 
 alias CreatesSingleton = Flag!"CreatesSingleton";
+alias InstanceFactoryMethod = Object delegate();
 
 class InstanceFactory {
 	private TypeInfo_Class instanceType = null;
 	private Object instance = null;
 	private CreatesSingleton createsSingleton;
+	private InstanceFactoryMethod factoryMethod;
 
-	this(TypeInfo_Class instanceType, CreatesSingleton createsSingleton = CreatesSingleton.yes, Object existingInstance = null) {
+	this(TypeInfo_Class instanceType, CreatesSingleton createsSingleton = CreatesSingleton.yes, Object existingInstance = null, InstanceFactoryMethod factoryMethod = null) {
 		this.instanceType = instanceType;
 		this.createsSingleton = existingInstance !is null ? CreatesSingleton.yes : createsSingleton;
 		this.instance = existingInstance;
+		this.factoryMethod = factoryMethod !is null ? factoryMethod : &this.createInstance;
 	}
 
 	public Object getInstance() {
@@ -88,13 +91,17 @@ class InstanceFactory {
 			return instance;
 		}
 
-		enforce!InstanceCreationException(instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
 		debug(poodinisVerbose) {
 			writeln(format("DEBUG: Creating new instance of type %s", instanceType.toString()));
 		}
 
-		instance = instanceType.create();
+		instance = factoryMethod();
 		return instance;
+	}
+
+	private Object createInstance() {
+		enforce!InstanceCreationException(instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
+		return instanceType.create();
 	}
 }
 
