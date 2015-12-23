@@ -41,9 +41,9 @@ auto exampleClassInstance = dependencies.resolve!ExampleInterface;
 auto exampleClassInstance2 = dependencies.resolve!ExampleClass; // A ResolveException is thrown
 ```
 
-Dependency scopes
+Dependency creation behaviour
 -----------------
-With dependency scopes, you can control how a dependency is resolved. The scope determines which instance is returned, be it the same each time or a new one. The following scopes are available:
+You can control how a dependency is resolved by specifying a creation scope during registration. The scope determines which instance is returned, be it the same each time or a new one. The following scopes are available:
 
 * Resolve a dependency using a single instance (default):
 
