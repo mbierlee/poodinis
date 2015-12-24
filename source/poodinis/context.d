@@ -34,7 +34,7 @@ public void registerContextComponents(ApplicationContextType : ApplicationContex
 		static if (hasUDA!(__traits(getMember, context, member), Component)) {
 			auto factoryMethod = &__traits(getMember, context, member);
 			auto registration = container.register!(ReturnType!factoryMethod);
-			registration.instanceFactory = new InstanceFactory(registration.instantiatableType, CreatesSingleton.yes, null, factoryMethod);
+			registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.yes, null, factoryMethod);
 		}
 	}
 }

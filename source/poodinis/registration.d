@@ -29,22 +29,22 @@ class InstanceCreationException : Exception {
 
 class Registration {
 	private TypeInfo _registeredType = null;
-	private TypeInfo_Class _instantiatableType = null;
+	private TypeInfo_Class _instanceType = null;
 	private Registration linkedRegistration;
 
 	public @property registeredType() {
 		return _registeredType;
 	}
 
-	public @property instantiatableType() {
-		return _instantiatableType;
+	public @property instanceType() {
+		return _instanceType;
 	}
 
 	public InstanceFactory instanceFactory = null;
 
-	this(TypeInfo registeredType, TypeInfo_Class instantiatableType) {
+	this(TypeInfo registeredType, TypeInfo_Class instanceType) {
 		this._registeredType = registeredType;
-		this._instantiatableType = instantiatableType;
+		this._instanceType = instanceType;
 	}
 
 	public Object getInstance(InstantiationContext context = new InstantiationContext()) {
@@ -111,7 +111,7 @@ class InstanceFactory {
  * Effectively makes the given registration a singleton.
  */
 public Registration singleInstance(Registration registration) {
-	registration.instanceFactory = new InstanceFactory(registration.instantiatableType, CreatesSingleton.yes, null);
+	registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.yes, null);
 	return registration;
 }
 
@@ -119,7 +119,7 @@ public Registration singleInstance(Registration registration) {
  * Scopes registrations to return a new instance every time the given registration is resolved.
  */
 public Registration newInstance(Registration registration) {
-	registration.instanceFactory = new InstanceFactory(registration.instantiatableType, CreatesSingleton.no, null);
+	registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.no, null);
 	return registration;
 }
 
@@ -127,7 +127,7 @@ public Registration newInstance(Registration registration) {
  * Scopes registrations to return the given instance every time the given registration is resolved.
  */
 public Registration existingInstance(Registration registration, Object instance) {
-	registration.instanceFactory = new InstanceFactory(registration.instantiatableType, CreatesSingleton.yes, instance);
+	registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.yes, instance);
 	return registration;
 }
 
@@ -137,7 +137,7 @@ public string toConcreteTypeListString(Registration[] registrations) {
 		if (concreteTypeListString.length > 0) {
 			concreteTypeListString ~= ", ";
 		}
-		concreteTypeListString ~= registration.instantiatableType.toString();
+		concreteTypeListString ~= registration.instanceType.toString();
 	}
 	return concreteTypeListString;
 }

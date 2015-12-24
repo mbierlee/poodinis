@@ -187,7 +187,7 @@ synchronized class DependencyContainer {
 
 	private Registration getRegistration(Registration[] candidates, TypeInfo concreteType) {
 		foreach(existingRegistration ; candidates) {
-			if (existingRegistration.instantiatableType == concreteType) {
+			if (existingRegistration.instanceType == concreteType) {
 				return existingRegistration;
 			}
 		}
