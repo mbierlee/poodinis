@@ -186,12 +186,12 @@ application context, but don't neccesarily have to be. You can even autowire dep
 Application contexts are directly autowired after they have been registered. This means that all autowired dependencies which are not registered in the application context itself need to be registered before registering the application context.
 
 ###Controlling component registration
-You can further influence how instances are registered and created with additional UDAs:
+You can further influence how components are registered and created with additional UDAs:
 ```d
 class Context : ApplicationContext {
 	@Component
 	@Prototype // Will create a new instance every time the dependency is resolved.
-	@RegisterByType!SomeInterface // Registers the dependency by the specified super type so it can be resolved when a dependency of that super type is required.
+	@RegisterByType!SomeInterface // Registers the dependency by the specified super type instead of the return type
 	public SomeClass someClass() {
 		return new SomeClass();
 	}
