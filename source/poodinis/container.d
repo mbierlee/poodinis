@@ -23,6 +23,7 @@ debug {
 
 import poodinis.registration;
 import poodinis.autowire;
+import poodinis.context;
 
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
@@ -359,6 +360,18 @@ synchronized class DependencyContainer {
 	 */
 	public void removeRegistration(RegistrationType)() {
 		registrations.remove(typeid(RegistrationType));
+	}
+
+	/**
+	* Register dependencies through an application context.
+	*
+	* An application context allows you to fine-tune dependency set-up and instantiation.
+	* It is mostly used for dependencies which come from an external library or when you don't
+	* want to use annotations to set-up dependencies in your classes.
+	*/
+	public void registerContext(Context : ApplicationContext)() {
+		auto context = new Context();
+		context.registerDependencies(this);
 	}
 
 	/**

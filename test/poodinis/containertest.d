@@ -11,6 +11,12 @@ import std.exception;
 import core.thread;
 
 version(unittest) {
+	class TestContext : ApplicationContext {
+		public override void registerDependencies(shared(DependencyContainer) container) {
+			container.register!TestClass;
+		}
+	}
+
 	interface TestInterface {
 	}
 
@@ -484,5 +490,14 @@ version(unittest) {
 		auto instance = cast(TestClassDeux) instances[0];
 
 		assert(instance.unrelated !is null);
+	}
+
+	// Test setting up simple dependencies through application context
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.registerContext!TestContext;
+		auto instance = container.resolve!TestClass;
+
+		assert(instance !is null);
 	}
 }
