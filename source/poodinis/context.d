@@ -36,15 +36,25 @@ struct RegisterByType(Type) {
 	Type type;
 }
 
+/**
+* Components with the prototype registration will be scoped as dependencies which will created
+* new instances every time they are resolved. The factory method will be called repeatedly.
+*/
+struct Prototype {}
+
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(ApplicationContextType context, shared(DependencyContainer) container) {
 	foreach (member ; __traits(allMembers, ApplicationContextType)) {
 		static if (hasUDA!(__traits(getMember, context, member), Component)) {
+
 			auto factoryMethod = &__traits(getMember, context, member);
 			Registration registration = null;
+			auto createsSingleton = CreatesSingleton.yes;
 
 			foreach(attribute; __traits(getAttributes, __traits(getMember, context, member))) {
 				static if (is(attribute == RegisterByType!T, T)) {
 					registration = container.register!(typeof(attribute.type), ReturnType!factoryMethod);
+				} else static if (__traits(isSame, attribute, Prototype)) {
+					createsSingleton = CreatesSingleton.no;
 				}
 			}
 
@@ -52,7 +62,7 @@ public void registerContextComponents(ApplicationContextType : ApplicationContex
 				registration = container.register!(ReturnType!factoryMethod);
 			}
 
-			registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.yes, null, factoryMethod);
+			registration.instanceFactory = new InstanceFactory(registration.instanceType, createsSingleton, null, factoryMethod);
 		}
 	}
 }

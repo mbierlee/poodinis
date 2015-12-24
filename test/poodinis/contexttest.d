@@ -47,6 +47,8 @@ version(unittest) {
 		}
 	}
 
+	class PieChart {}
+
 	class TestContext : ApplicationContext {
 
 		@Component
@@ -74,6 +76,12 @@ version(unittest) {
 		@RegisterByType!Animal
 		public Wolf wolf() {
 			return new Wolf();
+		}
+
+		@Component
+		@Prototype
+		public PieChart pieChart() {
+			return new PieChart();
 		}
 	}
 
@@ -115,6 +123,19 @@ version(unittest) {
 
 		auto wolf = container.resolve!(Animal, Wolf);
 		assert(wolf.getYell() == "Wooooooooooo");
+	}
+
+	//Test register component as prototype
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		auto context = new TestContext();
+		context.registerContextComponents(container);
+
+		auto firstInstance = container.resolve!PieChart;
+		auto secondInstance = container.resolve!PieChart;
+
+		assert(firstInstance !is null && secondInstance !is null);
+		assert(firstInstance !is secondInstance);
 	}
 
 }
