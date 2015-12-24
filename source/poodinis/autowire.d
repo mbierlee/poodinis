@@ -17,7 +17,8 @@
 
 module poodinis.autowire;
 
-public import poodinis.container;
+import poodinis.container;
+import poodinis.registration;
 
 import std.exception;
 import std.stdio;

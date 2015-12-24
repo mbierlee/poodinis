@@ -21,8 +21,8 @@ debug {
 	import std.stdio;
 }
 
-public import poodinis.registration;
-public import poodinis.autowire;
+import poodinis.registration;
+import poodinis.autowire;
 
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
