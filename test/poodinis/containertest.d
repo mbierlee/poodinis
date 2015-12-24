@@ -22,6 +22,41 @@ version(unittest) {
 		}
 	}
 
+	class AutowiredTestContext : ApplicationContext {
+
+		@Autowire
+		public UnrelatedClass unrelatedClass;
+
+		@Component
+		public ClassWrapper wrapper() {
+			return new ClassWrapper(unrelatedClass);
+		}
+	}
+
+	class ComplexAutowiredTestContext : ApplicationContext {
+
+		@Autowire
+		public UnrelatedClass unrelatedClass;
+
+		@Autowire
+		public ClassWrapper classWrapper;
+
+		public override void registerDependencies(shared(DependencyContainer) container) {
+			container.register!UnrelatedClass;
+		}
+
+		@Component
+		public ClassWrapper wrapper() {
+			return new ClassWrapper(unrelatedClass);
+		}
+
+		@Component
+		public ClassWrapperWrapper wrapperWrapper() {
+			return new ClassWrapperWrapper(classWrapper);
+		}
+
+	}
+
 	interface TestInterface {
 	}
 
@@ -127,6 +162,22 @@ version(unittest) {
 	class John {
 		@Autowire
 		public Wants wants;
+	}
+
+	class ClassWrapper {
+		public Object someClass;
+
+		this(Object someClass) {
+			this.someClass = someClass;
+		}
+	}
+
+	class ClassWrapperWrapper {
+		public ClassWrapper wrapper;
+
+		this(ClassWrapper wrapper) {
+			this.wrapper = wrapper;
+		}
 	}
 
 	// Test register concrete type
@@ -513,5 +564,29 @@ version(unittest) {
 		auto instance = container.resolve!UnrelatedClass;
 
 		assert(instance !is null);
+	}
+
+	// Test autowiring application context
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!UnrelatedClass;
+		container.registerContext!AutowiredTestContext;
+		auto instance = container.resolve!ClassWrapper;
+
+		assert(instance !is null);
+		assert(instance.someClass !is null);
+	}
+
+	// Test autowiring application context with dependencies registered in same context
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.registerContext!ComplexAutowiredTestContext;
+		auto instance = container.resolve!ClassWrapperWrapper;
+		auto wrapper = container.resolve!ClassWrapper;
+		auto someClass = container.resolve!UnrelatedClass;
+
+		assert(instance !is null);
+		assert(instance.wrapper is wrapper);
+		assert(instance.wrapper.someClass is someClass);
 	}
 }
