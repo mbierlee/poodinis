@@ -127,3 +127,73 @@ dependencies.register!(Color, Red);
 auto mixer = dependencies.resolve!ColorMixer;
 ```
 Member mixer.colors will now contain instances of Blue and Red. The order of the instances is not guarenteed to be that of the order in which they were registered.
+
+Application Contexts
+--------------------
+You can fine-tune dependency configuration using application contexts. Application contexts allow you to centralize all dependency configuration as well as define
+how instances of certain classes should be constructed using factory methods.
+###Defining and using application contexts
+An application context is defined as follows:
+```d
+class Context : ApplicationContext {
+	public override void registerDependencies(shared(DependencyContainer) container) {
+		container.register!SomeClass;
+		container.register!(SomeInterface, SomeOtherClass).newInstance();
+	}
+	
+	@Component
+	public SomeLibraryClass libraryClass() {
+		return new SomeLibraryClass("This class needs constructor parameters so I have to register it through an application context");
+	}
+}
+```
+In the override *registerDependencies()* you can register all dependencies which do not need complex set-up, just like you would do when directly using the dependency container. 
+This override is optional. You can still register simple dependencies outside of the context (or in another context).  
+Complex dependencies are registered through member methods of the context. These member methods serve as factory methods which will be called when a dependency is resolved. 
+They are annotated with the *@Component* UDA to let the container know that these methods should be registered as dependencies. The type of the registration is the same as the return type of the method.  
+Factory methods are useful when you have to deal with dependencies which require constructor arguments or elaborate set-up after instantiation.  
+Application contexts have to be registered with a dependency container. They are registered as follows:
+```d
+container.registerContext!Context;
+```
+All registered dependencies can now be resolved by the same dependency container. Registering a context will also register it as a dependency, meaning you can autowire the application context in other classes. 
+You can register as many types of application contexts as you like.
+
+###Autowiring application contexts
+Application contexts can make use of autowired dependencies like any other dependency. When registering an application context, all its components are registered first after which the application context is autowired. 
+This means that after the registration of an application context some dependencies will already be resolved and instantiated. The following example illustrates how autowired members can be used in a context:
+```d
+class Context : ApplicationContext {
+
+	@Autowire
+	public SomeClass someClass;
+	
+	@Autowire
+	public SomeOtherClass someOtherClass;
+
+	public override void registerDependencies(shared(DependencyContainer) container) {
+		container.register!SomeClass;
+	}
+	
+	@Component
+	public SomeLibraryClass libraryClass() {
+		return new SomeLibraryClass(someClass, someOtherClass);
+	}
+}
+```
+As you can see, autowired dependencies can be used within factory methods. When *SomeLibraryClass* is resolved, it will be created with a resolved instance of *SomeClass* and *SomeOtherClass*. As shown, autowired dependencies can be registered within the same
+application context, but don't neccesarily have to be. You can even autowire dependencies which are created within a factory method within the same application context.  
+Application contexts are directly autowired after they have been registered. This means that all autowired dependencies which are not registered in the application context itself need to be registered before registering the application context.
+
+###Controlling component registration
+You can further influence how instances are registered and created with additional UDAs:
+```d
+class Context : ApplicationContext {
+	@Component
+	@Prototype // Will create a new instance every time the dependency is resolved.
+	@RegisterByType!SomeInterface // Registers the dependency by the specified super type so it can be resolved when a dependency of that super type is required.
+	public SomeClass someClass() {
+		return new SomeClass();
+	}
+}
+```
