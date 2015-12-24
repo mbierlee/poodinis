@@ -11,6 +11,14 @@ import std.exception;
 
 version(unittest) {
 
+	interface Fruit {
+		string getShape();
+	}
+
+	interface Animal {
+		string getYell();
+	}
+
 	class Banana {
 		public string color;
 
@@ -21,6 +29,24 @@ version(unittest) {
 
 	class Apple {}
 
+	class Pear : Fruit {
+		public override string getShape() {
+			return "Pear shaped";
+		}
+	}
+
+	class Rabbit : Animal {
+		public override string getYell() {
+			return "Squeeeeeel";
+		}
+	}
+
+	class Wolf : Animal {
+		public override string getYell() {
+			return "Wooooooooooo";
+		}
+	}
+
 	class TestContext : ApplicationContext {
 
 		@Component
@@ -30,6 +56,24 @@ version(unittest) {
 
 		public Apple apple() {
 			return new Apple();
+		}
+
+		@Component
+		@RegisterByType!Fruit
+		public Pear pear() {
+			return new Pear();
+		}
+
+		@Component
+		@RegisterByType!Animal
+		public Rabbit rabbit() {
+			return new Rabbit();
+		}
+
+		@Component
+		@RegisterByType!Animal
+		public Wolf wolf() {
+			return new Wolf();
 		}
 	}
 
@@ -49,6 +93,28 @@ version(unittest) {
 		auto context = new TestContext();
 		context.registerContextComponents(container);
 		assertThrown!ResolveException(container.resolve!Apple);
+	}
+
+	//Test register component by base type
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		auto context = new TestContext();
+		context.registerContextComponents(container);
+		auto instance = container.resolve!Fruit;
+		assert(instance.getShape() == "Pear shaped");
+	}
+
+	//Test register components with multiple candidates
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		auto context = new TestContext();
+		context.registerContextComponents(container);
+
+		auto rabbit = container.resolve!(Animal, Rabbit);
+		assert(rabbit.getYell() == "Squeeeeeel");
+
+		auto wolf = container.resolve!(Animal, Wolf);
+		assert(wolf.getYell() == "Wooooooooooo");
 	}
 
 }

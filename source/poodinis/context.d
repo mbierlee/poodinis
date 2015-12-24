@@ -28,12 +28,30 @@ class ApplicationContext {
 */
 struct Component {}
 
+/**
+* This annotation allows you to specify by which super type the component should be registered. This
+* enables you to use type-qualified alternatives for dependencies.
+*/
+struct RegisterByType(Type) {
+	Type type;
+}
+
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(ApplicationContextType context, shared(DependencyContainer) container) {
-	import std.stdio;
 	foreach (member ; __traits(allMembers, ApplicationContextType)) {
 		static if (hasUDA!(__traits(getMember, context, member), Component)) {
 			auto factoryMethod = &__traits(getMember, context, member);
-			auto registration = container.register!(ReturnType!factoryMethod);
+			Registration registration = null;
+
+			foreach(attribute; __traits(getAttributes, __traits(getMember, context, member))) {
+				static if (is(attribute == RegisterByType!T, T)) {
+					registration = container.register!(typeof(attribute.type), ReturnType!factoryMethod);
+				}
+			}
+
+			if (registration is null) {
+				registration = container.register!(ReturnType!factoryMethod);
+			}
+
 			registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.yes, null, factoryMethod);
 		}
 	}
