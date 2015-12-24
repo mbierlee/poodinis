@@ -1,5 +1,11 @@
 Poodinis Changelog
 ==================
+**Version THE NEXT ONE**
+* CHANGE registration scopes are replaced by a single factory implementation. If you were not doing anything with the internal scope mechanism, you 
+should not be affected by this change.
+* ADD application contexts. You can register dependencies within an application context which allow you to fine-tune the creation of dependency instances.
+* CHANGE all public poodinis imports to private. This should not affect you if you use the package import "poodinis" instead of individual modules.
+
 **Version 5.0.0**
 * DEPRECATE ADD_CONCRETE_TYPE_REGISTRATION registration option. It basically does nothing anymore. See next point.
 * CHANGE adding registrations by super type always registers them by concrete type as well now. (Previously done with ADD_CONCRETE_TYPE_REGISTRATION). See DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION for the reverse behaviour.
