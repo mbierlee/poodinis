@@ -60,6 +60,7 @@ Future Work
 * Component scan (auto-registration)
 * Phobos collections autowiring
 * Constructor injection
+* Named qualifiers
 
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://github.com/ybainier/hypodermic/
