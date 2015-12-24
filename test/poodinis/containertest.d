@@ -589,4 +589,11 @@ version(unittest) {
 		assert(instance.wrapper is wrapper);
 		assert(instance.wrapper.someClass is someClass);
 	}
+
+	// Test resolving registered context
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.registerContext!TestContext;
+		container.resolve!ApplicationContext;
+	}
 }

@@ -373,6 +373,7 @@ synchronized class DependencyContainer {
 		auto context = new Context();
 		context.registerDependencies(this);
 		context.registerContextComponents(this);
+		this.register!(ApplicationContext, Context)().existingInstance(context);
 		autowire(this, context);
 	}
 
