@@ -15,6 +15,11 @@ version(unittest) {
 		public override void registerDependencies(shared(DependencyContainer) container) {
 			container.register!TestClass;
 		}
+
+		@Component
+		public UnrelatedClass unrelated() {
+			return new UnrelatedClass();
+		}
 	}
 
 	interface TestInterface {
@@ -497,6 +502,15 @@ version(unittest) {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.registerContext!TestContext;
 		auto instance = container.resolve!TestClass;
+
+		assert(instance !is null);
+	}
+
+	// Test resolving dependency from registered application context
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.registerContext!TestContext;
+		auto instance = container.resolve!UnrelatedClass;
 
 		assert(instance !is null);
 	}

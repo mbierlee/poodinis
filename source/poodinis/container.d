@@ -372,6 +372,7 @@ synchronized class DependencyContainer {
 	public void registerContext(Context : ApplicationContext)() {
 		auto context = new Context();
 		context.registerDependencies(this);
+		context.registerContextComponents(this);
 	}
 
 	/**
