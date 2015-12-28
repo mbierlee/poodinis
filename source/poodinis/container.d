@@ -55,11 +55,6 @@ public enum RegistrationOption {
 }
 
 /**
- * Deprecated: Use enum RegistrationOption instead
- */
-alias RegistrationOptions = RegistrationOption;
-
-/**
  * The dependency container maintains all dependencies registered with it.
  *
  * Dependencies registered by a container can be resolved as long as they are still registered with the container.

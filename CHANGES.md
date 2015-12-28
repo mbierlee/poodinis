@@ -6,6 +6,7 @@ should not be affected by this change.
 * ADD application contexts. You can register dependencies within an application context which allow you to fine-tune the creation of dependency instances.
 * CHANGE all public poodinis imports to private. This should not affect you if you use the package import "poodinis" instead of individual modules.
 * REMOVE deprecated ADD_CONCRETE_TYPE_REGISTRATION registration option.
+* REMOVE deprecated RegistrationOptions alias.
 
 **Version 5.0.0**
 * DEPRECATE ADD_CONCRETE_TYPE_REGISTRATION registration option. It basically does nothing anymore. See next point.
