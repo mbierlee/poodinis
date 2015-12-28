@@ -48,30 +48,6 @@ class RegistrationException : Exception {
  */
 public enum RegistrationOption {
 	/**
-	 * When registering a type by its supertype, providing this option will also register
-	 * a linked registration to the type itself.
-	 *
-	 * This allows you to resolve that type both by super type and concrete type using the
-	 * same registration scope (and instance managed by this scope).
-	 *
-	 * Examples:
-	 * ---
-	 * class Cat : Animal { ... }
-	 *
-	 * container.register!(Animal, Cat)(RegistrationOptions.ADD_CONCRETE_TYPE_REGISTRATION);
-	 *
-	 * auto firstCat = container.resolve!(Animal, Cat);
-	 * auto secondCat = container.resolve!Cat;
-	 *
-	 * assert(firstCat is secondCat);
-	 * ---
-	 *
-	 * Deprecated: ADD_CONCRETE_TYPE_REGISTRATION behaviour is default now. If you want to reverse to happen, use DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION.
-	 */
-
-	ADD_CONCRETE_TYPE_REGISTRATION,
-
-	/**
 	 * Prevent a concrete type being registered on itself. With this option you will always need
 	 * to use the supertype as the type of the dependency.
 	 */
