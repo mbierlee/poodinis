@@ -1,10 +1,6 @@
-/poodinis.exe
+/*.exe
 /poodinis.lib
 /poodinis.obj
-/quickstartExample.exe
-/qualifiersExample.exe
-/arrayCompletionExample.exe
-/annotationsExample.exe
 /.settings
 /.dub
 /dub.selections.json
@@ -18,3 +14,4 @@
 /qualifiersExample
 /arrayCompletionExample
 /annotationsExample
+/applicationContextExample

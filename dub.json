@@ -78,6 +78,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "applicationContextExample",
+			"description" : "Example where an application context is used to set-up dependencies.",
+			"targetType": "executable",
+			"targetName": "applicationContextExample",
+			"sourcePaths": [
+				"example/applicationcontext"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }
