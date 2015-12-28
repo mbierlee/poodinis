@@ -1,6 +1,6 @@
 Poodinis Changelog
 ==================
-**Version THE NEXT ONE**
+**Version 6.0.0**
 * CHANGE registration scopes are replaced by a single factory implementation. If you were not doing anything with the internal scope mechanism, you 
 should not be affected by this change.
 * ADD application contexts. You can register dependencies within an application context which allow you to fine-tune the creation of dependency instances.
