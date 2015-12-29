@@ -16,10 +16,10 @@ To make dependencies available, they have to be registered:
 ```d
 // Register concrete class
 dependencies.register!ExampleClass;
-// Register by interface
+// Register by super type
 dependencies.register!(ExampleInterface, ExampleClass);
 ```
-In the above example, dependencies on the concrete class and interface will resolve an instance of class ExampleClass. Registering a class by interface does not automatically register by concrete type.
+In the above example, dependencies on the concrete class and interface will resolve an instance of class ExampleClass. A dependency registered by super type will automatically be registered by concrete type.
 
 Resolving dependencies
 ----------------------
