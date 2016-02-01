@@ -1,6 +1,10 @@
 language: d
 
-d: dmd-2.070.0
+d:
+  - dmd
+  - dmd-2.069.2
+  - dmd-2.068.2
+  - dmd-2.068.0
 
 sudo: false
 
