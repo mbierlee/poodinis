@@ -2,6 +2,7 @@ Poodinis Changelog
 ==================
 **Version NEXT**
 * ADD setting persistent registration options
+* DEPRECATE DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION, use doNotAddConcreteTypeRegistration instead
 
 **Version 6.0.0**
 * CHANGE registration scopes are replaced by a single factory implementation. If you were not doing anything with the internal scope mechanism, you 

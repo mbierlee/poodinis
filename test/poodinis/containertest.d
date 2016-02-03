@@ -494,7 +494,16 @@ version(unittest) {
 		assert(expectedTestClass is actualTestClass, "Instance resolved in main thread is not the one resolved in thread");
 	}
 
-	// Test registering type with option DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION
+	// Test registering type with option doNotAddConcreteTypeRegistration
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!(TestInterface, TestClass)(RegistrationOption.doNotAddConcreteTypeRegistration);
+
+		auto firstInstance = container.resolve!TestInterface;
+		assertThrown!ResolveException(container.resolve!TestClass);
+	}
+
+	// Test registering type with option DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION (DEPRECATED)
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.register!(TestInterface, TestClass)(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
@@ -589,7 +598,7 @@ version(unittest) {
 	// Test set persistent registration options
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.setPersistentRegistrationOptions(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
+		container.setPersistentRegistrationOptions(RegistrationOption.doNotAddConcreteTypeRegistration);
 		container.register!(TestInterface, TestClass);
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
@@ -597,7 +606,7 @@ version(unittest) {
 	// Test unset persistent registration options
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.setPersistentRegistrationOptions(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
+		container.setPersistentRegistrationOptions(RegistrationOption.doNotAddConcreteTypeRegistration);
 		container.unsetPersistentRegistrationOptions();
 		container.register!(TestInterface, TestClass);
 		container.resolve!TestClass;

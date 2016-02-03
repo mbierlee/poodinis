@@ -51,6 +51,13 @@ public enum RegistrationOption {
 	 * Prevent a concrete type being registered on itself. With this option you will always need
 	 * to use the supertype as the type of the dependency.
 	 */
+	doNotAddConcreteTypeRegistration,
+
+	/**
+	 * Prevent a concrete type being registered on itself. With this option you will always need
+	 * to use the supertype as the type of the dependency.
+	 * @deprecated use doNotAddConcreteTypeRegistration instead
+	 */
 	DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION
 }
 
@@ -128,7 +135,7 @@ synchronized class DependencyContainer {
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 
-		if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION)) {
+		if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
 			static if (!is(SuperType == ConcreteType)) {
 				auto concreteTypeRegistration = register!ConcreteType;
 				concreteTypeRegistration.linkTo(newRegistration);
@@ -141,12 +148,22 @@ synchronized class DependencyContainer {
 
 	private bool hasOption(OptionType, OptionsTuple...)(OptionsTuple options, OptionType[] persistentOptions, OptionType option) {
 		foreach (presentOption; persistentOptions) {
+			// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
+			if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
+				presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
+			}
+
 			if (presentOption == option) {
 				return true;
 			}
 		}
 
 		foreach(presentOption ; options) {
+			// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
+			if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
+				presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
+			}
+
 			if (presentOption == option) {
 				return true;
 			}
