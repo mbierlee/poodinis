@@ -3,6 +3,7 @@ Poodinis Changelog
 **Version NEXT**
 * ADD setting persistent registration options
 * DEPRECATE DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION, use doNotAddConcreteTypeRegistration instead
+* DEPRECATE supplying register()'s registration options as variadic arguments. Use register(SuperType, ConcreteType)(RegistrationOption[]) instead.
 * ADD resolve options to container resolve()
 * ADD ability to register a type while resolving it. Use resolve option registerBeforeResolving
 
