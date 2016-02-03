@@ -511,6 +511,14 @@ version(unittest) {
 		auto firstInstance = container.resolve!TestInterface;
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
+
+	// Test registering conrete type with registration option doNotAddConcreteTypeRegistration does nothing
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!TestClass([RegistrationOption.doNotAddConcreteTypeRegistration]);
+		container.resolve!TestClass;
+	}
+
 	// Test registering type with options in the DEPRECATED way
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();

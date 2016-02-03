@@ -98,8 +98,8 @@ synchronized class DependencyContainer {
 	 *
 	 * See_Also: singleInstance, newInstance, existingInstance
 	 */
-	public Registration register(ConcreteType)() {
-		return register!(ConcreteType, ConcreteType)([]);
+	public Registration register(ConcreteType)(RegistrationOption[] options = []) {
+		return register!(ConcreteType, ConcreteType)(options);
 	}
 
 	/**
