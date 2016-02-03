@@ -585,4 +585,21 @@ version(unittest) {
 		container.registerContext!TestContext;
 		container.resolve!ApplicationContext;
 	}
+
+	// Test set persistent registration options
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.setPersistentRegistrationOptions(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
+		container.register!(TestInterface, TestClass);
+		assertThrown!ResolveException(container.resolve!TestClass);
+	}
+
+	// Test unset persistent registration options
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.setPersistentRegistrationOptions(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
+		container.unsetPersistentRegistrationOptions();
+		container.register!(TestInterface, TestClass);
+		container.resolve!TestClass;
+	}
 }

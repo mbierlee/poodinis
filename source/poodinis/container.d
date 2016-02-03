@@ -69,6 +69,8 @@ synchronized class DependencyContainer {
 
 	private Registration[] autowireStack;
 
+	private RegistrationOption[] persistentRegistrationOptions;
+
 	/**
 	 * Register a dependency by concrete class type.
 	 *
@@ -126,7 +128,7 @@ synchronized class DependencyContainer {
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 
-		if (!hasOption(options, RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION)) {
+		if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION)) {
 			static if (!is(SuperType == ConcreteType)) {
 				auto concreteTypeRegistration = register!ConcreteType;
 				concreteTypeRegistration.linkTo(newRegistration);
@@ -137,7 +139,13 @@ synchronized class DependencyContainer {
 		return newRegistration;
 	}
 
-	private bool hasOption(RegistrationOptionsTuple...)(RegistrationOptionsTuple options, RegistrationOption option) {
+	private bool hasOption(OptionType, OptionsTuple...)(OptionsTuple options, OptionType[] persistentOptions, OptionType option) {
+		foreach (presentOption; persistentOptions) {
+			if (presentOption == option) {
+				return true;
+			}
+		}
+
 		foreach(presentOption ; options) {
 			if (presentOption == option) {
 				return true;
@@ -358,4 +366,22 @@ synchronized class DependencyContainer {
 		}
 		return instance;
 	}
+
+	/**
+	 * Apply persistent registration options which will be used everytime register() is called.
+	 */
+	public void setPersistentRegistrationOptions(RegistrationOptionsTuple...)(RegistrationOptionsTuple registrationOptions) {
+		unsetPersistentRegistrationOptions();
+		foreach (option; registrationOptions) {
+			persistentRegistrationOptions ~= option;
+		}
+	}
+
+	/**
+	 * Unsets all applied registration options
+	 */
+	public void unsetPersistentRegistrationOptions() {
+		persistentRegistrationOptions = [];
+	}
+
 }

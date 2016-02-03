@@ -197,3 +197,11 @@ class Context : ApplicationContext {
 	}
 }
 ```
+
+Persistent Registration Options
+-------------------------------
+If you want registration options to be persistent (applicable for every call to register()), you can use the container method setPersistentRegistrationOptions():
+```d
+dependencies.setPersistentRegistrationOptions(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION); // Sets the option
+dependencies.unsetPersistentRegistrationOptions(); // Clears the persistentent options
+```
