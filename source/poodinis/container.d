@@ -105,7 +105,7 @@ synchronized class DependencyContainer {
 	/**
 	 * Deprecated: Use register(SuperType, ConcreteType)(RegistrationOption[]) instead
 	 */
-	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options...) {
+	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption[] options...) {
 		return register!(SuperType, ConcreteType)(options);
 	}
 
