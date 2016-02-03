@@ -21,6 +21,11 @@ dependencies.register!(ExampleInterface, ExampleClass);
 ```
 In the above example, dependencies on the concrete class and interface will resolve an instance of class ExampleClass. A dependency registered by super type will automatically be registered by concrete type.
 
+If you want to prevent registrations from being both registered by interface and concrete type, use the "doNotAddConcreteTypeRegistration" option when registering:
+```d
+dependencies.register!(ExampleInterface, ExampleClass)([RegistrationOptions.doNotAddConcreteTypeRegistration]);
+```
+
 Resolving dependencies
 ----------------------
 To manually resolve a dependency, all you have to do is resolve the dependency's type using the container in which it is registered:
@@ -34,12 +39,7 @@ auto exampleClassInstance = dependencies.resolve!ExampleInterface;
 auto exampleClassInstance2 = dependencies.resolve!ExampleClass;
 assert(exampleClassInstance is exampleClassInstance2);
 ```
-If you want to prevent registrations from being both registered by interface and concrete type, use the "doNotAddConcreteTypeRegistration" option when registering:
-```d
-dependencies.register!(ExampleInterface, ExampleClass)([RegistrationOptions.doNotAddConcreteTypeRegistration]);
-auto exampleClassInstance = dependencies.resolve!ExampleInterface;
-auto exampleClassInstance2 = dependencies.resolve!ExampleClass; // A ResolveException is thrown
-```
+
 It is also possible to register a type while resolving it. Doing so means you don't need to explicitly register it beforehand. To do this, use the resolve option "registerBeforeResolving":
 ```d
 dependencies.resolve!ExampleClass([ResolveOption.registerBeforeResolving]);
