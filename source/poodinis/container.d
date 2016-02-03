@@ -99,7 +99,14 @@ synchronized class DependencyContainer {
 	 * See_Also: singleInstance, newInstance, existingInstance
 	 */
 	public Registration register(ConcreteType)() {
-		return register!(ConcreteType, ConcreteType)();
+		return register!(ConcreteType, ConcreteType)([]);
+	}
+
+	/**
+	 * Deprecated: Use register(SuperType, ConcreteType)(RegistrationOption[]) instead
+	 */
+	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options...) {
+		return register!(SuperType, ConcreteType)(options);
 	}
 
 	/**
@@ -119,7 +126,7 @@ synchronized class DependencyContainer {
 	 *
 	 * See_Also: singleInstance, newInstance, existingInstance, RegistrationOptions
 	 */
-	public Registration register(SuperType, ConcreteType : SuperType, RegistrationOptionsTuple...)(RegistrationOptionsTuple options) {
+	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption[] options = []) {
 		TypeInfo registeredType = typeid(SuperType);
 		TypeInfo_Class concreteType = typeid(ConcreteType);
 
@@ -146,7 +153,7 @@ synchronized class DependencyContainer {
 		return newRegistration;
 	}
 
-	private bool hasOption(OptionType, OptionsTuple...)(OptionsTuple options, OptionType[] persistentOptions, OptionType option) {
+	private bool hasOption(OptionType)(OptionType[] options, shared(OptionType[]) persistentOptions, OptionType option) {
 		foreach (presentOption; persistentOptions) {
 			// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
 			if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
