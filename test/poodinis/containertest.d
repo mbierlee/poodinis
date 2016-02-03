@@ -634,4 +634,19 @@ version(unittest) {
 		container.resolve!(TestInterface, TestClass)([ResolveOption.registerBeforeResolving]);
 		container.resolve!TestClass;
 	}
+
+	// Test set persistent resolve options
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.setPersistentResolveOptions(ResolveOption.registerBeforeResolving);
+		container.resolve!TestClass;
+	}
+
+	// Test unset persistent resolve options
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.setPersistentResolveOptions(ResolveOption.registerBeforeResolving);
+		container.unsetPersistentResolveOptions();
+		assertThrown!ResolveException(container.resolve!TestClass);
+	}
 }

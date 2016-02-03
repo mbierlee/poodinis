@@ -417,7 +417,7 @@ synchronized class DependencyContainer {
 	/**
 	 * Apply persistent registration options which will be used everytime register() is called.
 	 */
-	public void setPersistentRegistrationOptions(RegistrationOptionsTuple...)(RegistrationOptionsTuple registrationOptions) {
+	public void setPersistentRegistrationOptions(OptionsTuple...)(OptionsTuple registrationOptions) {
 		unsetPersistentRegistrationOptions();
 		foreach (option; registrationOptions) {
 			persistentRegistrationOptions ~= option;
@@ -429,6 +429,23 @@ synchronized class DependencyContainer {
 	 */
 	public void unsetPersistentRegistrationOptions() {
 		persistentRegistrationOptions = [];
+	}
+
+	/**
+	 * Apply persistent resolve options which will be used everytime resolve() is called.
+	 */
+	public void setPersistentResolveOptions(OptionsTuple...)(OptionsTuple resolveOptions) {
+		unsetPersistentResolveOptions();
+		foreach (option; resolveOptions) {
+			persistentResolveOptions ~= option;
+		}
+	}
+
+	/**
+	 * Unsets all applied registration options
+	 */
+	public void unsetPersistentResolveOptions() {
+		persistentResolveOptions = [];
 	}
 
 }
