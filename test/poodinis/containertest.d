@@ -649,4 +649,10 @@ version(unittest) {
 		container.unsetPersistentResolveOptions();
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
+
+	// Test ResolveOption registerBeforeResolving fails for interfaces
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		assertThrown!ResolveException(container.resolve!TestInterface([ResolveOption.registerBeforeResolving]));
+	}
 }
