@@ -40,6 +40,11 @@ dependencies.register!(ExampleInterface, ExampleClass)(RegistrationOptions.DO_NO
 auto exampleClassInstance = dependencies.resolve!ExampleInterface;
 auto exampleClassInstance2 = dependencies.resolve!ExampleClass; // A ResolveException is thrown
 ```
+It is also possible to register a type while resolving it. Doing so means you don't need to explicitly register it beforehand. To do this, use the resolve option "registerBeforeResolving":
+```d
+dependencies.resolve!ExampleClass([ResolveOption.registerBeforeResolving]);
+```
+Naturally this can only be done when you are resolving a concrete type or an interface type by qualifier.
 
 Dependency creation behaviour
 -----------------

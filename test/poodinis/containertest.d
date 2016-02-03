@@ -627,4 +627,11 @@ version(unittest) {
 		container.register!(TestInterface, TestClass);
 		container.resolve!TestClass;
 	}
+
+	// Test registration when resolving
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.resolve!(TestInterface, TestClass)([ResolveOption.registerBeforeResolving]);
+		container.resolve!TestClass;
+	}
 }

@@ -62,6 +62,18 @@ public enum RegistrationOption {
 }
 
 /**
+ * Options which influence the process of resolving dependencies
+ */
+public enum ResolveOption {
+	/**
+	 * Registers the type you're trying to resolve before returning it.
+	 * This essentially makes registration optional for resolving by concerete types.
+	 * Resolinvg will still fail when trying to resolve a dependency by supertype.
+	 */
+	registerBeforeResolving
+}
+
+/**
  * The dependency container maintains all dependencies registered with it.
  *
  * Dependencies registered by a container can be resolved as long as they are still registered with the container.
@@ -77,6 +89,7 @@ synchronized class DependencyContainer {
 	private Registration[] autowireStack;
 
 	private RegistrationOption[] persistentRegistrationOptions;
+	private ResolveOption[] persistentResolveOptions;
 
 	/**
 	 * Register a dependency by concrete class type.
@@ -155,9 +168,11 @@ synchronized class DependencyContainer {
 
 	private bool hasOption(OptionType)(OptionType[] options, shared(OptionType[]) persistentOptions, OptionType option) {
 		foreach (presentOption; persistentOptions) {
-			// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
-			if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
-				presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
+			static if (is(OptionType == RegistrationOption)) {
+				// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
+				if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
+					presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
+				}
 			}
 
 			if (presentOption == option) {
@@ -166,9 +181,11 @@ synchronized class DependencyContainer {
 		}
 
 		foreach(presentOption ; options) {
-			// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
-			if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
-				presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
+			static if (is(OptionType == RegistrationOption)) {
+				// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
+				if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
+					presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
+				}
 			}
 
 			if (presentOption == option) {
@@ -237,8 +254,8 @@ synchronized class DependencyContainer {
 	 * ---
 	 * You need to use the resolve method which allows you to specify a qualifier.
 	 */
-	public RegistrationType resolve(RegistrationType)() {
-		return resolve!(RegistrationType, RegistrationType)();
+	public RegistrationType resolve(RegistrationType)(ResolveOption[] resolveOptions = []) {
+		return resolve!(RegistrationType, RegistrationType)(resolveOptions);
 	}
 
 	/**
@@ -267,12 +284,18 @@ synchronized class DependencyContainer {
 	 * container.resolve!(Animal, Dog);
 	 * ---
 	 */
-	public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)() {
+	public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption[] resolveOptions = []) {
 		TypeInfo resolveType = typeid(RegistrationType);
 		TypeInfo qualifierType = typeid(QualifierType);
 
 		debug(poodinisVerbose) {
 			writeln("DEBUG: Resolving type " ~ resolveType.toString() ~ " with qualifier " ~ qualifierType.toString());
+		}
+
+		static if (__traits(compiles, new QualifierType())) {
+			if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.registerBeforeResolving)) {
+				register!(RegistrationType, QualifierType)();
+			}
 		}
 
 		auto candidates = resolveType in registrations;
