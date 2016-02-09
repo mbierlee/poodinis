@@ -6,6 +6,7 @@ Poodinis Changelog
 * DEPRECATE supplying register()'s registration options as variadic arguments. Use register(SuperType, ConcreteType)(RegistrationOption[]) instead.
 * ADD resolve options to container resolve()
 * ADD ability to register a type while resolving it. Use resolve option registerBeforeResolving
+* FIX registration of application contexts with non-public members
 
 **Version 6.0.0**
 * CHANGE registration scopes are replaced by a single factory implementation. If you were not doing anything with the internal scope mechanism, you 

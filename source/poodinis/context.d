@@ -44,8 +44,7 @@ struct Prototype {}
 
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(ApplicationContextType context, shared(DependencyContainer) container) {
 	foreach (member ; __traits(allMembers, ApplicationContextType)) {
-		static if (hasUDA!(__traits(getMember, context, member), Component)) {
-
+		static if (__traits(getProtection, __traits(getMember, context, member)) == "public" && hasUDA!(__traits(getMember, context, member), Component)) {
 			auto factoryMethod = &__traits(getMember, context, member);
 			Registration registration = null;
 			auto createsSingleton = CreatesSingleton.yes;
