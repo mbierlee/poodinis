@@ -62,6 +62,11 @@ Future Work
 * Constructor injection
 * Named qualifiers
 
+Contributing
+------------
+Any and all pull requests are welcome! If you (only) want discuss changes before making them, feel free to open an Issue on github.
+Please develop your changes on (a branch based on) the develop branch. Continuous integration is preferred so feature branches are not neccessary.
+
 [Spring Framework]: http://projects.spring.io/spring-framework/
 [Hypodermic]: https://github.com/ybainier/hypodermic/
 [DUB]: http://code.dlang.org/
