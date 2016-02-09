@@ -101,8 +101,8 @@ public void autowire(Type)(shared(DependencyContainer) container, Type instance)
 		printDebugAutowiredInstance(typeid(Type), &instance);
 	}
 
-	foreach (member ; __traits(allMembers, Type)) {
-		autowireMember!member(container, instance);
+	foreach(idx, name; FieldNameTuple!Type) {
+		autowireMember!(name, idx, Type)(container, instance);
 	}
 }
 
@@ -114,48 +114,46 @@ private void printDebugAutowiringArray(TypeInfo superTypeInfo, TypeInfo instance
 	writeln(format("DEBUG: Autowired all registered instances of super type %s to [%s@%s].%s", superTypeInfo, instanceType, instanceAddress, member));
 }
 
-private void autowireMember(string member, Type)(shared(DependencyContainer) container, Type instance) {
-	static if(__traits(compiles, __traits(getMember, instance, member)) && __traits(compiles, __traits(getAttributes, __traits(getMember, instance, member)))) {
-		foreach(autowireAttribute; __traits(getAttributes, __traits(getMember, instance, member))) {
-			static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
-				if (__traits(getMember, instance, member) is null) {
-					alias MemberType = typeof(__traits(getMember, instance, member));
+private void autowireMember(string member, size_t tupleIdx, Type)(shared(DependencyContainer) container, Type instance) {
+	foreach(autowireAttribute; __traits(getAttributes, Type.tupleof[tupleIdx])) {
+		static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
+			if (instance.tupleof[tupleIdx] is null) {
+				alias MemberType = typeof(Type.tupleof[tupleIdx]);
 
-					enum assignNewInstance = hasUDA!(__traits(getMember, instance, member), AssignNewInstance);
+				enum assignNewInstance = hasUDA!(Type.tupleof[tupleIdx], AssignNewInstance);
 
-					static if (isDynamicArray!MemberType) {
-						alias MemberElementType = ElementType!MemberType;
-						auto instances = container.resolveAll!MemberElementType;
-						__traits(getMember, instance, member) = instances;
+				static if (isDynamicArray!MemberType) {
+					alias MemberElementType = ElementType!MemberType;
+					auto instances = container.resolveAll!MemberElementType;
+					instance.tupleof[tupleIdx] = instances;
+					debug(poodinisVerbose) {
+						printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
+					}
+				} else {
+					debug(poodinisVerbose) {
+						TypeInfo qualifiedInstanceType = typeid(MemberType);
+					}
+
+					MemberType qualifiedInstance;
+					static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
+						alias QualifierType = typeof(autowireAttribute.qualifier);
+						qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance)(container);
 						debug(poodinisVerbose) {
-							printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
+							qualifiedInstanceType = typeid(QualifierType);
 						}
 					} else {
-						debug(poodinisVerbose) {
-							TypeInfo qualifiedInstanceType = typeid(MemberType);
-						}
+						qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance)(container);
+					}
 
-						MemberType qualifiedInstance;
-						static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
-							alias QualifierType = typeof(autowireAttribute.qualifier);
-							qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance)(container);
-							debug(poodinisVerbose) {
-								qualifiedInstanceType = typeid(QualifierType);
-							}
-						} else {
-							qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance)(container);
-						}
+					instance.tupleof[tupleIdx] = qualifiedInstance;
 
-						__traits(getMember, instance, member) = qualifiedInstance;
-
-						debug(poodinisVerbose) {
-							printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
-						}
+					debug(poodinisVerbose) {
+						printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
 					}
 				}
-
-				break;
 			}
+
+			break;
 		}
 	}
 }
