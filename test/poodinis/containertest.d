@@ -25,7 +25,7 @@ version(unittest) {
 	class AutowiredTestContext : ApplicationContext {
 
 		@Autowire
-		public UnrelatedClass unrelatedClass;
+		private UnrelatedClass unrelatedClass;
 
 		@Component
 		public ClassWrapper wrapper() {
@@ -36,10 +36,10 @@ version(unittest) {
 	class ComplexAutowiredTestContext : ApplicationContext {
 
 		@Autowire
-		public UnrelatedClass unrelatedClass;
+		private UnrelatedClass unrelatedClass;
 
 		@Autowire
-		public ClassWrapper classWrapper;
+		protected ClassWrapper classWrapper;
 
 		public override void registerDependencies(shared(DependencyContainer) container) {
 			container.register!UnrelatedClass;
