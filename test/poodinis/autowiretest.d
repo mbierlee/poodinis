@@ -78,7 +78,7 @@ version(unittest) {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.register!ComponentA;
 		auto componentB = new ComponentB();
-		container.autowire!(ComponentB)(componentB);
+		container.autowire(componentB);
 		assert(componentB !is null, "Autowirable dependency failed to autowire");
 	}
 
@@ -87,7 +87,7 @@ version(unittest) {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		auto componentD = new ComponentD();
-		container.autowire!(ComponentD)(componentD);
+		container.autowire(componentD);
 		assert(componentD.componentC !is null, "Autowirable dependency failed to autowire");
 	}
 
@@ -96,7 +96,7 @@ version(unittest) {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		auto componentD = new ComponentD();
-		container.autowire!(ComponentD)(componentD);
+		container.autowire(componentD);
 		assert(componentD.privateComponentC is componentD.componentC, "Autowire private dependency failed");
 	}
 
@@ -105,9 +105,9 @@ version(unittest) {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.register!(InterfaceA, ComponentC).newInstance();
 		auto componentD = new ComponentD();
-		container.autowire!(ComponentD)(componentD);
+		container.autowire(componentD);
 		auto expectedComponent = componentD.componentC;
-		container.autowire!(ComponentD)(componentD);
+		container.autowire(componentD);
 		auto actualComponent = componentD.componentC;
 		assert(expectedComponent is actualComponent, "Autowiring the second time wired a different instance");
 	}
@@ -116,14 +116,14 @@ version(unittest) {
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
 		auto componentD = new ComponentD();
-		assertThrown!(ResolveException)(container.autowire!(ComponentD)(componentD), "Autowiring unregistered type should throw ResolveException");
+		assertThrown!(ResolveException)(container.autowire(componentD), "Autowiring unregistered type should throw ResolveException");
 	}
 
 	// Test autowiring member with non-autowire attribute does not autowire
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
 		auto componentE = new ComponentE();
-		container.autowire!ComponentE(componentE);
+		container.autowire(componentE);
 		assert(componentE.componentC is null, "Autowiring should not occur for members with attributes other than @Autowire");
 	}
 

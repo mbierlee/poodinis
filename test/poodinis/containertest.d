@@ -183,15 +183,15 @@ version(unittest) {
 	// Test register concrete type
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		auto registration = container.register!(TestClass)();
+		auto registration = container.register!TestClass;
 		assert(registration.registeredType == typeid(TestClass), "Type of registered type not the same");
 	}
 
 	// Test resolve registered type
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestClass)();
-		TestClass actualInstance = container.resolve!(TestClass)();
+		container.register!TestClass;
+		TestClass actualInstance = container.resolve!TestClass;
 		assert(actualInstance !is null, "Resolved type is null");
 		assert(cast(TestClass) actualInstance, "Resolved class is not the same type as expected");
 	}
@@ -199,8 +199,8 @@ version(unittest) {
 	// Test register interface
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)();
-		TestInterface actualInstance = container.resolve!(TestInterface)();
+		container.register!(TestInterface, TestClass);
+		TestInterface actualInstance = container.resolve!TestInterface;
 		assert(actualInstance !is null, "Resolved type is null");
 		assert(cast(TestInterface) actualInstance, "Resolved class is not the same type as expected");
 	}
@@ -208,15 +208,15 @@ version(unittest) {
 	// Test resolve non-registered type
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving non-registered type does not fail");
+		assertThrown!ResolveException(container.resolve!TestClass, "Resolving non-registered type does not fail");
 	}
 
 	// Test clear registrations
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestClass)();
+		container.register!TestClass;
 		container.clearAllRegistrations();
-		assertThrown!ResolveException(container.resolve!(TestClass)(), "Resolving cleared type does not fail");
+		assertThrown!ResolveException(container.resolve!TestClass, "Resolving cleared type does not fail");
 	}
 
 	// Test get singleton of container
@@ -229,18 +229,18 @@ version(unittest) {
 	// Test resolve single instance for type
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestClass)().singleInstance();
-		auto instance1 = container.resolve!(TestClass);
-		auto instance2 = container.resolve!(TestClass);
+		container.register!TestClass.singleInstance();
+		auto instance1 = container.resolve!TestClass;
+		auto instance2 = container.resolve!TestClass;
 		assert(instance1 is instance2, "Resolved instance from single instance scope is not the each time it is resolved");
 	}
 
 	// Test resolve new instance for type
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestClass)().newInstance();
-		auto instance1 = container.resolve!(TestClass);
-		auto instance2 = container.resolve!(TestClass);
+		container.register!TestClass.newInstance();
+		auto instance1 = container.resolve!TestClass;
+		auto instance2 = container.resolve!TestClass;
 		assert(instance1 !is instance2, "Resolved instance from new instance scope is the same each time it is resolved");
 	}
 
@@ -248,8 +248,8 @@ version(unittest) {
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
 		auto expectedInstance = new TestClass();
-		container.register!(TestClass)().existingInstance(expectedInstance);
-		auto actualInstance = container.resolve!(TestClass);
+		container.register!TestClass.existingInstance(expectedInstance);
+		auto actualInstance = container.resolve!TestClass;
 		assert(expectedInstance is actualInstance, "Resolved instance from existing instance scope is not the same as the registered instance");
 	}
 
@@ -289,7 +289,7 @@ version(unittest) {
 		existingB.autowiredClass = existingA;
 
 		container.register!AutowiredClass;
-		container.register!(ComponentClass).existingInstance(existingB);
+		container.register!ComponentClass.existingInstance(existingB);
 		auto resolvedA = container.resolve!AutowiredClass;
 		auto resolvedB = container.resolve!ComponentClass;
 
@@ -323,9 +323,9 @@ version(unittest) {
 	// Test autowiring deep circular dependencies with newInstance scope does not autowire new instance second time
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(Ittie).newInstance();
-		container.register!(Bittie).newInstance();
-		container.register!(Banana).newInstance();
+		container.register!Ittie.newInstance();
+		container.register!Bittie.newInstance();
+		container.register!Banana.newInstance();
 
 		auto ittie = container.resolve!Ittie;
 
