@@ -27,11 +27,11 @@ class SuperSecurityDevice {
 
 class SecurityManager {
 	@Autowire
-	public SuperSecurityDevice levelOneSecurity;
+	private SuperSecurityDevice levelOneSecurity;
 
 	@Autowire
 	@AssignNewInstance
-	public SuperSecurityDevice levelTwoSecurity;
+	private SuperSecurityDevice levelTwoSecurity;
 }
 
 void main() {

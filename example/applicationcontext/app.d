@@ -12,7 +12,7 @@ import std.stdio;
 class TownSquare {
 
 	@Autowire
-	public MarketStall marketStall;
+	private MarketStall marketStall;
 
 	public void makeSound() {
 		marketStall.announceGoodsForSale();
@@ -45,7 +45,7 @@ class MarketStall {
 class ExampleApplicationContext : ApplicationContext {
 
 	@Autowire
-	public Goods goods;
+	private Goods goods;
 
 	public override void registerDependencies(shared(DependencyContainer) container) {
 		container.register!(Goods, Fish);

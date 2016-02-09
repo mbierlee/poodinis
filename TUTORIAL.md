@@ -111,7 +111,7 @@ If you want to autowire a type registered to multiple concrete types, specify a 
 ```d
 class BluePaint {
 	@Autowire!Blue
-	public Color color;
+	private Color color;
 }
 ```
 If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException is thrown stating that there are multiple candidates for the type to be resolved.
@@ -124,7 +124,7 @@ If you have registered multiple concrete types to a super type, you can autowire
 
 class ColorMixer {
 	@Autowire
-	public Color[] colors;
+	private Color[] colors;
 }
 
 dependencies.register!(Color, Blue);
@@ -171,10 +171,10 @@ This means that after the registration of an application context some dependenci
 class Context : ApplicationContext {
 
 	@Autowire
-	public SomeClass someClass;
+	private SomeClass someClass;
 	
 	@Autowire
-	public SomeOtherClass someOtherClass;
+	private SomeOtherClass someOtherClass;
 
 	public override void registerDependencies(shared(DependencyContainer) container) {
 		container.register!SomeClass;
