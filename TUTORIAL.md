@@ -75,7 +75,7 @@ class ExampleClassA {}
 
 class ExampleClassB {
 	@Autowire
-	public ExampleClassA dependency;
+	private ExampleClassA dependency;
 }
 
 dependencies.register!ExampleClassA;
@@ -83,7 +83,7 @@ auto exampleInstance = new ExampleClassB();
 dependencies.autowire(exampleInstance);
 assert(exampleInstance.dependency !is null);
 ```
-At the moment, it is only possible to autowire public members or properties.
+It is possible to autowire public and private members.
 
 Dependencies are automatically autowired when a class is resolved. So when you register ExampleClassB, its member, *dependency*, is automatically autowired:
 ```d

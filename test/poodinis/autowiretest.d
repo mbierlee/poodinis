@@ -22,6 +22,7 @@ version(unittest) {
 
 	class ComponentD {
 		public @Autowire InterfaceA componentC = null;
+        private @Autowire InterfaceA privateComponentC = null;
 	}
 
 	class DummyAttribute{};
@@ -86,6 +87,15 @@ version(unittest) {
 		container.autowire!(ComponentD)(componentD);
 		assert(componentD.componentC !is null, "Autowirable dependency failed to autowire");
 	}
+
+    // Test autowiring private members
+    unittest {
+        shared(DependencyContainer) container = new DependencyContainer();
+        container.register!(InterfaceA, ComponentC);
+        auto componentD = new ComponentD();
+        container.autowire!(ComponentD)(componentD);
+        assert(componentD.privateComponentC is componentD.componentC, "Autowire private dependency failed");
+    }
 
 	// Test autowiring will only happen once
 	unittest {

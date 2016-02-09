@@ -31,7 +31,7 @@ class RelationalDatabase : Database {}
 
 class DataWriter {
 	@Autowire
-	public Database database; // Automatically injected when class is resolved
+	private Database database; // Automatically injected when class is resolved
 }
 
 void main() {
