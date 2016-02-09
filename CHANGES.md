@@ -6,6 +6,7 @@ Poodinis Changelog
 * DEPRECATE supplying register()'s registration options as variadic arguments. Use register(SuperType, ConcreteType)(RegistrationOption[]) instead.
 * ADD resolve options to container resolve()
 * ADD ability to register a type while resolving it. Use resolve option registerBeforeResolving
+* ADD ability to autowire private fields (Thanks to Extrawurst)
 * FIX registration of application contexts with non-public members
 
 **Version 6.0.0**
