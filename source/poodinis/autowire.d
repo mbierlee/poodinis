@@ -101,6 +101,12 @@ public void autowire(Type)(shared(DependencyContainer) container, Type instance)
 		printDebugAutowiredInstance(typeid(Type), &instance);
 	}
 
+	// note: recurse into base class if there are more between Type and Object in the hirarchy
+	static if(BaseClassesTuple!Type.length > 1)
+	{
+		autowire!(BaseClassesTuple!Type[0])(container, instance);
+	}
+
 	foreach(idx, name; FieldNameTuple!Type) {
 		autowireMember!(name, idx, Type)(container, instance);
 	}

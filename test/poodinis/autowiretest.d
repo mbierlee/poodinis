@@ -47,6 +47,9 @@ version(unittest) {
 
 	class ComponentX : InterfaceA {}
 
+	class ComponentZ : ComponentB {
+	}
+
 	class MonkeyShine {
 		@Autowire!ComponentX
 		public InterfaceA component;
@@ -197,5 +200,18 @@ version(unittest) {
 		container.autowire(charlie);
 
 		assert(charlie.componentA !is regularComponentA, "Autowiring class with AssignNewInstance did not yield a different instance");
+	}
+
+	// Test autowiring members from base class
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!ComponentA;
+		container.register!ComponentB;
+		container.register!ComponentZ;
+		
+		auto instance = new ComponentZ();
+		container.autowire(instance);
+		
+		assert(instance.componentA !is null);
 	}
 }
