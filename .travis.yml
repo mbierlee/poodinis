@@ -17,4 +17,5 @@ script:
   - dub build --build=release --config=arrayCompletionExample
   - dub build --build=release --config=annotationsExample
   - dub build --build=release --config=applicationContextExample
+  - dub build --build=release --config=registerOnResolveExample
 # - dub build --build=ddox

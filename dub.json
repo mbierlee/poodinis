@@ -90,6 +90,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "registerOnResolveExample",
+			"description" : "Example where dependencies are registered at the moment they are resolved.",
+			"targetType": "executable",
+			"targetName": "registerOnResolveExample",
+			"sourcePaths": [
+				"example/registeronresolve"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }
