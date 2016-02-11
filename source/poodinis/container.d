@@ -137,7 +137,7 @@ synchronized class DependencyContainer {
 	 * container.register!(Animal, Cat);
 	 * ---
 	 *
-	 * See_Also: singleInstance, newInstance, existingInstance, RegistrationOptions
+	 * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
 	 */
 	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption[] options = []) {
 		TypeInfo registeredType = typeid(SuperType);

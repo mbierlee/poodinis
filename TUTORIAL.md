@@ -23,7 +23,7 @@ In the above example, dependencies on the concrete class and interface will reso
 
 If you want to prevent registrations from being both registered by interface and concrete type, use the "doNotAddConcreteTypeRegistration" option when registering:
 ```d
-dependencies.register!(ExampleInterface, ExampleClass)([RegistrationOptions.doNotAddConcreteTypeRegistration]);
+dependencies.register!(ExampleInterface, ExampleClass)([RegistrationOption.doNotAddConcreteTypeRegistration]);
 ```
 
 Resolving dependencies
@@ -207,6 +207,6 @@ Persistent Registration Options
 -------------------------------
 If you want registration options to be persistent (applicable for every call to register()), you can use the container method setPersistentRegistrationOptions():
 ```d
-dependencies.setPersistentRegistrationOptions(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION); // Sets the option
+dependencies.setPersistentRegistrationOptions(RegistrationOption.doNotAddConcreteTypeRegistration); // Sets the option
 dependencies.unsetPersistentRegistrationOptions(); // Clears the persistentent options
 ```
