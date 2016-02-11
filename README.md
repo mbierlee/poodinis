@@ -61,6 +61,7 @@ Future Work
 * Phobos collections autowiring
 * Constructor injection
 * Named qualifiers
+* Value type injection
 
 Contributing
 ------------
