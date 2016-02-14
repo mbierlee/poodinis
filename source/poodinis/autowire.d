@@ -107,8 +107,8 @@ public void autowire(Type)(shared(DependencyContainer) container, Type instance)
 		autowire!(BaseClassesTuple!Type[0])(container, instance);
 	}
 
-	foreach(idx, name; FieldNameTuple!Type) {
-		autowireMember!(name, idx, Type)(container, instance);
+	foreach(index, name; FieldNameTuple!Type) {
+		autowireMember!(name, index, Type)(container, instance);
 	}
 }
 
@@ -120,18 +120,18 @@ private void printDebugAutowiringArray(TypeInfo superTypeInfo, TypeInfo instance
 	writeln(format("DEBUG: Autowired all registered instances of super type %s to [%s@%s].%s", superTypeInfo, instanceType, instanceAddress, member));
 }
 
-private void autowireMember(string member, size_t tupleIdx, Type)(shared(DependencyContainer) container, Type instance) {
-	foreach(autowireAttribute; __traits(getAttributes, Type.tupleof[tupleIdx])) {
+private void autowireMember(string member, size_t memberIndex, Type)(shared(DependencyContainer) container, Type instance) {
+	foreach(autowireAttribute; __traits(getAttributes, Type.tupleof[memberIndex])) {
 		static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
-			if (instance.tupleof[tupleIdx] is null) {
-				alias MemberType = typeof(Type.tupleof[tupleIdx]);
+			if (instance.tupleof[memberIndex] is null) {
+				alias MemberType = typeof(Type.tupleof[memberIndex]);
 
-				enum assignNewInstance = hasUDA!(Type.tupleof[tupleIdx], AssignNewInstance);
+				enum assignNewInstance = hasUDA!(Type.tupleof[memberIndex], AssignNewInstance);
 
 				static if (isDynamicArray!MemberType) {
 					alias MemberElementType = ElementType!MemberType;
 					auto instances = container.resolveAll!MemberElementType;
-					instance.tupleof[tupleIdx] = instances;
+					instance.tupleof[memberIndex] = instances;
 					debug(poodinisVerbose) {
 						printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
 					}
@@ -151,7 +151,7 @@ private void autowireMember(string member, size_t tupleIdx, Type)(shared(Depende
 						qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance)(container);
 					}
 
-					instance.tupleof[tupleIdx] = qualifiedInstance;
+					instance.tupleof[memberIndex] = qualifiedInstance;
 
 					debug(poodinisVerbose) {
 						printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
