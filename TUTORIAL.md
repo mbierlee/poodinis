@@ -32,7 +32,7 @@ To manually resolve a dependency, all you have to do is resolve the dependency's
 ```d
 auto exampleClassInstance = dependencies.resolve!ExampleClass;
 ```
-If the class is registered by interface and not by concrete type, you can still resolve the class by concrete type:
+If the class is registered by interface and not by concrete type, you can still resolve the class by concrete type (unless doNotAddConcreteTypeRegistration is applied):
 
 ```d
 auto exampleClassInstance = dependencies.resolve!ExampleInterface;
