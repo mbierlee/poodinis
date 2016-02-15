@@ -53,18 +53,18 @@ You can control how a dependency is resolved by specifying a creation scope duri
 * Resolve a dependency using a single instance (default):
 
 ```d
-dependencies.register!(ExampleClass).singleInstance();
+dependencies.register!ExampleClass.singleInstance();
 ```
 * Resolve a dependency with a new instance each time it is resolved:
 
 ```d
-dependencies.register!(ExampleClass).newInstance();
+dependencies.register!ExampleClass.newInstance();
 ```
 * Resolve a dependency using a pre-existing instance
 
 ```d
 auto preExistingInstance = new ExampleClass();
-dependencies.register!(ExampleClass).existingInstance(preExistingInstance);
+dependencies.register!ExampleClass.existingInstance(preExistingInstance);
 ```
 
 Autowiring
