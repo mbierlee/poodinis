@@ -655,4 +655,11 @@ version(unittest) {
 		shared(DependencyContainer) container = new DependencyContainer();
 		assertThrown!ResolveException(container.resolve!TestInterface([ResolveOption.registerBeforeResolving]));
 	}
+
+	// Test ResolveOption noResolveException does not throw
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		auto instance = container.resolve!TestInterface([ResolveOption.noResolveException]);
+		assert(instance is null);
+	}
 }

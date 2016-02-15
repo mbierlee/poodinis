@@ -70,7 +70,13 @@ public enum ResolveOption {
 	 * This essentially makes registration optional for resolving by concerete types.
 	 * Resolinvg will still fail when trying to resolve a dependency by supertype.
 	 */
-	registerBeforeResolving
+	registerBeforeResolving,
+
+	/**
+	 * Does not throw a resolve exception when a type is not registered but will
+	 * return null instead.
+	 */
+	noResolveException
 }
 
 /**
@@ -300,6 +306,10 @@ synchronized class DependencyContainer {
 
 		auto candidates = resolveType in registrations;
 		if (!candidates) {
+			if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.noResolveException)) {
+				return null;
+			}
+
 			throw new ResolveException("Type not registered.", resolveType);
 		}
 
