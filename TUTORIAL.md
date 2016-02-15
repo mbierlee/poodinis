@@ -131,12 +131,12 @@ dependencies.register!(Color, Blue);
 dependencies.register!(Color, Red);
 auto mixer = dependencies.resolve!ColorMixer;
 ```
-Member `mixer.colors` will now contain instances of `Blue` and `Red`. The order of the instances is not guarenteed to be that of the order in which they were registered.
+Member `mixer.colors` will now contain instances of `Blue` and `Red`. The order in which instances are resolved is not guarenteed to be that of the order in which they were registered.
 
 Application Contexts
 --------------------
-You can fine-tune dependency configuration using application contexts. Application contexts allow you to centralize all dependency configuration as well as define
-how instances of certain classes should be constructed using factory methods.
+You can fine-tune dependency configuration using application contexts. Application contexts allow you to centralize all dependency configuration as well as define how instances of certain classes should be constructed using factory methods.
+
 ###Defining and using application contexts
 An application context is defined as follows:
 ```d
