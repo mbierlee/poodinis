@@ -19,9 +19,9 @@ dependencies.register!ExampleClass;
 // Register by super type
 dependencies.register!(ExampleInterface, ExampleClass);
 ```
-In the above example, dependencies on the concrete class and interface will resolve an instance of class ExampleClass. A dependency registered by super type will automatically be registered by concrete type.
+In the above example, dependencies on the concrete class and interface will resolve an instance of class `ExampleClass`. A dependency registered by super type will automatically be registered by concrete type.
 
-If you want to prevent registrations from being both registered by interface and concrete type, use the "doNotAddConcreteTypeRegistration" option when registering:
+If you want to prevent registrations from being both registered by interface and concrete type, use the `doNotAddConcreteTypeRegistration` option when registering:
 ```d
 dependencies.register!(ExampleInterface, ExampleClass)([RegistrationOption.doNotAddConcreteTypeRegistration]);
 ```
@@ -32,7 +32,7 @@ To manually resolve a dependency, all you have to do is resolve the dependency's
 ```d
 auto exampleClassInstance = dependencies.resolve!ExampleClass;
 ```
-If the class is registered by interface and not by concrete type, you can still resolve the class by concrete type (unless doNotAddConcreteTypeRegistration is applied):
+If the class is registered by interface and not by concrete type, you can still resolve the class by concrete type (unless `doNotAddConcreteTypeRegistration` is applied):
 
 ```d
 auto exampleClassInstance = dependencies.resolve!ExampleInterface;
@@ -40,7 +40,7 @@ auto exampleClassInstance2 = dependencies.resolve!ExampleClass;
 assert(exampleClassInstance is exampleClassInstance2);
 ```
 
-It is also possible to register a type while resolving it. Doing so means you don't need to explicitly register it beforehand. To do this, use the resolve option "registerBeforeResolving":
+It is also possible to register a type while resolving it. Doing so means you don't need to explicitly register it beforehand. To do this, use the resolve option `registerBeforeResolving`:
 ```d
 dependencies.resolve!ExampleClass([ResolveOption.registerBeforeResolving]);
 ```
@@ -69,7 +69,7 @@ dependencies.register!ExampleClass.existingInstance(preExistingInstance);
 
 Autowiring
 ----------
-The real value of any dependency injection framework comes from its ability to autowire dependencies. Poodinis supports autowiring by simply applying the **@Autowire** UDA to a member of a class:
+The real value of any dependency injection framework comes from its ability to autowire dependencies. Poodinis supports autowiring by simply applying the `@Autowire` UDA to a member of a class:
 ```d
 class ExampleClassA {}
 
@@ -85,7 +85,7 @@ assert(exampleInstance.dependency !is null);
 ```
 It is possible to autowire public as well as protected and private members.
 
-Dependencies are automatically autowired when a class is resolved. So when you register ExampleClassB, its member, *dependency*, is automatically autowired:
+Dependencies are automatically autowired when a class is resolved. So when you register `ExampleClassB`, its member `dependency` is automatically autowired:
 ```d
 dependencies.register!ExampleClassA;
 dependencies.register!ExampleClassB;
@@ -96,7 +96,7 @@ If an interface is to be autowired, you must register a concrete class by interf
 
 Circular dependencies
 ---------------------
-Poodinis can autowire circular dependencies when they are registered with singleInstance or existingInstance registration scopes. Circular dependencies in registrations with newInstance scopes will not be autowired, as this would cause an endless loop.
+Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop.
 
 Registering and resolving using qualifiers
 ------------------------------------------
@@ -114,7 +114,7 @@ class BluePaint {
 	private Color color;
 }
 ```
-If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a ResolveException is thrown stating that there are multiple candidates for the type to be resolved.
+If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a `ResolveException` is thrown stating that there are multiple candidates for the type to be resolved.
 
 Autowiring all registered instances to an array
 -----------------------------------------------
@@ -131,7 +131,7 @@ dependencies.register!(Color, Blue);
 dependencies.register!(Color, Red);
 auto mixer = dependencies.resolve!ColorMixer;
 ```
-Member mixer.colors will now contain instances of Blue and Red. The order of the instances is not guarenteed to be that of the order in which they were registered.
+Member `mixer.colors` will now contain instances of `Blue` and `Red`. The order of the instances is not guarenteed to be that of the order in which they were registered.
 
 Application Contexts
 --------------------
@@ -152,10 +152,10 @@ class Context : ApplicationContext {
 	}
 }
 ```
-In the override *registerDependencies()* you can register all dependencies which do not need complex set-up, just like you would do when directly using the dependency container. 
+In the override `registerDependencies()` you can register all dependencies which do not need complex set-up, just like you would do when directly using the dependency container. 
 This override is optional. You can still register simple dependencies outside of the context (or in another context).  
 Complex dependencies are registered through member methods of the context. These member methods serve as factory methods which will be called when a dependency is resolved. 
-They are annotated with the *@Component* UDA to let the container know that these methods should be registered as dependencies. The type of the registration is the same as the return type of the method.  
+They are annotated with the `@Component` UDA to let the container know that these methods should be registered as dependencies. The type of the registration is the same as the return type of the method.  
 Factory methods are useful when you have to deal with dependencies which require constructor arguments or elaborate set-up after instantiation.  
 Application contexts have to be registered with a dependency container. They are registered as follows:
 ```d
@@ -186,7 +186,7 @@ class Context : ApplicationContext {
 	}
 }
 ```
-As you can see, autowired dependencies can be used within factory methods. When *SomeLibraryClass* is resolved, it will be created with a resolved instance of *SomeClass* and *SomeOtherClass*. As shown, autowired dependencies can be registered within the same
+As you can see, autowired dependencies can be used within factory methods. When `SomeLibraryClass` is resolved, it will be created with a resolved instance of `SomeClass` and `SomeOtherClass`. As shown, autowired dependencies can be registered within the same
 application context, but don't neccesarily have to be. You can even autowire dependencies which are created within a factory method within the same application context.  
 Application contexts are directly autowired after they have been registered. This means that all autowired dependencies which are not registered in the application context itself need to be registered before registering the application context.
 
@@ -205,7 +205,7 @@ class Context : ApplicationContext {
 
 Persistent Registration Options
 -------------------------------
-If you want registration options to be persistent (applicable for every call to register()), you can use the container method setPersistentRegistrationOptions():
+If you want registration options to be persistent (applicable for every call to `register()`), you can use the container method `setPersistentRegistrationOptions()`:
 ```d
 dependencies.setPersistentRegistrationOptions(RegistrationOption.doNotAddConcreteTypeRegistration); // Sets the option
 dependencies.unsetPersistentRegistrationOptions(); // Clears the persistentent options
