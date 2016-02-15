@@ -7,7 +7,7 @@ The container
 To register a class, a new dependency container must be instantiated:
 ```d
 // Register a private container
-auto dependencies = new DependencyContainer();
+shared(DependencyContainer) dependencies = new DependencyContainer();
 // Or use the singleton container
 dependencies = DependencyContainer.getInstance();
 ```
