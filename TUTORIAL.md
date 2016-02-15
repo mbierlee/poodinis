@@ -83,7 +83,7 @@ auto exampleInstance = new ExampleClassB();
 dependencies.autowire(exampleInstance);
 assert(exampleInstance.dependency !is null);
 ```
-It is possible to autowire public and private members.
+It is possible to autowire public as well as protected and private members.
 
 Dependencies are automatically autowired when a class is resolved. So when you register ExampleClassB, its member, *dependency*, is automatically autowired:
 ```d
