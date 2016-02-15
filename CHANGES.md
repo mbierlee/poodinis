@@ -1,5 +1,9 @@
 Poodinis Changelog
 ==================
+**Version NEXT**
+* ADD ability to mark autowire dependencies as optional. When you use UDA @OptionalDependency, a type which fails to autowire will remain null
+(or an empty array). No ResolveException is thrown.
+
 **Version 6.1.0**
 * ADD setting persistent registration and resolve options
 * DEPRECATE DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION, use doNotAddConcreteTypeRegistration instead

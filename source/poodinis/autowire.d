@@ -65,6 +65,14 @@ struct Autowire(QualifierType = UseMemberType) {
 	QualifierType qualifier;
 };
 
+
+/**
+ * UDA for marking autowired dependencies optional.
+ * Optional dependencies will not lead to a resolveException when there is no type registered for them.
+ * The member will remain null.
+ */
+struct OptionalDependency {};
+
 /**
  * UDA for annotating class members to be autowired with a new instance regardless of their registration scope.
  *
@@ -127,10 +135,15 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 				alias MemberType = typeof(Type.tupleof[memberIndex]);
 
 				enum assignNewInstance = hasUDA!(Type.tupleof[memberIndex], AssignNewInstance);
+				enum isOptional = hasUDA!(Type.tupleof[memberIndex], OptionalDependency);
 
 				static if (isDynamicArray!MemberType) {
 					alias MemberElementType = ElementType!MemberType;
-					auto instances = container.resolveAll!MemberElementType;
+					static if (isOptional) {
+						auto instances = container.resolveAll!MemberElementType([ResolveOption.noResolveException]);
+					} else {
+						auto instances = container.resolveAll!MemberElementType;
+					}
 					instance.tupleof[memberIndex] = instances;
 					debug(poodinisVerbose) {
 						printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
@@ -143,12 +156,12 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 					MemberType qualifiedInstance;
 					static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
 						alias QualifierType = typeof(autowireAttribute.qualifier);
-						qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance)(container);
+						qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance, isOptional)(container);
 						debug(poodinisVerbose) {
 							qualifiedInstanceType = typeid(QualifierType);
 						}
 					} else {
-						qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance)(container);
+						qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance, isOptional)(container);
 					}
 
 					instance.tupleof[memberIndex] = qualifiedInstance;
@@ -164,12 +177,16 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 	}
 }
 
-private QualifierType createOrResolveInstance(MemberType, QualifierType, bool createNew)(shared(DependencyContainer) container) {
+private QualifierType createOrResolveInstance(MemberType, QualifierType, bool createNew, bool isOptional)(shared(DependencyContainer) container) {
 	static if (createNew) {
 		auto instanceFactory = new InstanceFactory(typeid(MemberType), CreatesSingleton.no, null);
 		return cast(MemberType) instanceFactory.getInstance();
 	} else {
-		return container.resolve!(MemberType, QualifierType);
+		static if (isOptional) {
+			return container.resolve!(MemberType, QualifierType)([ResolveOption.noResolveException]);
+		} else {
+			return container.resolve!(MemberType, QualifierType);
+		}
 	}
 }
 

@@ -12,6 +12,12 @@ import std.digest.md;
 import std.stdio;
 import std.conv;
 
+class SecurityAuditor {
+	public void submitAudit() {
+		writeln("Hmmmyes I have received your audit. It is.... adequate.");
+	}
+}
+
 class SuperSecurityDevice {
 	private int seed;
 
@@ -32,6 +38,18 @@ class SecurityManager {
 	@Autowire
 	@AssignNewInstance
 	private SuperSecurityDevice levelTwoSecurity;
+
+	@Autowire
+	@OptionalDependency
+	private SecurityAuditor auditor;
+
+	public void doAudit() {
+		if (auditor !is null) {
+			auditor.submitAudit();
+		} else {
+			writeln("I uh, will skip the audit for now...");
+		}
+	}
 }
 
 void main() {
@@ -45,6 +63,10 @@ void main() {
 	writeln("Password for user two: " ~ manager.levelTwoSecurity.getPassword());
 
 	if (manager.levelOneSecurity is manager.levelTwoSecurity) {
-		writeln("SECURITY BREACH!!!!!");
+		writeln("SECURITY BREACH!!!!!"); // Should not be printed since levelTwoSecurity is a new instance.
+	} else {
+		writeln("Security okay!");
 	}
+
+	manager.doAudit(); // Will not cause the SecurityAuditor to print, since we didn't register a SecurityAuditor.
 }

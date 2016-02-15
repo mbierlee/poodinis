@@ -94,6 +94,17 @@ assert(instance.dependency !is null);
 ```
 If an interface is to be autowired, you must register a concrete class by interface. Any class registered by concrete type can only be injected when a dependency on a concrete type is autowired.
 
+Using the UDA `OptionalDependency` you can mark an autowired member as being optional. When a member is optional, no ResolveException will be thrown when
+the type of the member is not registered and `ResolveOption.registerBeforeResolving` is not set on the container. The member will remain null or an empty array in
+case of array dependencies.
+```d
+class ExampleClass {
+	@Autowire
+	@OptionalDependency
+	private AnotherExampleClass dependency;
+}
+```
+
 Circular dependencies
 ---------------------
 Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop.

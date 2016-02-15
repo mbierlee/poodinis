@@ -73,6 +73,20 @@ version(unittest) {
 		public ComponentA componentA;
 	}
 
+	class OuttaTime {
+		@Autowire
+		@OptionalDependency
+		public InterfaceA interfaceA;
+
+		@Autowire
+		@OptionalDependency
+		public ComponentA componentA;
+
+		@Autowire
+		@OptionalDependency
+		public ComponentC[] componentCs;
+	}
+
 	// Test autowiring concrete type to existing instance
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
@@ -213,5 +227,17 @@ version(unittest) {
 		container.autowire(instance);
 
 		assert(instance.componentA !is null);
+	}
+
+	// Test autowiring optional depenencies
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		auto instance = new OuttaTime();
+
+		container.autowire(instance);
+
+		assert(instance.interfaceA is null);
+		assert(instance.componentA is null);
+		assert(instance.componentCs is null);
 	}
 }
