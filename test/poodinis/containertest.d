@@ -662,4 +662,11 @@ version(unittest) {
 		auto instance = container.resolve!TestInterface([ResolveOption.noResolveException]);
 		assert(instance is null);
 	}
+
+	// ResolveOption noResolveException does not throw for resolveAll
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		auto instances = container.resolveAll!TestInterface([ResolveOption.noResolveException]);
+		assert(instances.length == 0);
+	}
 }

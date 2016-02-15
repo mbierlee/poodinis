@@ -74,7 +74,7 @@ public enum ResolveOption {
 
 	/**
 	 * Does not throw a resolve exception when a type is not registered but will
-	 * return null instead.
+	 * return null instead. If the type is an array, an empty array is returned instead.
 	 */
 	noResolveException
 }
@@ -348,12 +348,16 @@ synchronized class DependencyContainer {
 	 * Animal[] animals = container.resolveAll!Animal;
 	 * ---
 	 */
-	public RegistrationType[] resolveAll(RegistrationType)() {
+	public RegistrationType[] resolveAll(RegistrationType)(ResolveOption[] resolveOptions = []) {
 		RegistrationType[] instances;
 		TypeInfo resolveType = typeid(RegistrationType);
 
 		auto qualifiedRegistrations = resolveType in registrations;
 		if (!qualifiedRegistrations) {
+			if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.noResolveException)) {
+				return [];
+			}
+
 			throw new ResolveException("Type not registered.", resolveType);
 		}
 
