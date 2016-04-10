@@ -1,6 +1,6 @@
 Poodinis Changelog
 ==================
-**Version NEXT**
+**Version 6.2.0**
 * ADD ability to mark autowire dependencies as optional. When you use UDA @OptionalDependency, a type which fails to autowire will remain null
 (or an empty array). No ResolveException is thrown.
 
