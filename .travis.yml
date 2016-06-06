@@ -8,6 +8,7 @@ d:
   - dmd-2.068.2
   - dmd-2.068.0
   - ldc
+  - ldc-0.17.1
 
 sudo: false
 
