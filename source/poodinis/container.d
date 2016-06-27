@@ -52,7 +52,7 @@ public enum RegistrationOption {
 	 * Prevent a concrete type being registered on itself. With this option you will always need
 	 * to use the supertype as the type of the dependency.
 	 */
-	doNotAddConcreteTypeRegistration = 1,
+	doNotAddConcreteTypeRegistration = 1 << 0,
 
 	/**
 	 * Prevent a concrete type being registered on itself. With this option you will always need
