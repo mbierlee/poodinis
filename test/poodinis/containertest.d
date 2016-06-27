@@ -497,7 +497,7 @@ version(unittest) {
 	// Test registering type with option doNotAddConcreteTypeRegistration
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)([RegistrationOption.doNotAddConcreteTypeRegistration]);
+		container.register!(TestInterface, TestClass)(RegistrationOption.doNotAddConcreteTypeRegistration);
 
 		auto firstInstance = container.resolve!TestInterface;
 		assertThrown!ResolveException(container.resolve!TestClass);
@@ -506,7 +506,7 @@ version(unittest) {
 	// Test registering type with option DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION (DEPRECATED)
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)([RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION]);
+		container.register!(TestInterface, TestClass)(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
 
 		auto firstInstance = container.resolve!TestInterface;
 		assertThrown!ResolveException(container.resolve!TestClass);
@@ -515,7 +515,7 @@ version(unittest) {
 	// Test registering conrete type with registration option doNotAddConcreteTypeRegistration does nothing
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!TestClass([RegistrationOption.doNotAddConcreteTypeRegistration]);
+		container.register!TestClass(RegistrationOption.doNotAddConcreteTypeRegistration);
 		container.resolve!TestClass;
 	}
 
@@ -631,7 +631,7 @@ version(unittest) {
 	// Test registration when resolving
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.resolve!(TestInterface, TestClass)([ResolveOption.registerBeforeResolving]);
+		container.resolve!(TestInterface, TestClass)(ResolveOption.registerBeforeResolving);
 		container.resolve!TestClass;
 	}
 
@@ -653,20 +653,20 @@ version(unittest) {
 	// Test ResolveOption registerBeforeResolving fails for interfaces
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		assertThrown!ResolveException(container.resolve!TestInterface([ResolveOption.registerBeforeResolving]));
+		assertThrown!ResolveException(container.resolve!TestInterface(ResolveOption.registerBeforeResolving));
 	}
 
 	// Test ResolveOption noResolveException does not throw
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		auto instance = container.resolve!TestInterface([ResolveOption.noResolveException]);
+		auto instance = container.resolve!TestInterface(ResolveOption.noResolveException);
 		assert(instance is null);
 	}
 
 	// ResolveOption noResolveException does not throw for resolveAll
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		auto instances = container.resolveAll!TestInterface([ResolveOption.noResolveException]);
+		auto instances = container.resolveAll!TestInterface(ResolveOption.noResolveException);
 		assert(instances.length == 0);
 	}
 }

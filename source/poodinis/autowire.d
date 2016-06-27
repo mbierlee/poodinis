@@ -140,7 +140,7 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 				static if (isDynamicArray!MemberType) {
 					alias MemberElementType = ElementType!MemberType;
 					static if (isOptional) {
-						auto instances = container.resolveAll!MemberElementType([ResolveOption.noResolveException]);
+						auto instances = container.resolveAll!MemberElementType(ResolveOption.noResolveException);
 					} else {
 						auto instances = container.resolveAll!MemberElementType;
 					}
@@ -183,7 +183,7 @@ private QualifierType createOrResolveInstance(MemberType, QualifierType, bool cr
 		return cast(MemberType) instanceFactory.getInstance();
 	} else {
 		static if (isOptional) {
-			return container.resolve!(MemberType, QualifierType)([ResolveOption.noResolveException]);
+			return container.resolve!(MemberType, QualifierType)(ResolveOption.noResolveException);
 		} else {
 			return container.resolve!(MemberType, QualifierType);
 		}
