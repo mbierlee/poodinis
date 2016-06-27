@@ -528,10 +528,10 @@ version(unittest) {
 		container.resolve!TestClass;
 	}
 
-	// Test registering type with options in the DEPRECATED way
+	// Test registering type with option doNotAddConcreteTypeRegistration as variadic (DEPRECATED)
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)(RegistrationOption.doNotAddConcreteTypeRegistration);
+		container.register!(TestInterface, TestClass)(RegistrationOption.none, RegistrationOption.doNotAddConcreteTypeRegistration);
 
 		auto firstInstance = container.resolve!TestInterface;
 		assertThrown!ResolveException(container.resolve!TestClass);
