@@ -1,5 +1,9 @@
 Poodinis Changelog
 ==================
+**Version 6.3.0**
+* CHANGE registration and resolve options to be supplied using bit flags instead. (Thanks to tmccombs)
+* DEPRECATE all other forms of supplying registration and resolve options (by array or variadics)
+
 **Version 6.2.0**
 * ADD ability to mark autowire dependencies as optional. When you use UDA @OptionalDependency, a type which fails to autowire will remain null
 (or an empty array). No ResolveException is thrown.
