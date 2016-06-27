@@ -628,6 +628,14 @@ version(unittest) {
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
 
+	// Test set persistent registration options by variadic (DEPRECATED)
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.setPersistentRegistrationOptions(RegistrationOption.none, RegistrationOption.doNotAddConcreteTypeRegistration);
+		container.register!(TestInterface, TestClass);
+		assertThrown!ResolveException(container.resolve!TestClass);
+	}
+
 	// Test unset persistent registration options
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
@@ -648,6 +656,13 @@ version(unittest) {
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.setPersistentResolveOptions(ResolveOption.registerBeforeResolving);
+		container.resolve!TestClass;
+	}
+
+	// Test set persistent resolve options by variadic (DEPRECATED)
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.setPersistentResolveOptions(ResolveOption.none, ResolveOption.registerBeforeResolving);
 		container.resolve!TestClass;
 	}
 

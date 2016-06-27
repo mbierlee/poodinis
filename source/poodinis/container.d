@@ -447,12 +447,16 @@ synchronized class DependencyContainer {
 
 	/**
 	 * Apply persistent registration options which will be used everytime register() is called.
+	 *
+	 * Deprecated: use setPersistentRegistrationOptions(RegistrationOption options) instead.
 	 */
-	public void setPersistentRegistrationOptions(RegistrationOption[] registrationOptions...) {
+	deprecated public void setPersistentRegistrationOptions(RegistrationOption[] registrationOptions...) {
 		persistentRegistrationOptions = buildFlags(registrationOptions);
 	}
 
-	/// ditto
+	/**
+	 * Apply persistent registration options which will be used everytime register() is called.
+	 */
 	public void setPersistentRegistrationOptions(RegistrationOption options) {
 		persistentRegistrationOptions = options;
 	}
@@ -466,12 +470,15 @@ synchronized class DependencyContainer {
 
 	/**
 	 * Apply persistent resolve options which will be used everytime resolve() is called.
+	 * Deprecated: use setPersistentResolveOptions(ResolveOption options) instead.
 	 */
-	public void setPersistentResolveOptions(ResolveOption[] resolveOptions...) {
+	deprecated public void setPersistentResolveOptions(ResolveOption[] resolveOptions...) {
 		persistentResolveOptions = buildFlags(resolveOptions);
 	}
 
-	/// ditto
+	/**
+	 * Apply persistent resolve options which will be used everytime resolve() is called.
+	 */
 	public void setPersistentResolveOptions(ResolveOption options) {
 		persistentResolveOptions = options;
 	}
