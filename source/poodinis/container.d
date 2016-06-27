@@ -175,8 +175,8 @@ synchronized class DependencyContainer {
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 
-		if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
-			static if (!is(SuperType == ConcreteType)) {
+		static if (!is(SuperType == ConcreteType)) {
+			if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
 				auto concreteTypeRegistration = register!ConcreteType;
 				concreteTypeRegistration.linkTo(newRegistration);
 			}
