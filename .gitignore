@@ -15,6 +15,7 @@
 /arrayCompletionExample
 /annotationsExample
 /applicationContextExample
+/registerOnResolveExample
 /.project
 /.idea
 /*.iml

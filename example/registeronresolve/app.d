@@ -32,7 +32,7 @@ void main() {
 	 * By using the resolve option "registerBeforeResolving" you can register the resolved class
 	 * immediately. Note that any autowired member will not automatically be registered as well.
 	 */
-	auto violinPlayer = dependencies.resolve!Violin([ResolveOption.registerBeforeResolving]);
+	auto violinPlayer = dependencies.resolve!Violin(ResolveOption.registerBeforeResolving);
 
 	/*
 	 * You can make the resolve option persistent by setting it on the container with setPersistentResolveOptions().

@@ -47,36 +47,38 @@ class RegistrationException : Exception {
  * Options which influence the process of registering dependencies
  */
 public enum RegistrationOption {
+	none = 0,
 	/**
 	 * Prevent a concrete type being registered on itself. With this option you will always need
 	 * to use the supertype as the type of the dependency.
 	 */
-	doNotAddConcreteTypeRegistration,
+	doNotAddConcreteTypeRegistration = 1,
 
 	/**
 	 * Prevent a concrete type being registered on itself. With this option you will always need
 	 * to use the supertype as the type of the dependency.
 	 * @deprecated use doNotAddConcreteTypeRegistration instead
 	 */
-	DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION
+	DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION = doNotAddConcreteTypeRegistration
 }
 
 /**
  * Options which influence the process of resolving dependencies
  */
 public enum ResolveOption {
+	none = 0,
 	/**
 	 * Registers the type you're trying to resolve before returning it.
 	 * This essentially makes registration optional for resolving by concerete types.
 	 * Resolinvg will still fail when trying to resolve a dependency by supertype.
 	 */
-	registerBeforeResolving,
+	registerBeforeResolving = 1 << 0,
 
 	/**
 	 * Does not throw a resolve exception when a type is not registered but will
 	 * return null instead. If the type is an array, an empty array is returned instead.
 	 */
-	noResolveException
+	noResolveException = 1 << 1
 }
 
 /**
@@ -94,8 +96,8 @@ synchronized class DependencyContainer {
 
 	private Registration[] autowireStack;
 
-	private RegistrationOption[] persistentRegistrationOptions;
-	private ResolveOption[] persistentResolveOptions;
+	private RegistrationOption persistentRegistrationOptions;
+	private ResolveOption persistentResolveOptions;
 
 	/**
 	 * Register a dependency by concrete class type.
@@ -117,15 +119,27 @@ synchronized class DependencyContainer {
 	 *
 	 * See_Also: singleInstance, newInstance, existingInstance
 	 */
-	public Registration register(ConcreteType)(RegistrationOption[] options = []) {
+	public Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none) {
 		return register!(ConcreteType, ConcreteType)(options);
 	}
 
 	/**
-	 * Deprecated: Use register(SuperType, ConcreteType)(RegistrationOption[]) instead
+	 * Deprecated: Use register(ConcreteType)(RegistrationOptions) instead.
 	 */
-	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption[] options...) {
-		return register!(SuperType, ConcreteType)(options);
+	deprecated public Registration register(ConcreteType)(RegistrationOption[] options) {
+		return register!(ConcreteType)(buildFlags(options));
+	}
+
+	/**
+	 * Deprecated: Use register(SuperType, ConcreteType)(RegistrationOptions) instead
+	 */
+	deprecated public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption first, RegistrationOption[] options...) {
+		return register!(SuperType, ConcreteType)(first | buildFlags(options));
+	}
+
+	/// ditto
+	deprecated public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption[] options) {
+		return register!(SuperType, ConcreteType)(buildFlags(options));
 	}
 
 	/**
@@ -145,7 +159,7 @@ synchronized class DependencyContainer {
 	 *
 	 * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
 	 */
-	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption[] options = []) {
+	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options = RegistrationOption.none) {
 		TypeInfo registeredType = typeid(SuperType);
 		TypeInfo_Class concreteType = typeid(ConcreteType);
 
@@ -161,8 +175,8 @@ synchronized class DependencyContainer {
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
 		newRegistration.singleInstance();
 
-		if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
-			static if (!is(SuperType == ConcreteType)) {
+		static if (!is(SuperType == ConcreteType)) {
+			if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
 				auto concreteTypeRegistration = register!ConcreteType;
 				concreteTypeRegistration.linkTo(newRegistration);
 			}
@@ -172,34 +186,16 @@ synchronized class DependencyContainer {
 		return newRegistration;
 	}
 
-	private bool hasOption(OptionType)(OptionType[] options, shared(OptionType[]) persistentOptions, OptionType option) {
-		foreach (presentOption; persistentOptions) {
-			static if (is(OptionType == RegistrationOption)) {
-				// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
-				if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
-					presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
-				}
-			}
+	private bool hasOption(OptionType)(OptionType options, OptionType persistentOptions, OptionType option) {
+		return ((options | persistentOptions) & option) != 0;
+	}
 
-			if (presentOption == option) {
-				return true;
-			}
+	private OptionType buildFlags(OptionType)(OptionType[] options) {
+		OptionType flags;
+		foreach (option; options) {
+			flags |= option;
 		}
-
-		foreach(presentOption ; options) {
-			static if (is(OptionType == RegistrationOption)) {
-				// DEPRECATED LEGACY COMPATIBILITY - REMOVE REMOVE REMOVE REMOVE REMOVE REMOVE (SOON)
-				if (presentOption == RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION) {
-					presentOption = RegistrationOption.doNotAddConcreteTypeRegistration;
-				}
-			}
-
-			if (presentOption == option) {
-				return true;
-			}
-		}
-
-		return false;
+		return flags;
 	}
 
 	private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType) {
@@ -260,8 +256,22 @@ synchronized class DependencyContainer {
 	 * ---
 	 * You need to use the resolve method which allows you to specify a qualifier.
 	 */
-	public RegistrationType resolve(RegistrationType)(ResolveOption[] resolveOptions = []) {
+	public RegistrationType resolve(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
 		return resolve!(RegistrationType, RegistrationType)(resolveOptions);
+	}
+
+	/**
+	 * Deprecated: Use register(RegistrationType)(ResolveOption) instead.
+	 */
+	deprecated public RegistrationType resolve(RegistrationType)(ResolveOption[] resolveOptions) {
+		return resolve!(RegistrationType)(buildFlags(resolveOptions));
+	}
+
+	/**
+	 * Deprecated: Use register(RegistrationType, QualifierType)(ResolveOption) instead.
+	 */
+	deprecated public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption[] resolveOptions) {
+		return resolve!(RegistrationType, QualifierType)(buildFlags(resolveOptions));
 	}
 
 	/**
@@ -290,7 +300,7 @@ synchronized class DependencyContainer {
 	 * container.resolve!(Animal, Dog);
 	 * ---
 	 */
-	public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption[] resolveOptions = []) {
+	public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
 		TypeInfo resolveType = typeid(RegistrationType);
 		TypeInfo qualifierType = typeid(QualifierType);
 
@@ -348,7 +358,7 @@ synchronized class DependencyContainer {
 	 * Animal[] animals = container.resolveAll!Animal;
 	 * ---
 	 */
-	public RegistrationType[] resolveAll(RegistrationType)(ResolveOption[] resolveOptions = []) {
+	public RegistrationType[] resolveAll(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
 		RegistrationType[] instances;
 		TypeInfo resolveType = typeid(RegistrationType);
 
@@ -366,6 +376,13 @@ synchronized class DependencyContainer {
 		}
 
 		return instances;
+	}
+
+	/**
+	 * Deprecated: Use resolveAll(RegistrationType)(ResolveOptions) instead.
+	 */
+	deprecated public RegistrationType[] resolveAll(RegistrationType)(ResolveOption[] resolveOptions) {
+		return resolveAll!RegistrationType(buildFlags(resolveOptions));
 	}
 
 	private Registration getQualifiedRegistration(TypeInfo resolveType, TypeInfo qualifierType, Registration[] candidates) {
@@ -431,35 +448,39 @@ synchronized class DependencyContainer {
 	/**
 	 * Apply persistent registration options which will be used everytime register() is called.
 	 */
-	public void setPersistentRegistrationOptions(OptionsTuple...)(OptionsTuple registrationOptions) {
-		unsetPersistentRegistrationOptions();
-		foreach (option; registrationOptions) {
-			persistentRegistrationOptions ~= option;
-		}
+	public void setPersistentRegistrationOptions(RegistrationOption[] registrationOptions...) {
+		persistentRegistrationOptions = buildFlags(registrationOptions);
+	}
+
+	/// ditto
+	public void setPersistentRegistrationOptions(RegistrationOption options) {
+		persistentRegistrationOptions = options;
 	}
 
 	/**
 	 * Unsets all applied registration options
 	 */
 	public void unsetPersistentRegistrationOptions() {
-		persistentRegistrationOptions = [];
+		persistentRegistrationOptions = RegistrationOption.none;
 	}
 
 	/**
 	 * Apply persistent resolve options which will be used everytime resolve() is called.
 	 */
-	public void setPersistentResolveOptions(OptionsTuple...)(OptionsTuple resolveOptions) {
-		unsetPersistentResolveOptions();
-		foreach (option; resolveOptions) {
-			persistentResolveOptions ~= option;
-		}
+	public void setPersistentResolveOptions(ResolveOption[] resolveOptions...) {
+		persistentResolveOptions = buildFlags(resolveOptions);
+	}
+
+	/// ditto
+	public void setPersistentResolveOptions(ResolveOption options) {
+		persistentResolveOptions = options;
 	}
 
 	/**
 	 * Unsets all applied registration options
 	 */
 	public void unsetPersistentResolveOptions() {
-		persistentResolveOptions = [];
+		persistentResolveOptions = ResolveOption.none;
 	}
 
 }
