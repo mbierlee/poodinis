@@ -503,6 +503,15 @@ version(unittest) {
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
 
+	// Test registering type with option doNotAddConcreteTypeRegistration as array (DEPRECATED)
+	unittest {
+		shared(DependencyContainer) container = new DependencyContainer();
+		container.register!(TestInterface, TestClass)([RegistrationOption.doNotAddConcreteTypeRegistration]);
+
+		auto firstInstance = container.resolve!TestInterface;
+		assertThrown!ResolveException(container.resolve!TestClass);
+	}
+
 	// Test registering type with option DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION (DEPRECATED)
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
