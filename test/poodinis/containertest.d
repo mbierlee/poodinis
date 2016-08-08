@@ -503,38 +503,11 @@ version(unittest) {
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
 
-	// Test registering type with option doNotAddConcreteTypeRegistration as array (DEPRECATED)
-	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)([RegistrationOption.doNotAddConcreteTypeRegistration]);
-
-		auto firstInstance = container.resolve!TestInterface;
-		assertThrown!ResolveException(container.resolve!TestClass);
-	}
-
-	// Test registering type with option DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION (DEPRECATED)
-	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)(RegistrationOption.DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION);
-
-		auto firstInstance = container.resolve!TestInterface;
-		assertThrown!ResolveException(container.resolve!TestClass);
-	}
-
 	// Test registering conrete type with registration option doNotAddConcreteTypeRegistration does nothing
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.register!TestClass(RegistrationOption.doNotAddConcreteTypeRegistration);
 		container.resolve!TestClass;
-	}
-
-	// Test registering type with option doNotAddConcreteTypeRegistration as variadic (DEPRECATED)
-	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
-		container.register!(TestInterface, TestClass)(RegistrationOption.none, RegistrationOption.doNotAddConcreteTypeRegistration);
-
-		auto firstInstance = container.resolve!TestInterface;
-		assertThrown!ResolveException(container.resolve!TestClass);
 	}
 
 	// Test registering type will register by contrete type by default
@@ -628,14 +601,6 @@ version(unittest) {
 		assertThrown!ResolveException(container.resolve!TestClass);
 	}
 
-	// Test set persistent registration options by variadic (DEPRECATED)
-	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
-		container.setPersistentRegistrationOptions(RegistrationOption.none, RegistrationOption.doNotAddConcreteTypeRegistration);
-		container.register!(TestInterface, TestClass);
-		assertThrown!ResolveException(container.resolve!TestClass);
-	}
-
 	// Test unset persistent registration options
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
@@ -656,13 +621,6 @@ version(unittest) {
 	unittest {
 		shared(DependencyContainer) container = new DependencyContainer();
 		container.setPersistentResolveOptions(ResolveOption.registerBeforeResolving);
-		container.resolve!TestClass;
-	}
-
-	// Test set persistent resolve options by variadic (DEPRECATED)
-	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
-		container.setPersistentResolveOptions(ResolveOption.none, ResolveOption.registerBeforeResolving);
 		container.resolve!TestClass;
 	}
 

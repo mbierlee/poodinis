@@ -1,5 +1,10 @@
 Poodinis Changelog
 ==================
+**Version 7.0.0**
+* REMOVE deprecated registration options. They are still available in properly cased forms.
+* REMOVE deprecated register() and resolve() methods which accept variadics and arrays for options. 
+Since registration and resolve options have become bitfields, you should specify them with logical ANDs.
+
 **Version 6.3.0**
 * CHANGE registration and resolve options to be supplied using bit flags instead. (Thanks to tmccombs)
 * DEPRECATE all other forms of supplying registration and resolve options (by array or variadics)

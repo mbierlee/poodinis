@@ -53,13 +53,6 @@ public enum RegistrationOption {
 	 * to use the supertype as the type of the dependency.
 	 */
 	doNotAddConcreteTypeRegistration = 1 << 0,
-
-	/**
-	 * Prevent a concrete type being registered on itself. With this option you will always need
-	 * to use the supertype as the type of the dependency.
-	 * @deprecated use doNotAddConcreteTypeRegistration instead
-	 */
-	DO_NOT_ADD_CONCRETE_TYPE_REGISTRATION = doNotAddConcreteTypeRegistration
 }
 
 /**
@@ -121,25 +114,6 @@ synchronized class DependencyContainer {
 	 */
 	public Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none) {
 		return register!(ConcreteType, ConcreteType)(options);
-	}
-
-	/**
-	 * Deprecated: Use register(ConcreteType)(RegistrationOptions) instead.
-	 */
-	deprecated public Registration register(ConcreteType)(RegistrationOption[] options) {
-		return register!(ConcreteType)(buildFlags(options));
-	}
-
-	/**
-	 * Deprecated: Use register(SuperType, ConcreteType)(RegistrationOptions) instead
-	 */
-	deprecated public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption first, RegistrationOption[] options...) {
-		return register!(SuperType, ConcreteType)(first | buildFlags(options));
-	}
-
-	/// ditto
-	deprecated public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption[] options) {
-		return register!(SuperType, ConcreteType)(buildFlags(options));
 	}
 
 	/**
@@ -261,20 +235,6 @@ synchronized class DependencyContainer {
 	}
 
 	/**
-	 * Deprecated: Use register(RegistrationType)(ResolveOption) instead.
-	 */
-	deprecated public RegistrationType resolve(RegistrationType)(ResolveOption[] resolveOptions) {
-		return resolve!(RegistrationType)(buildFlags(resolveOptions));
-	}
-
-	/**
-	 * Deprecated: Use register(RegistrationType, QualifierType)(ResolveOption) instead.
-	 */
-	deprecated public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption[] resolveOptions) {
-		return resolve!(RegistrationType, QualifierType)(buildFlags(resolveOptions));
-	}
-
-	/**
 	 * Resolve dependencies using a qualifier.
 	 *
 	 * Dependencies can only resolved using this method if they are registered by super type.
@@ -378,13 +338,6 @@ synchronized class DependencyContainer {
 		return instances;
 	}
 
-	/**
-	 * Deprecated: Use resolveAll(RegistrationType)(ResolveOptions) instead.
-	 */
-	deprecated public RegistrationType[] resolveAll(RegistrationType)(ResolveOption[] resolveOptions) {
-		return resolveAll!RegistrationType(buildFlags(resolveOptions));
-	}
-
 	private Registration getQualifiedRegistration(TypeInfo resolveType, TypeInfo qualifierType, Registration[] candidates) {
 		if (resolveType == qualifierType) {
 			if (candidates.length > 1) {
@@ -447,15 +400,6 @@ synchronized class DependencyContainer {
 
 	/**
 	 * Apply persistent registration options which will be used everytime register() is called.
-	 *
-	 * Deprecated: use setPersistentRegistrationOptions(RegistrationOption options) instead.
-	 */
-	deprecated public void setPersistentRegistrationOptions(RegistrationOption[] registrationOptions...) {
-		persistentRegistrationOptions = buildFlags(registrationOptions);
-	}
-
-	/**
-	 * Apply persistent registration options which will be used everytime register() is called.
 	 */
 	public void setPersistentRegistrationOptions(RegistrationOption options) {
 		persistentRegistrationOptions = options;
@@ -466,14 +410,6 @@ synchronized class DependencyContainer {
 	 */
 	public void unsetPersistentRegistrationOptions() {
 		persistentRegistrationOptions = RegistrationOption.none;
-	}
-
-	/**
-	 * Apply persistent resolve options which will be used everytime resolve() is called.
-	 * Deprecated: use setPersistentResolveOptions(ResolveOption options) instead.
-	 */
-	deprecated public void setPersistentResolveOptions(ResolveOption[] resolveOptions...) {
-		persistentResolveOptions = buildFlags(resolveOptions);
 	}
 
 	/**
