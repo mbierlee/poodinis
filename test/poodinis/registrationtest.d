@@ -20,13 +20,13 @@ version(unittest) {
 
 	// Test getting instance without scope defined throws exception
 	unittest {
-		Registration registration = new Registration(typeid(TestType), null);
-		assertThrown!(InstanceCreationException)(registration.getInstance());
+		Registration registration = new Registration(typeid(TestType), null, null);
+		assertThrown!(InstanceCreationException)(registration.getInstance(), null);
 	}
 
 	// Test set single instance scope using scope setter
 	unittest {
-		Registration registration = new Registration(null, typeid(TestType));
+		Registration registration = new Registration(null, typeid(TestType), null);
 		auto chainedRegistration = registration.singleInstance();
 		auto instance1 = registration.getInstance();
 		auto instance2 = registration.getInstance();
@@ -36,7 +36,7 @@ version(unittest) {
 
 	// Test set new instance scope using scope setter
 	unittest {
-		Registration registration = new Registration(null, typeid(TestType));
+		Registration registration = new Registration(null, typeid(TestType), null);
 		auto chainedRegistration = registration.newInstance();
 		auto instance1 = registration.getInstance();
 		auto instance2 = registration.getInstance();
@@ -46,7 +46,7 @@ version(unittest) {
 
 	// Test set existing instance scope using scope setter
 	unittest {
-		Registration registration = new Registration(null, null);
+		Registration registration = new Registration(null, null, null);
 		auto expectedInstance = new TestType();
 		auto chainedRegistration = registration.existingInstance(expectedInstance);
 		auto actualInstance = registration.getInstance();
@@ -56,8 +56,8 @@ version(unittest) {
 
 	// Test linking registrations
 	unittest {
-		Registration firstRegistration = new Registration(typeid(TestInterface), typeid(TestImplementation)).singleInstance();
-		Registration secondRegistration = new Registration(typeid(TestImplementation), typeid(TestImplementation)).singleInstance().linkTo(firstRegistration);
+		Registration firstRegistration = new Registration(typeid(TestInterface), typeid(TestImplementation), null).singleInstance();
+		Registration secondRegistration = new Registration(typeid(TestImplementation), typeid(TestImplementation), null).singleInstance().linkTo(firstRegistration);
 
 		auto firstInstance = firstRegistration.getInstance();
 		auto secondInstance = secondRegistration.getInstance();

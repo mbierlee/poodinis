@@ -203,19 +203,19 @@ public deprecated void globalAutowire(Type)(Type instance) {
 class AutowiredRegistration(RegistrationType : Object) : Registration {
 	private shared(DependencyContainer) container;
 
-	public this(TypeInfo registeredType, shared(DependencyContainer) container) {
-		enforce(!(container is null), "Argument 'container' is null. Autowired registrations need to autowire using a container.");
-		this.container = container;
-		super(registeredType, typeid(RegistrationType));
+	public this(TypeInfo registeredType, shared(DependencyContainer) originatingContainer) {
+		super(registeredType, typeid(RegistrationType), originatingContainer);
 	}
 
 	public override Object getInstance(InstantiationContext context = new AutowireInstantiationContext()) {
+		enforce(!(originatingContainer is null), "The registration's originating container is null. There is no way to resolve autowire dependencies.");
+
 		RegistrationType instance = cast(RegistrationType) super.getInstance(context);
 
 		AutowireInstantiationContext autowireContext = cast(AutowireInstantiationContext) context;
 		enforce(!(autowireContext is null), "Given instantiation context type could not be cast to an AutowireInstantiationContext. If you relied on using the default assigned context: make sure you're calling getInstance() on an instance of type AutowiredRegistration!");
 		if (autowireContext.autowireInstance) {
-			container.autowire(instance);
+			originatingContainer.autowire(instance);
 		}
 
 		return instance;

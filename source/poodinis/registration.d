@@ -13,6 +13,8 @@
 
 module poodinis.registration;
 
+import poodinis.container;
+
 import std.typecons;
 import std.exception;
 
@@ -31,6 +33,7 @@ class Registration {
 	private TypeInfo _registeredType = null;
 	private TypeInfo_Class _instanceType = null;
 	private Registration linkedRegistration;
+	private shared(DependencyContainer) _originatingContainer;
 
 	public @property registeredType() {
 		return _registeredType;
@@ -40,11 +43,16 @@ class Registration {
 		return _instanceType;
 	}
 
+	public @property originatingContainer() {
+		return _originatingContainer;
+	}
+
 	public InstanceFactory instanceFactory = null;
 
-	this(TypeInfo registeredType, TypeInfo_Class instanceType) {
+	this(TypeInfo registeredType, TypeInfo_Class instanceType, shared(DependencyContainer) originatingContainer) {
 		this._registeredType = registeredType;
 		this._instanceType = instanceType;
+		this._originatingContainer = originatingContainer;
 	}
 
 	public Object getInstance(InstantiationContext context = new InstantiationContext()) {
