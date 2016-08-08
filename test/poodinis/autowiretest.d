@@ -89,7 +89,7 @@ version(unittest) {
 
 	// Test autowiring concrete type to existing instance
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!ComponentA;
 		auto componentB = new ComponentB();
 		container.autowire(componentB);
@@ -98,7 +98,7 @@ version(unittest) {
 
 	// Test autowiring interface type to existing instance
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		auto componentD = new ComponentD();
 		container.autowire(componentD);
@@ -107,7 +107,7 @@ version(unittest) {
 
 	// Test autowiring private members
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		auto componentD = new ComponentD();
 		container.autowire(componentD);
@@ -116,7 +116,7 @@ version(unittest) {
 
 	// Test autowiring will only happen once
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!(InterfaceA, ComponentC).newInstance();
 		auto componentD = new ComponentD();
 		container.autowire(componentD);
@@ -128,14 +128,14 @@ version(unittest) {
 
 	// Test autowiring unregistered type
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto componentD = new ComponentD();
 		assertThrown!(ResolveException)(container.autowire(componentD), "Autowiring unregistered type should throw ResolveException");
 	}
 
 	// Test autowiring member with non-autowire attribute does not autowire
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto componentE = new ComponentE();
 		container.autowire(componentE);
 		assert(componentE.componentC is null, "Autowiring should not occur for members with attributes other than @Autowire");
@@ -143,7 +143,7 @@ version(unittest) {
 
 	// Test autowire class with alias declaration
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!ComponentA;
 		auto componentDeclarationCocktail = new ComponentDeclarationCocktail();
 
@@ -154,7 +154,7 @@ version(unittest) {
 
 	// Test autowire class with qualifier
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		container.register!(InterfaceA, ComponentX);
 		auto componentX = container.resolve!(InterfaceA, ComponentX);
@@ -167,7 +167,7 @@ version(unittest) {
 
 	// Test autowire class with multiple qualifiers
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		container.register!(InterfaceA, ComponentX);
 		auto componentC = container.resolve!(InterfaceA, ComponentC);
@@ -182,7 +182,7 @@ version(unittest) {
 
 	// Test getting instance from autowired registration will autowire instance
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!ComponentA;
 
 		auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB), container).singleInstance();
@@ -193,7 +193,7 @@ version(unittest) {
 
 	// Test autowiring a dynamic array with all qualified types
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!(InterfaceA, ComponentC);
 		container.register!(InterfaceA, ComponentX);
 
@@ -205,7 +205,7 @@ version(unittest) {
 
 	// Test autowiring new instance of singleinstance registration with newInstance UDA
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!ComponentA;
 
 		auto regularComponentA = container.resolve!ComponentA;
@@ -218,7 +218,7 @@ version(unittest) {
 
 	// Test autowiring members from base class
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		container.register!ComponentA;
 		container.register!ComponentB;
 		container.register!ComponentZ;
@@ -231,7 +231,7 @@ version(unittest) {
 
 	// Test autowiring optional depenencies
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto instance = new OuttaTime();
 
 		container.autowire(instance);

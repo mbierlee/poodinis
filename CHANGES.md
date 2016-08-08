@@ -4,6 +4,9 @@ Poodinis Changelog
 * REMOVE deprecated registration options. They are still available in properly cased forms.
 * REMOVE deprecated register() and resolve() methods which accept variadics and arrays for options. 
 Since registration and resolve options have become bitfields, you should specify them with logical ANDs.
+* DEPRECATE DependencyContainer.getInstance(). To properly make use of inversion of control, one should only 
+create the dependency container once during set-up and then completly rely on injection. See examples for 
+proper usage. You can still create your own singleton factory (method) if this is crucial to your design.
 
 **Version 6.3.0**
 * CHANGE registration and resolve options to be supplied using bit flags instead. (Thanks to tmccombs)

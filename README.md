@@ -35,7 +35,7 @@ class DataWriter {
 }
 
 void main() {
-	auto dependencies = DependencyContainer.getInstance();
+	auto dependencies = new shared DependencyContainer();
 	dependencies.register!DataWriter;
 	dependencies.register!(Database, RelationalDatabase);
 

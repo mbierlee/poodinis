@@ -389,8 +389,9 @@ synchronized class DependencyContainer {
 
 	/**
 	 * Returns a global singleton instance of a dependency container.
+	 * Deprecated: create new instance with new keyword or implement your own singleton factory (method)
 	 */
-	public static shared(DependencyContainer) getInstance() {
+	deprecated public static shared(DependencyContainer) getInstance() {
 		static shared DependencyContainer instance;
 		if (instance is null) {
 			instance = new DependencyContainer();

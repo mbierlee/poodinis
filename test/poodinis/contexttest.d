@@ -87,7 +87,7 @@ version(unittest) {
 
 	//Test register component registrations from context
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto context = new TestContext();
 		context.registerContextComponents(container);
 		auto bananaInstance = container.resolve!Banana;
@@ -97,7 +97,7 @@ version(unittest) {
 
 	//Test non-annotated methods are not registered
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto context = new TestContext();
 		context.registerContextComponents(container);
 		assertThrown!ResolveException(container.resolve!Apple);
@@ -105,7 +105,7 @@ version(unittest) {
 
 	//Test register component by base type
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto context = new TestContext();
 		context.registerContextComponents(container);
 		auto instance = container.resolve!Fruit;
@@ -114,7 +114,7 @@ version(unittest) {
 
 	//Test register components with multiple candidates
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto context = new TestContext();
 		context.registerContextComponents(container);
 
@@ -127,7 +127,7 @@ version(unittest) {
 
 	//Test register component as prototype
 	unittest {
-		shared(DependencyContainer) container = new DependencyContainer();
+		auto container = new shared DependencyContainer();
 		auto context = new TestContext();
 		context.registerContextComponents(container);
 

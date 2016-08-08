@@ -43,7 +43,7 @@ class PieEater {
 }
 
 void main() {
-	auto dependencies = DependencyContainer.getInstance();
+	auto dependencies = new shared DependencyContainer();
 	dependencies.register!(Pie, BlueBerryPie);
 	dependencies.register!(Pie, ApplePie);
 	dependencies.register!(Pie, CardboardBoxPie);

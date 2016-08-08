@@ -26,7 +26,7 @@ class Orchestra {
 }
 
 void main() {
-	auto dependencies = DependencyContainer.getInstance();
+	auto dependencies = new shared DependencyContainer();
 
 	/*
 	 * By using the resolve option "registerBeforeResolving" you can register the resolved class

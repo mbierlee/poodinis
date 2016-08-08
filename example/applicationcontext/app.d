@@ -60,7 +60,7 @@ class ExampleApplicationContext : ApplicationContext {
 }
 
 void main() {
-	auto container = DependencyContainer.getInstance();
+	auto container = new shared DependencyContainer();
 	container.registerContext!ExampleApplicationContext;
 
 	auto townSquare = container.resolve!TownSquare;

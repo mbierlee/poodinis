@@ -6,11 +6,10 @@ The container
 -------------
 To register a class, a new dependency container must be instantiated:
 ```d
-// Register a private container
-shared(DependencyContainer) dependencies = new DependencyContainer();
-// Or use the singleton container
-dependencies = DependencyContainer.getInstance();
+// Create a shared container
+auto dependencies = new shared DependencyContainer();
 ```
+A shared dependency container is thread-safe and resolves the same dependencies across all threads.
 ###Registering dependencies
 To make dependencies available, they have to be registered:
 ```d

@@ -53,7 +53,7 @@ class SecurityManager {
 }
 
 void main() {
-	auto dependencies = DependencyContainer.getInstance();
+	auto dependencies = new shared DependencyContainer();
 	dependencies.register!SuperSecurityDevice; // Registered with the default "Single instance" scope
 	dependencies.register!SecurityManager;
 

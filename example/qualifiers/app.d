@@ -44,7 +44,7 @@ class HybridCar {
 }
 
 void main() {
-	auto dependencies = DependencyContainer.getInstance();
+	auto dependencies = new shared DependencyContainer();
 
 	dependencies.register!HybridCar;
 	dependencies.register!(Engine, FuelEngine);
