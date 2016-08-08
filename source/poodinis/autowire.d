@@ -194,8 +194,9 @@ private QualifierType createOrResolveInstance(MemberType, QualifierType, bool cr
  * Autowire the given instance using the globally available dependency container.
  *
  * See_Also: DependencyContainer
+ * Deprecated: Using the global container is undesired. See DependencyContainer.getInstance().
  */
-public void globalAutowire(Type)(Type instance) {
+public deprecated void globalAutowire(Type)(Type instance) {
 	DependencyContainer.getInstance().autowire(instance);
 }
 
