@@ -185,7 +185,7 @@ version(unittest) {
 		auto container = new shared DependencyContainer();
 		container.register!ComponentA;
 
-		auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB), container).singleInstance();
+		auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB), new InstanceFactory(), container).singleInstance();
 		auto instance = cast(ComponentB) registration.getInstance(new AutowireInstantiationContext());
 
 		assert(instance.componentA !is null);

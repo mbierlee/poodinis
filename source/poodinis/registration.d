@@ -21,6 +21,7 @@ class Registration {
 	private TypeInfo_Class _instanceType = null;
 	private Registration linkedRegistration;
 	private shared(DependencyContainer) _originatingContainer;
+	private InstanceFactory _instanceFactory;
 
 	public @property registeredType() {
 		return _registeredType;
@@ -34,12 +35,15 @@ class Registration {
 		return _originatingContainer;
 	}
 
-	public InstanceFactory instanceFactory = null;
+	public @property instanceFactory() {
+		return _instanceFactory;
+	}
 
-	this(TypeInfo registeredType, TypeInfo_Class instanceType, shared(DependencyContainer) originatingContainer) {
+	this(TypeInfo registeredType, TypeInfo_Class instanceType, InstanceFactory instanceFactory, shared(DependencyContainer) originatingContainer) {
 		this._registeredType = registeredType;
 		this._instanceType = instanceType;
 		this._originatingContainer = originatingContainer;
+		this._instanceFactory = instanceFactory;
 	}
 
 	public Object getInstance(InstantiationContext context = new InstantiationContext()) {

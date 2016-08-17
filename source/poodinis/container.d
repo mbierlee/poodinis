@@ -147,8 +147,7 @@ synchronized class DependencyContainer {
 			return existingRegistration;
 		}
 
-		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
-		newRegistration.instanceFactory = new InstanceFactory();
+		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, new InstanceFactory(), this);
 		newRegistration.singleInstance();
 
 		static if (!is(SuperType == ConcreteType)) {

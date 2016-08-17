@@ -62,9 +62,7 @@ public void registerContextComponents(ApplicationContextType : ApplicationContex
 				registration = container.register!(ReturnType!factoryMethod);
 			}
 
-			auto instanceFactory = new InstanceFactory();
-			instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, createsSingleton, null, factoryMethod);
-			registration.instanceFactory = instanceFactory;
+			registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, createsSingleton, null, factoryMethod);
 		}
 	}
 }

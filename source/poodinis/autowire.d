@@ -205,8 +205,8 @@ public deprecated void globalAutowire(Type)(Type instance) {
 class AutowiredRegistration(RegistrationType : Object) : Registration {
 	private shared(DependencyContainer) container;
 
-	public this(TypeInfo registeredType, shared(DependencyContainer) originatingContainer) {
-		super(registeredType, typeid(RegistrationType), originatingContainer);
+	public this(TypeInfo registeredType, InstanceFactory instanceFactory, shared(DependencyContainer) originatingContainer) {
+		super(registeredType, typeid(RegistrationType), instanceFactory, originatingContainer);
 	}
 
 	public override Object getInstance(InstantiationContext context = new AutowireInstantiationContext()) {
