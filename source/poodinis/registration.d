@@ -14,20 +14,7 @@
 module poodinis.registration;
 
 import poodinis.container;
-
-import std.typecons;
-import std.exception;
-
-debug {
-	import std.stdio;
-	import std.string;
-}
-
-class InstanceCreationException : Exception {
-	this(string message, string file = __FILE__, size_t line = __LINE__) {
-		super(message, file, line);
-	}
-}
+import poodinis.factory;
 
 class Registration {
 	private TypeInfo _registeredType = null;
@@ -71,45 +58,6 @@ class Registration {
 	public Registration linkTo(Registration registration) {
 		this.linkedRegistration = registration;
 		return this;
-	}
-}
-
-alias CreatesSingleton = Flag!"CreatesSingleton";
-alias InstanceFactoryMethod = Object delegate();
-
-class InstanceFactory {
-	private TypeInfo_Class instanceType = null;
-	private Object instance = null;
-	private CreatesSingleton createsSingleton;
-	private InstanceFactoryMethod factoryMethod;
-
-	this(TypeInfo_Class instanceType, CreatesSingleton createsSingleton = CreatesSingleton.yes, Object existingInstance = null, InstanceFactoryMethod factoryMethod = null) {
-		this.instanceType = instanceType;
-		this.createsSingleton = existingInstance !is null ? CreatesSingleton.yes : createsSingleton;
-		this.instance = existingInstance;
-		this.factoryMethod = factoryMethod !is null ? factoryMethod : &this.createInstance;
-	}
-
-	public Object getInstance() {
-		if (createsSingleton && instance !is null) {
-			debug(poodinisVerbose) {
-				writeln(format("DEBUG: Existing instance returned of type %s", instanceType.toString()));
-			}
-
-			return instance;
-		}
-
-		debug(poodinisVerbose) {
-			writeln(format("DEBUG: Creating new instance of type %s", instanceType.toString()));
-		}
-
-		instance = factoryMethod();
-		return instance;
-	}
-
-	private Object createInstance() {
-		enforce!InstanceCreationException(instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
-		return instanceType.create();
 	}
 }
 

@@ -15,3 +15,4 @@ public import poodinis.autowire;
 public import poodinis.container;
 public import poodinis.registration;
 public import poodinis.context;
+public import poodinis.factory;
