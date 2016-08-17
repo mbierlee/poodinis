@@ -49,7 +49,7 @@ class InstanceFactory {
 			this.instance = factoryParameters.existingInstance;
 		}
 
-		this.factoryParameters = factoryParameters;
+		_factoryParameters = factoryParameters;
 	}
 
 	public @property InstanceFactoryParameters factoryParameters() {
