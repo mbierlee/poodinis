@@ -24,6 +24,7 @@ debug {
 import poodinis.registration;
 import poodinis.autowire;
 import poodinis.context;
+import poodinis.factory;
 
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
@@ -147,6 +148,7 @@ synchronized class DependencyContainer {
 		}
 
 		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, this);
+		newRegistration.instanceFactory = new InstanceFactory();
 		newRegistration.singleInstance();
 
 		static if (!is(SuperType == ConcreteType)) {

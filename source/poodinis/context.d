@@ -38,7 +38,7 @@ struct RegisterByType(Type) {
 }
 
 /**
-* Components with the prototype registration will be scoped as dependencies which will created
+* Components with the prototype registration will be scoped as dependencies which will create
 * new instances every time they are resolved. The factory method will be called repeatedly.
 */
 struct Prototype {}
