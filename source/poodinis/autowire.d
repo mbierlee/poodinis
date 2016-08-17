@@ -180,7 +180,8 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 
 private QualifierType createOrResolveInstance(MemberType, QualifierType, bool createNew, bool isOptional)(shared(DependencyContainer) container) {
 	static if (createNew) {
-		auto instanceFactory = new InstanceFactory(typeid(MemberType), CreatesSingleton.no, null);
+		auto instanceFactory = new InstanceFactory();
+		instanceFactory.factoryParameters = InstanceFactoryParameters(typeid(MemberType), CreatesSingleton.no);
 		return cast(MemberType) instanceFactory.getInstance();
 	} else {
 		static if (isOptional) {

@@ -28,38 +28,53 @@ class InstanceCreationException : Exception {
 	}
 }
 
-class InstanceFactory {
-	private TypeInfo_Class instanceType = null;
-	private Object instance = null;
-	private CreatesSingleton createsSingleton;
-	private InstanceFactoryMethod factoryMethod;
+struct InstanceFactoryParameters {
+	TypeInfo_Class instanceType;
+	CreatesSingleton createsSingleton = CreatesSingleton.yes;
+	Object existingInstance;
+	InstanceFactoryMethod factoryMethod;
+}
 
-	this(TypeInfo_Class instanceType, CreatesSingleton createsSingleton = CreatesSingleton.yes, Object existingInstance = null, InstanceFactoryMethod factoryMethod = null) {
-		this.instanceType = instanceType;
-		this.createsSingleton = existingInstance !is null ? CreatesSingleton.yes : createsSingleton;
-		this.instance = existingInstance;
-		this.factoryMethod = factoryMethod !is null ? factoryMethod : &this.createInstance;
+class InstanceFactory {
+	private Object instance = null;
+	private InstanceFactoryParameters _factoryParameters;
+
+	public @property void factoryParameters(InstanceFactoryParameters factoryParameters) {
+		if (factoryParameters.factoryMethod is null) {
+			factoryParameters.factoryMethod = &this.createInstance;
+		}
+
+		if (factoryParameters.existingInstance !is null) {
+			factoryParameters.createsSingleton = CreatesSingleton.yes;
+			this.instance = factoryParameters.existingInstance;
+		}
+
+		this.factoryParameters = factoryParameters;
+	}
+
+	public @property InstanceFactoryParameters factoryParameters() {
+		return _factoryParameters;
 	}
 
 	public Object getInstance() {
-		if (createsSingleton && instance !is null) {
+		if (_factoryParameters.createsSingleton && instance !is null) {
 			debug(poodinisVerbose) {
-				writeln(format("DEBUG: Existing instance returned of type %s", instanceType.toString()));
+				writeln(format("DEBUG: Existing instance returned of type %s", _factoryParameters.instanceType.toString()));
 			}
 
 			return instance;
 		}
 
 		debug(poodinisVerbose) {
-			writeln(format("DEBUG: Creating new instance of type %s", instanceType.toString()));
+			writeln(format("DEBUG: Creating new instance of type %s", _factoryParameters.instanceType.toString()));
 		}
 
-		instance = factoryMethod();
+		instance = _factoryParameters.factoryMethod();
 		return instance;
 	}
 
 	private Object createInstance() {
-		enforce!InstanceCreationException(instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
-		return instanceType.create();
+		enforce!InstanceCreationException(_factoryParameters.instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
+		return _factoryParameters.instanceType.create();
 	}
 }

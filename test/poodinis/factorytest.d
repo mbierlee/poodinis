@@ -17,7 +17,8 @@ version(unittest) {
 
 	// Test instance factory with singletons
 	unittest {
-		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.yes, null);
+		auto factory = new InstanceFactory();
+		factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.yes);
 		auto instanceOne = factory.getInstance();
 		auto instanceTwo = factory.getInstance();
 
@@ -27,7 +28,8 @@ version(unittest) {
 
 	// Test instance factory with new instances
 	unittest {
-		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.no, null);
+		auto factory = new InstanceFactory();
+		factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.no);
 		auto instanceOne = factory.getInstance();
 		auto instanceTwo = factory.getInstance();
 
@@ -38,7 +40,8 @@ version(unittest) {
 	// Test instance factory with existing instances
 	unittest {
 		auto existingInstance = new TestImplementation();
-		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.yes, existingInstance);
+		auto factory = new InstanceFactory();
+		factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.yes, existingInstance);
 		auto instanceOne = factory.getInstance();
 		auto instanceTwo = factory.getInstance();
 
@@ -49,7 +52,8 @@ version(unittest) {
 	// Test instance factory with existing instances when setting singleton flag to "no"
 	unittest {
 		auto existingInstance = new TestImplementation();
-		auto factory = new InstanceFactory(typeid(TestImplementation), CreatesSingleton.no, existingInstance);
+		auto factory = new InstanceFactory();
+		factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.no, existingInstance);
 		auto instance = factory.getInstance();
 
 		assert(instance is existingInstance, "Created factory instance is not the existing instance");
@@ -63,7 +67,8 @@ version(unittest) {
 			return instance;
 		}
 
-		auto factory = new InstanceFactory(null, CreatesSingleton.yes, null, &factoryMethod);
+		auto factory = new InstanceFactory();
+		factory.factoryParameters = InstanceFactoryParameters(null, CreatesSingleton.yes, null, &factoryMethod);
 		auto instance = cast(TestImplementation) factory.getInstance();
 
 		assert(instance !is null, "No instance was created by factory or could not be cast to expected type");

@@ -67,7 +67,8 @@ class Registration {
  * Effectively makes the given registration a singleton.
  */
 public Registration singleInstance(Registration registration) {
-	registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.yes, null);
+	registration.instanceFactory = new InstanceFactory();
+	registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.yes);
 	return registration;
 }
 
@@ -75,7 +76,8 @@ public Registration singleInstance(Registration registration) {
  * Scopes registrations to return a new instance every time the given registration is resolved.
  */
 public Registration newInstance(Registration registration) {
-	registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.no, null);
+	registration.instanceFactory = new InstanceFactory();
+	registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.no);
 	return registration;
 }
 
@@ -83,7 +85,8 @@ public Registration newInstance(Registration registration) {
  * Scopes registrations to return the given instance every time the given registration is resolved.
  */
 public Registration existingInstance(Registration registration, Object instance) {
-	registration.instanceFactory = new InstanceFactory(registration.instanceType, CreatesSingleton.yes, instance);
+	registration.instanceFactory = new InstanceFactory();
+	registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.yes, instance);
 	return registration;
 }
 
