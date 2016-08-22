@@ -180,6 +180,17 @@ version(unittest) {
 		}
 	}
 
+	class Cocktail {
+		@Autowire
+		public Moolah moolah;
+
+		public Red red;
+
+		this(Red red) {
+			this.red = red;
+		}
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -650,5 +661,19 @@ version(unittest) {
 		auto container = new shared DependencyContainer();
 		auto instances = container.resolveAll!TestInterface(ResolveOption.noResolveException);
 		assert(instances.length == 0);
+	}
+
+	// Test autowired, constructor injected class
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!Red;
+		container.register!Moolah;
+		container.register!Cocktail;
+
+		auto instance = container.resolve!Cocktail;
+
+		assert(instance !is null);
+		assert(instance.moolah is container.resolve!Moolah);
+		assert(instance.red is container.resolve!Red);
 	}
 }

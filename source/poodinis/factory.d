@@ -11,8 +11,12 @@
 
 module poodinis.factory;
 
+import poodinis.container;
+
 import std.typecons;
 import std.exception;
+import std.traits;
+import std.meta;
 
 debug {
 	import std.string;
@@ -38,6 +42,10 @@ struct InstanceFactoryParameters {
 class InstanceFactory {
 	private Object instance = null;
 	private InstanceFactoryParameters _factoryParameters;
+
+	this() {
+		factoryParameters = InstanceFactoryParameters();
+	}
 
 	public @property void factoryParameters(InstanceFactoryParameters factoryParameters) {
 		if (factoryParameters.factoryMethod is null) {
@@ -73,8 +81,65 @@ class InstanceFactory {
 		return instance;
 	}
 
-	private Object createInstance() {
+	protected Object createInstance() {
 		enforce!InstanceCreationException(_factoryParameters.instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
 		return _factoryParameters.instanceType.create();
+	}
+}
+
+class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
+	private shared DependencyContainer container;
+
+	this(shared DependencyContainer container) {
+		this.container = container;
+	}
+
+	private static string createArgumentList(Params...)() {
+		string argumentList = "";
+		foreach(param; Params) {
+			if (argumentList.length > 0) {
+				argumentList ~= ",";
+			}
+
+			argumentList ~= "container.resolve!" ~ param.stringof;
+		}
+		return argumentList;
+	}
+
+	private static bool parametersAreValid(Params...)() {
+		bool isValid = true;
+		foreach(param; Params) {
+			if (isBuiltinType!param) {
+				isValid = false;
+				break;
+			}
+		}
+
+		return isValid;
+	}
+
+	protected override Object createInstance() {
+		enforce!InstanceCreationException(container, "A dependency container is not defined. Cannot perform constructor injection without one.");
+
+		Object instance = null;
+		static if (__traits(compiles, __traits(getOverloads, InstanceType, `__ctor`))) {
+			foreach(ctor ; __traits(getOverloads, InstanceType, `__ctor`)) {
+				static if (parametersAreValid!(Parameters!ctor)) {
+					mixin(`
+						import ` ~ moduleName!InstanceType ~ `;
+						instance = new ` ~ fullyQualifiedName!InstanceType ~ `(` ~ createArgumentList!(Parameters!ctor) ~ `);
+					`);
+					break;
+				}
+			}
+		}
+
+		if (instance is null) {
+			instance = typeid(InstanceType).create();
+		}
+
+		enforce!InstanceCreationException(instance !is null, "Unable to create instance of type" ~ InstanceType.stringof ~ ", does it have injectable constructors?");
+
+		return instance;
 	}
 }
