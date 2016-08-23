@@ -133,7 +133,7 @@ Classes with multiple constructors can be injected. The following rules apply to
 * When no injectable constructor is found an InstanceCreationException will be thrown on resolve.
 
 If the constructors of a class are not suitable for injection, you could manually configure its creation using Application Contexts (see chapter further down).
-Constructor injection has the advantage of not having add dependcies to Poodinis all over your application.
+Constructor injection has the advantage of not having to import Poodinis throughout your application.
 
 Circular dependencies
 ---------------------
