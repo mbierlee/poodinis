@@ -191,6 +191,14 @@ version(unittest) {
 		}
 	}
 
+	class Wallpaper {
+		public Color color;
+
+		this(Color color) {
+			this.color = color;
+		}
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -675,5 +683,16 @@ version(unittest) {
 		assert(instance !is null);
 		assert(instance.moolah is container.resolve!Moolah);
 		assert(instance.red is container.resolve!Red);
+	}
+
+	// Test injecting constructor with super-type parameter
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!Wallpaper;
+		container.register!(Color, Blue);
+
+		auto instance = container.resolve!Wallpaper;
+		assert(instance !is null);
+		assert(instance.color is container.resolve!Blue);
 	}
 }
