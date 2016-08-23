@@ -131,7 +131,9 @@ Classes with multiple constructors can be injected. The following rules apply to
 * Injection is attempted for the first constructor which has non-builtin types only in its parameter list.
 * When a constructor with an empty parameter list is found, no other constructors are attempted (and nothing is injected). This can be used to explicitly prevent constructor injection.
 * When no injectable constructor is found an InstanceCreationException will be thrown on resolve.
+
 If the constructors of a class are not suitable for injection, you could manually configure its creation using Application Contexts (see chapter further down).
+Constructor injection has the advantage of not having add dependcies to Poodinis all over your application.
 
 Circular dependencies
 ---------------------
