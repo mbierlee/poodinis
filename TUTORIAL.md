@@ -66,7 +66,7 @@ auto preExistingInstance = new ExampleClass();
 dependencies.register!ExampleClass.existingInstance(preExistingInstance);
 ```
 
-Autowiring
+Automatic Injection
 ----------
 The real value of any dependency injection framework comes from its ability to automatically inject dependencies. Poodinis supports automatic injection either through autowiring members annotated with the `@Autowire` UDA or through constructor injection.
 ### UDA-based autowiring
