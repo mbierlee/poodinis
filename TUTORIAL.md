@@ -172,7 +172,7 @@ dependencies.register!(Color, Blue);
 dependencies.register!(Color, Red);
 auto mixer = dependencies.resolve!ColorMixer;
 ```
-Member `mixer.colors` will now contain instances of `Blue` and `Red`. The order in which instances are resolved is not guarenteed to be that of the order in which they were registered.
+Member `mixer.colors` will now contain instances of `Blue` and `Red`. The order in which instances are resolved is not guaranteed to be that of the order in which they were registered.
 
 Application Contexts
 --------------------
