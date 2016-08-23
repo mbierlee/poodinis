@@ -81,13 +81,8 @@ class ExampleClassB {
 
 dependencies.register!ExampleClassA;
 auto exampleInstance = new ExampleClassB();
-
-// Manual autowiring
-dependencies.autowire(exampleInstance); 
-
-// Let the container autowire on resolve
-dependencies.register!ExampleClassB;
-auto exampleInstance2 = dependencies.resolve!ExampleClassB;
+dependencies.autowire(exampleInstance);
+assert(exampleInstance.dependency !is null);
 ```
 It is possible to autowire public as well as protected and private members.
 
