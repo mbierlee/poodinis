@@ -6,7 +6,7 @@ Licensed under the terms of the MIT license - See [LICENSE.txt](LICENSE.txt)
 
 Master: [![Build Status](https://api.travis-ci.org/mbierlee/poodinis.png?branch=master)](https://travis-ci.org/mbierlee/poodinis) - Dev: [![Build Status](https://api.travis-ci.org/mbierlee/poodinis.png?branch=develop)](https://travis-ci.org/mbierlee/poodinis)
 
-Poodinis is a dependency injection framework for the D programming language. It is inspired by the [Spring Framework] and [Hypodermic] IoC container for C++. Poodinis supports registering and resolving classes either by concrete type or interface. Automatic injection of dependencies is supported through the use of UDAs (Referred to as autowiring).
+Poodinis is a dependency injection framework for the D programming language. It is inspired by the [Spring Framework] and [Hypodermic] IoC container for C++. Poodinis supports registering and resolving classes either by concrete type or interface. Automatic injection of dependencies is supported through the use of UDAs or constructors.
 
 Requires at least a D 2.068.0 compatible compiler  
 Uses the Phobos standard library  
@@ -59,7 +59,6 @@ Future Work
 -----------
 * Component scan (auto-registration)
 * Phobos collections autowiring
-* Constructor injection
 * Named qualifiers
 * Value type injection
 

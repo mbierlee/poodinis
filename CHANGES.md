@@ -1,6 +1,7 @@
 Poodinis Changelog
 ==================
 **Version 7.0.0**
+* ADD constructor injection. Injection is done automatically on resolve. See tutorial and examples for more details.
 * REMOVE deprecated registration options. They are still available in properly cased forms.
 * REMOVE deprecated register() and resolve() methods which accept variadics and arrays for options. 
 Since registration and resolve options have become bitfields, you should specify them with logical ANDs.

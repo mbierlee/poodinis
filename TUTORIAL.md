@@ -68,7 +68,9 @@ dependencies.register!ExampleClass.existingInstance(preExistingInstance);
 
 Autowiring
 ----------
-The real value of any dependency injection framework comes from its ability to autowire dependencies. Poodinis supports autowiring by simply applying the `@Autowire` UDA to a member of a class:
+The real value of any dependency injection framework comes from its ability to automatically inject dependencies. Poodinis supports automatic injection either through autowiring members annotated with the `@Autowire` UDA or through constructor injection.
+### UDA-based autowiring
+UDA-based autowiring can be achieved by annotating members of a class with the `@Autowire` UDA:
 ```d
 class ExampleClassA {}
 
@@ -79,8 +81,13 @@ class ExampleClassB {
 
 dependencies.register!ExampleClassA;
 auto exampleInstance = new ExampleClassB();
-dependencies.autowire(exampleInstance);
-assert(exampleInstance.dependency !is null);
+
+// Manual autowiring
+dependencies.autowire(exampleInstance); 
+
+// Let the container handle injection
+dependencies.register!ExampleClassB;
+auto exampleInstance2 = dependencies.resolve!ExampleClassB;
 ```
 It is possible to autowire public as well as protected and private members.
 
@@ -103,6 +110,33 @@ class ExampleClass {
 	private AnotherExampleClass dependency;
 }
 ```
+
+### Constructor injection
+Poodinis also supports automatic injection of dependencies through constructors:
+```d
+class ExampleClassA {}
+
+class ExampleClassB {
+	private ExampleClassA dependency;
+
+	this(ExampleClassA dependency) {
+		this.dependency = dependency;
+	}
+}
+
+dependencies.register!ExampleClassA;
+dependencies.register!ExampleClassB;
+
+auto instance = dependencies.resolve!ExampleClassB;
+ 
+```
+`ExampleClassA` is automatically resolved and passed to `ExampleClassB`'s constructor. 
+Classes with multiple constructors can be injected. The following rules apply to constructor injection:
+* Injection is attempted at the order of declaration. However, this is compiler dependant and may not always be the case.
+* Injection is attempted for the first constructor which has non-builtin types only in its parameter list.
+* When a constructor with an empty parameter list is found, no other constructors are attempted (and nothing is injected). This can be used to explicitly prevent constructor injection.
+* When no injectable constructor is found an InstanceCreationException will be thrown on resolve.
+If the constructors of a class are not suitable for injection, you could manually configure its creation using Application Contexts (see chapter further down).
 
 Circular dependencies
 ---------------------
