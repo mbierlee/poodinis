@@ -189,7 +189,7 @@ class Context : ApplicationContext {
 	
 	@Component
 	public SomeLibraryClass libraryClass() {
-		return new SomeLibraryClass("This class needs constructor parameters so I have to register it through an application context");
+		return new SomeLibraryClass("This class uses a constructor parameter of a built-in type so I have to register it through an application context");
 	}
 }
 ```
