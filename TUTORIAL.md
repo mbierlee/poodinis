@@ -85,7 +85,7 @@ auto exampleInstance = new ExampleClassB();
 // Manual autowiring
 dependencies.autowire(exampleInstance); 
 
-// Let the container handle injection
+// Let the container autowire on resolve
 dependencies.register!ExampleClassB;
 auto exampleInstance2 = dependencies.resolve!ExampleClassB;
 ```
