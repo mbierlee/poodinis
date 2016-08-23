@@ -93,7 +93,7 @@ dependencies.register!ExampleClassB;
 auto instance = dependencies.resolve!ExampleClassB;
 assert(instance.dependency !is null);
 ```
-If an interface is to be autowired, you must register a concrete class by interface. Any class registered by concrete type can only be injected when a dependency on a concrete type is autowired.
+If an interface is to be autowired, you must register a concrete class by interface. A class registered only by concrete type can only be injected into members of that type, not its supertypes.
 
 Using the UDA `OptionalDependency` you can mark an autowired member as being optional. When a member is optional, no ResolveException will be thrown when
 the type of the member is not registered and `ResolveOption.registerBeforeResolving` is not set on the container. The member will remain null or an empty array in
