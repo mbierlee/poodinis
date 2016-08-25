@@ -102,6 +102,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "constructorInjectionExample",
+			"description" : "Example where dependencies are injected into constructors when their classes are created.",
+			"targetType": "executable",
+			"targetName": "constructorInjectionExample",
+			"sourcePaths": [
+				"example/constructorinjection"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }
