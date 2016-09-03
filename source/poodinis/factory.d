@@ -17,9 +17,9 @@ import std.typecons;
 import std.exception;
 import std.traits;
 import std.meta;
+import std.string;
 
 debug {
-	import std.string;
 	import std.stdio;
 }
 
