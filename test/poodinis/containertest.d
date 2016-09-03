@@ -199,6 +199,14 @@ version(unittest) {
 		}
 	}
 
+	class Pot {
+		this(Kettle kettle) {}
+	}
+
+	class Kettle {
+		this(Pot pot) {}
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -694,5 +702,14 @@ version(unittest) {
 		auto instance = container.resolve!Wallpaper;
 		assert(instance !is null);
 		assert(instance.color is container.resolve!Blue);
+	}
+
+	// Test prevention of circular dependencies during constructor injection
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!Pot;
+		container.register!Kettle;
+
+		assertThrown!InstanceCreationException(container.resolve!Pot);
 	}
 }

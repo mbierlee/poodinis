@@ -137,7 +137,7 @@ Constructor injection has the advantage of not having to import Poodinis through
 
 Circular dependencies
 ---------------------
-Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop.
+Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop. Circular dependencies are only supported when autowiring members through the `@Autowire` UDA; circular dependencies in constructors are not supported and will result in an `InstanceCreationException`.
 
 Registering and resolving using qualifiers
 ------------------------------------------

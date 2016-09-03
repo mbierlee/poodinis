@@ -89,6 +89,7 @@ class InstanceFactory {
 
 class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
 	private shared DependencyContainer container;
+	private bool isBeingInjected = false;
 
 	this(shared DependencyContainer container) {
 		this.container = container;
@@ -120,15 +121,18 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
 
 	protected override Object createInstance() {
 		enforce!InstanceCreationException(container, "A dependency container is not defined. Cannot perform constructor injection without one.");
+		enforce!InstanceCreationException(!isBeingInjected, format("%s is already being created and injected; possible circular dependencies in constructors?", InstanceType.stringof));
 
 		Object instance = null;
 		static if (__traits(compiles, __traits(getOverloads, InstanceType, `__ctor`))) {
 			foreach(ctor ; __traits(getOverloads, InstanceType, `__ctor`)) {
 				static if (parametersAreValid!(Parameters!ctor)) {
+					isBeingInjected = true;
 					mixin(`
 						import ` ~ moduleName!InstanceType ~ `;
 						instance = new ` ~ fullyQualifiedName!InstanceType ~ `(` ~ createArgumentList!(Parameters!ctor) ~ `);
 					`);
+					isBeingInjected = false;
 					break;
 				}
 			}
