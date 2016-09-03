@@ -244,10 +244,16 @@ class Context : ApplicationContext {
 }
 ```
 
-Persistent Registration Options
+Persistent Registration and Resolve Options
 -------------------------------
 If you want registration options to be persistent (applicable for every call to `register()`), you can use the container method `setPersistentRegistrationOptions()`:
 ```d
-dependencies.setPersistentRegistrationOptions(RegistrationOption.doNotAddConcreteTypeRegistration); // Sets the option
+dependencies.setPersistentRegistrationOptions(RegistrationOption.doNotAddConcreteTypeRegistration); // Sets the options
 dependencies.unsetPersistentRegistrationOptions(); // Clears the persistentent options
 ```
+Likewise, the same is possible for resolve options:
+```d
+dependencies.setPersistentResolveOptions(ResolveOption.registerBeforeResolving); // Sets the options
+dependencies.unsetPersistentResolveOptions(); // Clears the persistentent options
+```
+Please note that setting options will unset previously set options; the options specified will be the only ones in effect.
