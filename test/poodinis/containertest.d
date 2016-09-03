@@ -207,6 +207,18 @@ version(unittest) {
 		this(Pot pot) {}
 	}
 
+	class Rock {
+		this(Scissors scissors) {}
+	}
+
+	class Paper {
+		this(Rock rock) {}
+	}
+
+	class Scissors {
+		this(Paper paper) {}
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -711,5 +723,15 @@ version(unittest) {
 		container.register!Kettle;
 
 		assertThrown!InstanceCreationException(container.resolve!Pot);
+	}
+
+	// Test prevention of transitive circular dependencies during constructor injection
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!Rock;
+		container.register!Paper;
+		container.register!Scissors;
+
+		assertThrown!InstanceCreationException(container.resolve!Rock);
 	}
 }
