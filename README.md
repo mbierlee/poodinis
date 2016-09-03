@@ -59,7 +59,7 @@ void main() {
 	auto writer = dependencies.resolve!DataWriter;
 }
 ```
-For more examples, see the [examples](example) directory.
+Set-up can further be reduced by enabling "Register on resolve". For more details and examples, see the [examples](example) directory.
 
 ###Tutorial
 For an extended tutorial walking you through all functionality offered by Poodinis, see [TUTORIAL.md](TUTORIAL.md)
