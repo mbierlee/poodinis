@@ -21,6 +21,7 @@ Features
 * Multi-threadable: Dependency containers return the same dependencies across all threads.
 * Minimal set-up: Creation and injection of conventional classes requires almost no manual dependency configuration.
 * Well-tested: Developed test-driven, a great number of scenarios are tested as part of the test suite.  
+
 See the [TUTORIAL.md](TUTORIAL.md) and [examples](example) for a complete walkthrough of all features.
 
 Getting started
