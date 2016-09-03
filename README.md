@@ -12,9 +12,16 @@ Requires at least a D 2.068.0 compatible compiler
 Uses the Phobos standard library  
 Can be built with DUB 0.9.24 or higher
 
-History
--------
-For a full overview of changes, see [CHANGES.md](CHANGES.md)
+Features
+--------
+* Member injection: Injection of dependencies in class members of any visibility (public, private, etc.)
+* Constructor injection: Automatic injection of dependencies in class constructors on creation.
+* Type qualifiers: Inject concrete types into members defined only by abstract types.
+* Application contexts: Control the creation of dependencies manually through factory methods.
+* Multi-threadable: Dependency containers return the same dependencies across all threads.
+* Minimal set-up: Creation and injection of conventional classes requires almost no manual dependency configuration.
+* Well-tested: Developed test-driven, a great number of scenarios are tested as part of the test suite. 
+See the [TUTORIAL.md](TUTORIAL.md) and [examples](example) for a complete walkthrough of all features.
 
 Getting started
 ---------------
@@ -54,6 +61,10 @@ You can generate Public API documentation from the source code using DUB:
 dub build --build=ddox
 ```
 The documentation can then be found in docs/
+
+History
+-------
+For a full overview of changes, see [CHANGES.md](CHANGES.md)
 
 Future Work
 -----------
