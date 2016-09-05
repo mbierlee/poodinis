@@ -1,5 +1,9 @@
 Poodinis Changelog
 ==================
+**Version 7.0.1**
+* FIX codegeneration of constructor injection factories for constructors with dependencies from foreign modules, 
+such as modules from other libraries (Issue #12).
+
 **Version 7.0.0**  
 This version introduces changes which might be incompatible with your current codebase
 * ADD constructor injection. Injection is done automatically on resolve. See tutorial and examples for more details.

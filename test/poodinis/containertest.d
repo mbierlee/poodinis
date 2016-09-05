@@ -6,6 +6,7 @@
  */
 
 import poodinis;
+import poodinis.test.foreignDependencies;
 
 import std.exception;
 import core.thread;
@@ -217,6 +218,10 @@ version(unittest) {
 
 	class Scissors {
 		this(Paper paper) {}
+	}
+
+	class Hello {
+		this(Ola ola) {}
 	}
 
 	// Test register concrete type
@@ -733,5 +738,13 @@ version(unittest) {
 		container.register!Scissors;
 
 		assertThrown!InstanceCreationException(container.resolve!Rock);
+	}
+
+	// Test injection of foreign dependency in constructor
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!Ola;
+		container.register!Hello;
+		container.resolve!Hello;
 	}
 }

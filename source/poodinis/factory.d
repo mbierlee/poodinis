@@ -107,6 +107,14 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
 		return argumentList;
 	}
 
+	private static string createImportList(Params...)() {
+		string importList = "";
+		foreach(param; Params) {
+			importList ~= "import " ~ moduleName!param ~ ";";
+		}
+		return importList;
+	}
+
 	private static bool parametersAreValid(Params...)() {
 		bool isValid = true;
 		foreach(param; Params) {
@@ -130,6 +138,7 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
 					isBeingInjected = true;
 					mixin(`
 						import ` ~ moduleName!InstanceType ~ `;
+						` ~ createImportList!(Parameters!ctor) ~ `
 						instance = new ` ~ fullyQualifiedName!InstanceType ~ `(` ~ createArgumentList!(Parameters!ctor) ~ `);
 					`);
 					isBeingInjected = false;
