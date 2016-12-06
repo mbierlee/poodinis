@@ -67,18 +67,34 @@ class InstanceFactory {
 	public Object getInstance() {
 		if (_factoryParameters.createsSingleton && instance !is null) {
 			debug(poodinisVerbose) {
-				writeln(format("DEBUG: Existing instance returned of type %s", _factoryParameters.instanceType.toString()));
+				printDebugUseExistingInstance();
 			}
 
 			return instance;
 		}
 
 		debug(poodinisVerbose) {
-			writeln(format("DEBUG: Creating new instance of type %s", _factoryParameters.instanceType.toString()));
+			printDebugCreateNewInstance();
 		}
 
 		instance = _factoryParameters.factoryMethod();
 		return instance;
+	}
+
+	private void printDebugUseExistingInstance() {
+		if (_factoryParameters.instanceType !is null) {
+			writeln(format("DEBUG: Existing instance returned of type %s", _factoryParameters.instanceType.toString()));
+		} else {
+			writeln("DEBUG: Existing instance returned from custom factory method");
+		}
+	}
+
+	private void printDebugCreateNewInstance() {
+		if (_factoryParameters.instanceType !is null) {
+			writeln(format("DEBUG: Creating new instance of type %s", _factoryParameters.instanceType.toString()));
+		} else {
+			writeln("DEBUG: Creating new instance from custom factory method");
+		}
 	}
 
 	protected Object createInstance() {

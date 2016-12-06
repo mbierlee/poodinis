@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version NEXT**
+* FIX nullpointer exception in instance factory when debugging with poodinisVerbose
+
 **Version 7.0.1**
 * FIX codegeneration of constructor injection factories for constructors with dependencies from foreign modules, 
 such as modules from other libraries (Issue #12).
