@@ -128,14 +128,14 @@ private void printDebugAutowiringArray(TypeInfo superTypeInfo, TypeInfo instance
 private void autowireMember(string member, size_t memberIndex, Type)(shared(DependencyContainer) container, Type instance) {
 	foreach(attribute; __traits(getAttributes, Type.tupleof[memberIndex])) {
 		static if (is(attribute == Autowire!T, T)) {
-			injectInstance!(member, memberIndex, attribute)(container, instance);
+			injectInstance!(member, memberIndex, typeof(attribute.qualifier))(container, instance);
 		} else if (__traits(isSame, attribute, Autowire)) {
-			injectInstance!(member, memberIndex, Autowire!UseMemberType)(container, instance);
+			injectInstance!(member, memberIndex, UseMemberType)(container, instance);
 		}
 	}
 }
 
-private void injectInstance(string member, size_t memberIndex, autowireAttribute, Type)(shared(DependencyContainer) container, Type instance) {
+private void injectInstance(string member, size_t memberIndex, QualifierType, Type)(shared(DependencyContainer) container, Type instance) {
 	if (instance.tupleof[memberIndex] is null) {
 		alias MemberType = typeof(Type.tupleof[memberIndex]);
 		enum isOptional = hasUDA!(Type.tupleof[memberIndex], OptionalDependency);
@@ -143,7 +143,7 @@ private void injectInstance(string member, size_t memberIndex, autowireAttribute
 		static if (isDynamicArray!MemberType) {
 			injectMultipleInstances!(member, memberIndex, isOptional, MemberType)(container, instance);
 		} else {
-			injectSingleInstance!(member, memberIndex, autowireAttribute, isOptional, MemberType)(container, instance);
+			injectSingleInstance!(member, memberIndex, isOptional, MemberType, QualifierType)(container, instance);
 		}
 	}
 }
@@ -162,7 +162,7 @@ private void injectMultipleInstances(string member, size_t memberIndex, bool isO
 	}
 }
 
-private void injectSingleInstance(string member, size_t memberIndex, autowireAttribute, bool isOptional, MemberType, Type)(shared(DependencyContainer) container, Type instance) {
+private void injectSingleInstance(string member, size_t memberIndex, bool isOptional, MemberType, QualifierType, Type)(shared(DependencyContainer) container, Type instance) {
 	debug(poodinisVerbose) {
 		TypeInfo qualifiedInstanceType = typeid(MemberType);
 	}
@@ -170,8 +170,7 @@ private void injectSingleInstance(string member, size_t memberIndex, autowireAtt
 	enum assignNewInstance = hasUDA!(Type.tupleof[memberIndex], AssignNewInstance);
 
 	MemberType qualifiedInstance;
-	static if (is(autowireAttribute == Autowire!T, T) && !is(typeof(autowireAttribute.qualifier) == UseMemberType)) {
-		alias QualifierType = typeof(autowireAttribute.qualifier);
+	static if (!is(QualifierType == UseMemberType)) {
 		qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance, isOptional)(container);
 		debug(poodinisVerbose) {
 			qualifiedInstanceType = typeid(QualifierType);
