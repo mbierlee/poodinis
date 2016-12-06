@@ -27,7 +27,7 @@ import std.string;
 import std.traits;
 import std.range;
 
-struct UseMemberType {};
+private struct UseMemberType {};
 
 /**
  * UDA for annotating class members as candidates for autowiring.
@@ -62,10 +62,9 @@ struct UseMemberType {};
  * autowire member "fuelEngine" as if it's of type "FuelEngine". This means that the members of instance "fuelEngine"
  * will also be autowired because the autowire mechanism knows that member "fuelEngine" is an instance of "FuelEngine"
  */
-struct Autowire(QualifierType = UseMemberType) {
+struct Autowire(QualifierType) {
 	QualifierType qualifier;
 };
-
 
 /**
  * UDA for marking autowired dependencies optional.
@@ -130,51 +129,64 @@ private void printDebugAutowiringArray(TypeInfo superTypeInfo, TypeInfo instance
 }
 
 private void autowireMember(string member, size_t memberIndex, Type)(shared(DependencyContainer) container, Type instance) {
-	foreach(autowireAttribute; __traits(getAttributes, Type.tupleof[memberIndex])) {
-		static if (__traits(isSame, autowireAttribute, Autowire) || is(autowireAttribute == Autowire!T, T)) {
-			if (instance.tupleof[memberIndex] is null) {
-				alias MemberType = typeof(Type.tupleof[memberIndex]);
-
-				enum assignNewInstance = hasUDA!(Type.tupleof[memberIndex], AssignNewInstance);
-				enum isOptional = hasUDA!(Type.tupleof[memberIndex], OptionalDependency);
-
-				static if (isDynamicArray!MemberType) {
-					alias MemberElementType = ElementType!MemberType;
-					static if (isOptional) {
-						auto instances = container.resolveAll!MemberElementType(ResolveOption.noResolveException);
-					} else {
-						auto instances = container.resolveAll!MemberElementType;
-					}
-					instance.tupleof[memberIndex] = instances;
-					debug(poodinisVerbose) {
-						printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
-					}
-				} else {
-					debug(poodinisVerbose) {
-						TypeInfo qualifiedInstanceType = typeid(MemberType);
-					}
-
-					MemberType qualifiedInstance;
-					static if (is(autowireAttribute == Autowire!T, T) && !is(autowireAttribute.qualifier == UseMemberType)) {
-						alias QualifierType = typeof(autowireAttribute.qualifier);
-						qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance, isOptional)(container);
-						debug(poodinisVerbose) {
-							qualifiedInstanceType = typeid(QualifierType);
-						}
-					} else {
-						qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance, isOptional)(container);
-					}
-
-					instance.tupleof[memberIndex] = qualifiedInstance;
-
-					debug(poodinisVerbose) {
-						printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
-					}
-				}
-			}
-
-			break;
+	foreach(attribute; __traits(getAttributes, Type.tupleof[memberIndex])) {
+		static if (is(attribute == Autowire!T, T)) {
+			injectInstance!(member, memberIndex, attribute)(container, instance);
+		} else if (__traits(isSame, attribute, Autowire)) {
+			injectInstance!(member, memberIndex, Autowire!UseMemberType)(container, instance);
 		}
+	}
+}
+
+private void injectInstance(string member, size_t memberIndex, autowireAttribute, Type)(shared(DependencyContainer) container, Type instance) {
+	if (instance.tupleof[memberIndex] is null) {
+		alias MemberType = typeof(Type.tupleof[memberIndex]);
+		enum isOptional = hasUDA!(Type.tupleof[memberIndex], OptionalDependency);
+
+		static if (isDynamicArray!MemberType) {
+			injectMultipleInstances!(member, memberIndex, isOptional, MemberType)(container, instance);
+		} else {
+			injectSingleInstance!(member, memberIndex, autowireAttribute, isOptional, MemberType)(container, instance);
+		}
+	}
+}
+
+private void injectMultipleInstances(string member, size_t memberIndex, bool isOptional, MemberType, Type)(shared(DependencyContainer) container, Type instance) {
+	alias MemberElementType = ElementType!MemberType;
+	static if (isOptional) {
+		auto instances = container.resolveAll!MemberElementType(ResolveOption.noResolveException);
+	} else {
+		auto instances = container.resolveAll!MemberElementType;
+	}
+
+	instance.tupleof[memberIndex] = instances;
+	debug(poodinisVerbose) {
+		printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
+	}
+}
+
+private void injectSingleInstance(string member, size_t memberIndex, autowireAttribute, bool isOptional, MemberType, Type)(shared(DependencyContainer) container, Type instance) {
+	debug(poodinisVerbose) {
+		TypeInfo qualifiedInstanceType = typeid(MemberType);
+	}
+
+	enum assignNewInstance = hasUDA!(Type.tupleof[memberIndex], AssignNewInstance);
+
+	MemberType qualifiedInstance;
+	static if (is(autowireAttribute == Autowire!T, T) && !is(typeof(autowireAttribute.qualifier) == UseMemberType)) {
+		alias QualifierType = typeof(autowireAttribute.qualifier);
+		qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance, isOptional)(container);
+		debug(poodinisVerbose) {
+			qualifiedInstanceType = typeid(QualifierType);
+		}
+	} else {
+		qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance, isOptional)(container);
+	}
+
+	instance.tupleof[memberIndex] = qualifiedInstance;
+
+	debug(poodinisVerbose) {
+		printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
 	}
 }
 
