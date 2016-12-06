@@ -18,10 +18,7 @@ import std.exception;
 import std.traits;
 import std.meta;
 import std.string;
-
-debug {
-	import std.stdio;
-}
+import std.stdio;
 
 alias CreatesSingleton = Flag!"CreatesSingleton";
 alias InstanceFactoryMethod = Object delegate();
