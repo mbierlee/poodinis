@@ -95,12 +95,9 @@ private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAd
 /**
  * Autowires members of a given instance using dependencies registered in the given container.
  *
- * All public members of the given instance, which are annotated using the "Autowire" UDA, are autowired.
- * All members are resolved using the given container. Qualifiers are used to determine the type of class to
- * resolve for any member of instance.
- *
- * Note that private members will not be autowired because the autowiring mechanism is not able to by-pass
- * member visibility protection.
+ * All members of the given instance, which are annotated using the "Autowire" UDA, are autowired.
+ * Members can have any visibility (public, private, etc). All members are resolved using the given
+ * container. Qualifiers are used to determine the type of class to resolve for any member of instance.
  *
  * See_Also: Autowire
  */
