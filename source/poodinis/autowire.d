@@ -129,7 +129,7 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 	foreach(attribute; __traits(getAttributes, Type.tupleof[memberIndex])) {
 		static if (is(attribute == Autowire!T, T)) {
 			injectInstance!(member, memberIndex, typeof(attribute.qualifier))(container, instance);
-		} else if (__traits(isSame, attribute, Autowire)) {
+		} else static if (__traits(isSame, attribute, Autowire)) {
 			injectInstance!(member, memberIndex, UseMemberType)(container, instance);
 		}
 	}
