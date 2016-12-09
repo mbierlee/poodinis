@@ -1,6 +1,7 @@
 Poodinis Changelog
 ==================
 **Version NEXT**
+* ADD value injection. Members with UDA @Value will be attempted to be injected with a value-type. See tutorial and examples for more info.
 * FIX nullpointer exception in instance factory when debugging with poodinisVerbose
 
 **Version 7.0.1**

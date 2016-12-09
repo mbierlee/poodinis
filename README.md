@@ -16,6 +16,7 @@ Features
 --------
 * Member injection: Injection of dependencies in class members of any visibility (public, private, etc.)
 * Constructor injection: Automatic injection of dependencies in class constructors on creation.
+* Value injection: Value-types such as primitives or structs can be injected using custom value injectors.
 * Type qualifiers: Inject concrete types into members defined only by abstract types.
 * Application contexts: Control the creation of dependencies manually through factory methods.
 * Multi-threadable: Dependency containers return the same dependencies across all threads.

@@ -16,3 +16,4 @@ public import poodinis.container;
 public import poodinis.registration;
 public import poodinis.context;
 public import poodinis.factory;
+public import poodinis.valueinjection;

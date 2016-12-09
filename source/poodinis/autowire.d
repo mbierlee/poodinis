@@ -20,6 +20,7 @@ module poodinis.autowire;
 import poodinis.container;
 import poodinis.registration;
 import poodinis.factory;
+import poodinis.valueinjection;
 
 import std.exception;
 import std.stdio;
@@ -106,7 +107,7 @@ public void autowire(Type)(shared(DependencyContainer) container, Type instance)
 		printDebugAutowiredInstance(typeid(Type), &instance);
 	}
 
-	// note: recurse into base class if there are more between Type and Object in the hirarchy
+	// Recurse into base class if there are more between Type and Object in the hierarchy
 	static if(BaseClassesTuple!Type.length > 1)
 	{
 		autowire!(BaseClassesTuple!Type[0])(container, instance);
@@ -131,6 +132,9 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 			injectInstance!(member, memberIndex, typeof(attribute.qualifier))(container, instance);
 		} else static if (__traits(isSame, attribute, Autowire)) {
 			injectInstance!(member, memberIndex, UseMemberType)(container, instance);
+		} else static if (is(typeof(attribute) == Value)) {
+			enum key = attribute.key;
+			injectValue!(member, memberIndex, key)(container, instance);
 		}
 	}
 }
@@ -198,6 +202,19 @@ private QualifierType createOrResolveInstance(MemberType, QualifierType, bool cr
 			return container.resolve!(MemberType, QualifierType);
 		}
 	}
+}
+
+private void injectValue(string member, size_t memberIndex, string key, Type)(shared(DependencyContainer) container, Type instance) {
+	alias MemberType = typeof(Type.tupleof[memberIndex]);
+	auto injector = container.resolve!(ValueInjector!MemberType);
+	instance.tupleof[memberIndex] = injector.get(key);
+	debug(poodinisVerbose) {
+		printDebugValueInjection(typeid(Type), &instance, member, typeid(MemberType), key);
+	}
+}
+
+private void printDebugValueInjection(TypeInfo instanceType, void* instanceAddress, string member, TypeInfo valueType, string key) {
+	writeln(format("DEBUG: Injected value with key '%s' of type %s into [%s@%s].%s", key, valueType, instanceType, instanceAddress, member));
 }
 
 /**

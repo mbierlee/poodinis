@@ -87,6 +87,14 @@ version(unittest) {
 		public ComponentC[] componentCs;
 	}
 
+	class ValuedClass {
+		@Value("values.int")
+		public int intValue;
+
+		@Autowire
+		public ComponentA unrelated;
+	}
+
 	// Test autowiring concrete type to existing instance
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -229,7 +237,7 @@ version(unittest) {
 		assert(instance.componentA !is null);
 	}
 
-	// Test autowiring optional depenencies
+	// Test autowiring optional dependencies
 	unittest {
 		auto container = new shared DependencyContainer();
 		auto instance = new OuttaTime();
@@ -239,5 +247,25 @@ version(unittest) {
 		assert(instance.interfaceA is null);
 		assert(instance.componentA is null);
 		assert(instance.componentCs is null);
+	}
+
+	// Test autowiring class using value injection
+	unittest {
+		auto container = new shared DependencyContainer();
+		class TestInjector : ValueInjector!int {
+			public override int get(string key) {
+				assert(key == "values.int");
+				return 8;
+			}
+		}
+
+		container.register!(ValueInjector!int, TestInjector);
+		container.register!ComponentA;
+		auto instance = new ValuedClass();
+
+		container.autowire(instance);
+
+		assert(instance.intValue == 8);
+		assert(instance.unrelated !is null);
 	}
 }
