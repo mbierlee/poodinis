@@ -159,6 +159,8 @@ You can only register one value injector per type, a resolve exception will be t
 
 Besides injecting primitive types, it is also possible to inject structs. While it is possible to inject class instances this way, this mechanism isn't really meant for that.
 
+Poodinis doesn't come with any value injector implementations. In the [README.md](README.md) you will find a list of projects which use different libraries as value sources.
+
 Circular dependencies
 ---------------------
 Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop. Circular dependencies are only supported when autowiring members through the `@Autowire` UDA; circular dependencies in constructors are not supported and will result in an `InstanceCreationException`.
