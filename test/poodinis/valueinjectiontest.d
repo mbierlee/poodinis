@@ -7,6 +7,8 @@
 
 import poodinis;
 
+import std.exception;
+
 version(unittest) {
 	struct Thing {
 		int x;
@@ -57,5 +59,14 @@ version(unittest) {
 		assert(instance.stuffs == 364);
 		assert(instance.name == "Le Chef");
 		assert(instance.thing.x == 8899);
+	}
+
+	// Test injection of values throws exception when injector is not there
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!MyConfig;
+		assertThrown!ResolveException(container.resolve!MyConfig);
+
+		assertThrown!ValueInjectionException(autowire(container, new MyConfig()));
 	}
 }

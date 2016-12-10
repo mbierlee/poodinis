@@ -11,23 +11,40 @@
  */
 module poodinis.valueinjection;
 
+import std.exception;
+
+/**
+ * Thrown when something goes wrong during value injection.
+ */
+class ValueInjectionException : Exception {
+	mixin basicExceptionCtors;
+}
+
 /**
  * UDA used for marking class members which should be value-injected.
  *
  * A key must be supplied, which can be in any format depending on how
  * a value injector reads it.
  *
+ * When the injector throws a ValueNotAvailableException, the value is
+ * not injected and will keep its original assignment.
+ *
  * Examples:
  * ---
  * class MyClass {
  *     @Value("general.importantNumber")
- *     private int number;
+ *     private int number = 8;
  * }
  * ---
  */
 struct Value {
+	/**
+	 * The textual key used to find the value by injectors.
+	 *
+	 * The format is injector-specific.
+	 */
 	string key;
-};
+}
 
 /**
  * Interface which should be implemented by value injectors.

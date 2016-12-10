@@ -25,6 +25,7 @@ import poodinis.registration;
 import poodinis.autowire;
 import poodinis.context;
 import poodinis.factory;
+import poodinis.valueinjection;
 
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
@@ -32,6 +33,10 @@ import poodinis.factory;
 class ResolveException : Exception {
 	this(string message, TypeInfo resolveType) {
 		super(format("Exception while resolving type %s: %s", resolveType.toString(), message));
+	}
+
+	this(Throwable cause, TypeInfo resolveType) {
+		super(format("Exception while resolving type %s", resolveType.toString()), cause);
 	}
 }
 
@@ -286,7 +291,12 @@ synchronized class DependencyContainer {
 		}
 
 		Registration registration = getQualifiedRegistration(resolveType, qualifierType, cast(Registration[]) *candidates);
-		return resolveAutowiredInstance!QualifierType(registration);
+
+		try {
+			return resolveAutowiredInstance!QualifierType(registration);
+		} catch (ValueInjectionException e) {
+			throw new ResolveException(e, resolveType);
+		}
 	}
 
 	private QualifierType resolveAutowiredInstance(QualifierType)(Registration registration) {

@@ -206,10 +206,14 @@ private QualifierType createOrResolveInstance(MemberType, QualifierType, bool cr
 
 private void injectValue(string member, size_t memberIndex, string key, Type)(shared(DependencyContainer) container, Type instance) {
 	alias MemberType = typeof(Type.tupleof[memberIndex]);
-	auto injector = container.resolve!(ValueInjector!MemberType);
-	instance.tupleof[memberIndex] = injector.get(key);
-	debug(poodinisVerbose) {
-		printDebugValueInjection(typeid(Type), &instance, member, typeid(MemberType), key);
+	try {
+		auto injector = container.resolve!(ValueInjector!MemberType);
+		instance.tupleof[memberIndex] = injector.get(key);
+		debug(poodinisVerbose) {
+			printDebugValueInjection(typeid(Type), &instance, member, typeid(MemberType), key);
+		}
+	} catch (ResolveException e) {
+		throw new ValueInjectionException(format("Could not inject value of type %s into %s.%s: value injector is missing for this type.", typeid(MemberType), typeid(Type), member));
 	}
 }
 
