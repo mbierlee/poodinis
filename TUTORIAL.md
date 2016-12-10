@@ -135,6 +135,30 @@ Classes with multiple constructors can be injected. The following rules apply to
 If the constructors of a class are not suitable for injection, you could manually configure its creation using Application Contexts (see chapter further down).  
 Constructor injection has the advantage of not having to import Poodinis throughout your application.
 
+### Value injection
+Besides injecting class instances, Poodinis can also inject values:
+```
+class ExampleClass {
+	@Value("a.key.for.this.value")
+	private int someNumber;
+}
+```
+The value will automatically be injected during the autowiring process. In order for Poodinis to be able to inject values, ValueInjectors must be available and registered with the dependency container:
+```
+class MyIntInjector : ValueInjector!int {
+	int get(string key) {
+		// read from some value source, such as a configuration file.
+	}
+}
+
+dependencies.register!(ValueInjector!int, MyIntInjector);
+```
+Each injector injects a value of a specific type. You are required to register value injectors by interface; when injecting values, the autowiring process will try to resolve an injector of the member type, such as `ValueInjector!int`.
+
+You can only register one value injector per type, a resolve exception will be thrown otherwise (unless you suppress them via resolve options). Naturally a resolve exception will also be thrown when there is no injector for a certain value type.
+
+Besides injecting primitive types, it is also possible to inject structs. While it is possible to inject class instances this way, this mechanism isn't really meant for that.
+
 Circular dependencies
 ---------------------
 Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop. Circular dependencies are only supported when autowiring members through the `@Autowire` UDA; circular dependencies in constructors are not supported and will result in an `InstanceCreationException`.
@@ -193,11 +217,15 @@ class Context : ApplicationContext {
 	}
 }
 ```
-In the override `registerDependencies()` you can register all dependencies which do not need complex set-up, just like you would do when directly using the dependency container. 
+In the override `registerDependencies()` you can register all dependencies which do not need complex set-up, just like you would do when directly using the dependency container.
+
 This override is optional. You can still register simple dependencies outside of the context (or in another context).  
-Complex dependencies are registered through member methods of the context. These member methods serve as factory methods which will be called when a dependency is resolved. 
-They are annotated with the `@Component` UDA to let the container know that these methods should be registered as dependencies. The type of the registration is the same as the return type of the method.  
-Factory methods are useful when you have to deal with dependencies which require constructor arguments or elaborate set-up after instantiation.  
+Complex dependencies are registered through member methods of the context. These member methods serve as factory methods which will be called when a dependency is resolved.
+
+They are annotated with the `@Component` UDA to let the container know that these methods should be registered as dependencies. The type of the registration is the same as the return type of the method.
+
+Factory methods are useful when you have to deal with dependencies which require constructor arguments or elaborate set-up after instantiation.
+
 Application contexts have to be registered with a dependency container. They are registered as follows:
 ```d
 container.registerContext!Context;
@@ -228,7 +256,8 @@ class Context : ApplicationContext {
 }
 ```
 As you can see, autowired dependencies can be used within factory methods. When `SomeLibraryClass` is resolved, it will be created with a resolved instance of `SomeClass` and `SomeOtherClass`. As shown, autowired dependencies can be registered within the same
-application context, but don't neccesarily have to be. You can even autowire dependencies which are created within a factory method within the same application context.  
+application context, but don't neccesarily have to be. You can even autowire dependencies which are created within a factory method within the same application context.
+
 Application contexts are directly autowired after they have been registered. This means that all autowired dependencies which are not registered in the application context itself need to be registered before registering the application context.
 
 ###Controlling component registration
