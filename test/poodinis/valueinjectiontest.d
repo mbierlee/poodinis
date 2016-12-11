@@ -150,7 +150,6 @@ version(unittest) {
 		}
 
 		container.register!(ValueInjector!int, IntInjector);
-
 		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
 
 		assert(injector.dependency is dependency);
@@ -177,10 +176,58 @@ version(unittest) {
 		}
 
 		container.register!(ValueInjector!int, IntInjector);
-
 		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
 
 		assert(injector.dependency is injector);
 		assert(injector.get("whatever") == 3);
+	}
+
+	// Test value injection within value injectors
+	unittest {
+		auto container = new shared DependencyContainer();
+
+		class IntInjector : ValueInjector!int {
+
+			@Value("five")
+			public int count = 0;
+
+			public override int get(string key) {
+				if (key == "five") {
+					return 5;
+				}
+
+				return count;
+			}
+		}
+
+		container.register!(ValueInjector!int, IntInjector);
+		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+
+		assert(injector.count == 5);
+	}
+
+	// Test value injection within dependencies of value injectors
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!ConfigWithDefaults;
+
+		class IntInjector : ValueInjector!int {
+
+			@Autowire
+			public ConfigWithDefaults config;
+
+			public override int get(string key) {
+				if (key == "conf.missing") {
+					return 8899;
+				}
+
+				return 0;
+			}
+		}
+
+		container.register!(ValueInjector!int, IntInjector);
+		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+
+		assert(injector.config.noms == 8899);
 	}
 }
