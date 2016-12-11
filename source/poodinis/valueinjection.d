@@ -13,6 +13,7 @@ module poodinis.valueinjection;
 
 import std.exception;
 import std.string;
+import poodinis.polyfill;
 
 /**
  * Thrown when something goes wrong during value injection.
