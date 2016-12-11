@@ -84,7 +84,6 @@ Future Work
 * Component scan (auto-registration)
 * Phobos collections autowiring
 * Named qualifiers
-* Value type injection
 
 Contributing
 ------------
