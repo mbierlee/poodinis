@@ -10,6 +10,8 @@ import poodinis;
 import std.exception;
 
 version(unittest) {
+	class Dependency {}
+
 	struct Thing {
 		int x;
 	}
@@ -129,5 +131,56 @@ version(unittest) {
 
 		assertThrown!ResolveException(container.resolve!ConfigWithMandatory);
 		assertThrown!ValueInjectionException(autowire(container, new ConfigWithMandatory()));
+	}
+
+	// Test injecting dependencies within value injectors
+	unittest {
+		auto container = new shared DependencyContainer();
+		auto dependency = new Dependency();
+		container.register!Dependency.existingInstance(dependency);
+
+		class IntInjector : ValueInjector!int {
+
+			@Autowire
+			public Dependency dependency;
+
+			public override int get(string key) {
+				return 2345;
+			}
+		}
+
+		container.register!(ValueInjector!int, IntInjector);
+
+		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+
+		assert(injector.dependency is dependency);
+	}
+
+	// Test injecting circular dependencies within value injectors
+	unittest {
+		auto container = new shared DependencyContainer();
+
+		class IntInjector : ValueInjector!int {
+
+			@Autowire
+			public ValueInjector!int dependency;
+
+			private int count = 0;
+
+			public override int get(string key) {
+				count += 1;
+				if (count >= 3) {
+					return count;
+				}
+				return dependency.get(key);
+			}
+		}
+
+		container.register!(ValueInjector!int, IntInjector);
+
+		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+
+		assert(injector.dependency is injector);
+		assert(injector.get("whatever") == 3);
 	}
 }
