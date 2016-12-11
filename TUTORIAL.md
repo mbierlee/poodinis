@@ -159,7 +159,7 @@ You can only register one value injector per type, a resolve exception will be t
 
 Besides injecting primitive types, it is also possible to inject structs. While it is possible to inject class instances this way, this mechanism isn't really meant for that.
 
-Value injectors will also be autowired before being used. However, value injectors will not be value-injected to prevent circular dependencies. Dependencies within value injectors will also not be value-injected.
+Value injectors will also be autowired before being used. Value injectors will even be value injected themselves, even if they will use themselves to do so. Dependencies of value injectors will also be value injected. Be extremely careful with relying on injected values within value injectors though, you might easily create a stack overflow or a chicken-egg situation.
 
 Poodinis doesn't come with any value injector implementations. In the [README.md](README.md) you will find a list of projects which use different libraries as value sources.
 
