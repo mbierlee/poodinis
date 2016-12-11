@@ -134,7 +134,7 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 			injectInstance!(member, memberIndex, UseMemberType)(container, instance);
 		} else static if (is(typeof(attribute) == Value)) {
 			enum key = attribute.key;
-			injectValue!(member, memberIndex, key)(container, instance);
+			injectValue!(member, memberIndex, key, false)(container, instance);
 		}
 	}
 }
@@ -204,7 +204,7 @@ private QualifierType createOrResolveInstance(MemberType, QualifierType, bool cr
 	}
 }
 
-private void injectValue(string member, size_t memberIndex, string key, Type)(shared(DependencyContainer) container, Type instance) {
+private void injectValue(string member, size_t memberIndex, string key, bool mandatory, Type)(shared(DependencyContainer) container, Type instance) {
 	alias MemberType = typeof(Type.tupleof[memberIndex]);
 	try {
 		auto injector = container.resolve!(ValueInjector!MemberType);
@@ -214,6 +214,10 @@ private void injectValue(string member, size_t memberIndex, string key, Type)(sh
 		}
 	} catch (ResolveException e) {
 		throw new ValueInjectionException(format("Could not inject value of type %s into %s.%s: value injector is missing for this type.", typeid(MemberType), typeid(Type), member));
+	} catch (ValueNotAvailableException e) {
+		static if (mandatory) {
+			throw new ValueInjectionException(format("Could not inject value of type %s into %s.%s", typeid(MemberType), typeid(Type), member), e);
+		}
 	}
 }
 

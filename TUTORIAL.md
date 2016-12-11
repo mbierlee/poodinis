@@ -140,7 +140,7 @@ Besides injecting class instances, Poodinis can also inject values:
 ```
 class ExampleClass {
 	@Value("a.key.for.this.value")
-	private int someNumber;
+	private int someNumber = 9; // Assignment is kept when the injector cannot find the value associated with key
 }
 ```
 The value will automatically be injected during the autowiring process. In order for Poodinis to be able to inject values, ValueInjectors must be available and registered with the dependency container:

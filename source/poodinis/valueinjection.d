@@ -12,12 +12,26 @@
 module poodinis.valueinjection;
 
 import std.exception;
+import std.string;
 
 /**
  * Thrown when something goes wrong during value injection.
  */
 class ValueInjectionException : Exception {
 	mixin basicExceptionCtors;
+}
+
+/**
+ * Thrown by injectors when the value with the given key cannot be found.
+ */
+class ValueNotAvailableException : Exception {
+	this(string key) {
+		super(format("Value for key %s is not available", key));
+	}
+
+	this(string key, Throwable cause) {
+		super(format("Value for key %s is not available", key), cause);
+	}
 }
 
 /**
@@ -53,9 +67,8 @@ struct Value {
  * type or that of a struct. While class types are also supported, value injectors
  * are not intended for them.
  *
- * Note that value injectors are also autowired before being used. Value injectors should
- * not contain dependencies on classes which require value injection. Neither should a
- * value injector have members which are to be value-injected.
+ * Note that value injectors are also autowired before being used. Values within dependencies of
+ * a value injector are not injected. Neither are values within the value injector itself.
  *
  * Value injection is not supported for constructor injection.
  *
@@ -75,6 +88,8 @@ interface ValueInjector(Type) {
 	 *
 	 * The key can have any format. Generally you are encouraged
 	 * to accept a dot separated path, for example: server.http.port
+	 *
+	 * Throws: ValueNotAvailableException when the value for the given key is not available for any reason
 	 */
 	Type get(string key);
 }

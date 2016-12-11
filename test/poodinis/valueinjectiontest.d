@@ -25,6 +25,11 @@ version(unittest) {
 		Thing thing;
 	}
 
+	class ConfigWithDefaults {
+		@Value("conf.missing")
+		int noms = 9;
+	}
+
 	// Test injection of values
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -68,5 +73,22 @@ version(unittest) {
 		assertThrown!ResolveException(container.resolve!MyConfig);
 
 		assertThrown!ValueInjectionException(autowire(container, new MyConfig()));
+	}
+
+	// Test injection of values with defaults
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!ConfigWithDefaults;
+
+		class IntInjector : ValueInjector!int {
+			public override int get(string key) {
+				throw new ValueNotAvailableException(key);
+			}
+		}
+
+		container.register!(ValueInjector!int, IntInjector);
+
+		auto instance = container.resolve!ConfigWithDefaults;
+		assert(instance.noms == 9);
 	}
 }
