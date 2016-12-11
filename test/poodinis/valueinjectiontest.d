@@ -30,6 +30,11 @@ version(unittest) {
 		int noms = 9;
 	}
 
+	class ConfigWithMandatory {
+		@MandatoryValue("conf.mustbethere")
+		int nums;
+	}
+
 	// Test injection of values
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -90,5 +95,39 @@ version(unittest) {
 
 		auto instance = container.resolve!ConfigWithDefaults;
 		assert(instance.noms == 9);
+	}
+
+	// Test mandatory injection of values which are available
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!ConfigWithMandatory;
+
+		class IntInjector : ValueInjector!int {
+			public override int get(string key) {
+				return 7466;
+			}
+		}
+
+		container.register!(ValueInjector!int, IntInjector);
+
+		auto instance = container.resolve!ConfigWithMandatory;
+		assert(instance.nums == 7466);
+	}
+
+	// Test mandatory injection of values which are not available
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!ConfigWithMandatory;
+
+		class IntInjector : ValueInjector!int {
+			public override int get(string key) {
+				throw new ValueNotAvailableException(key);
+			}
+		}
+
+		container.register!(ValueInjector!int, IntInjector);
+
+		assertThrown!ResolveException(container.resolve!ConfigWithMandatory);
+		assertThrown!ValueInjectionException(autowire(container, new ConfigWithMandatory()));
 	}
 }

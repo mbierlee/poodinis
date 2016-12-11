@@ -61,6 +61,32 @@ struct Value {
 }
 
 /**
+ * UDA used for marking class members which should be value-injected.
+ *
+ * When the injector throws a ValueNotAvailableException, it is re-thrown
+ * instead of being suppressed.
+ *
+ * A key must be supplied, which can be in any format depending on how
+ * a value injector reads it.
+ *
+ * Examples:
+ * ---
+ * class MyClass {
+ *     @MandatoryValue("general.valueWhichShouldBeThere")
+ *     private int number;
+ * }
+ * ---
+ */
+struct MandatoryValue {
+	/**
+	 * The textual key used to find the value by injectors.
+	 *
+	 * The format is injector-specific.
+	 */
+	string key;
+}
+
+/**
  * Interface which should be implemented by value injectors.
  *
  * Each value injector injects one specific type. The type can be any primitive

@@ -135,6 +135,9 @@ private void autowireMember(string member, size_t memberIndex, Type)(shared(Depe
 		} else static if (is(typeof(attribute) == Value)) {
 			enum key = attribute.key;
 			injectValue!(member, memberIndex, key, false)(container, instance);
+		} else static if (is(typeof(attribute) == MandatoryValue)) {
+			enum key = attribute.key;
+			injectValue!(member, memberIndex, key, true)(container, instance);
 		}
 	}
 }
