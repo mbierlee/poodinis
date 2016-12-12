@@ -114,6 +114,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "valueInjectionExample",
+			"description" : "Example where values are injected into dependencies.",
+			"targetType": "executable",
+			"targetName": "valueInjectionExample",
+			"sourcePaths": [
+				"example/valueinjection"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }
