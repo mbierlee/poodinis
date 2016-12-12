@@ -2,4 +2,4 @@ To build any of these examples, specify the relevant DUB configuration when buil
 ```
 dub build --build=release --config=<name>Example
 ```
-Where \<name\> corresponds to the name of the folder where the code example is in.
+Where \<name\> corresponds to the name of the folder where the code example is in (camel-cased).
