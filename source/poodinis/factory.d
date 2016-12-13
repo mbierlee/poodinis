@@ -16,9 +16,9 @@ import poodinis.container;
 import std.typecons;
 import std.exception;
 import std.traits;
-import std.meta;
 import std.string;
 import std.stdio;
+import poodinis.polyfill;
 
 alias CreatesSingleton = Flag!"CreatesSingleton";
 alias InstanceFactoryMethod = Object delegate();

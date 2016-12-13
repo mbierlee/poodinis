@@ -16,6 +16,7 @@ module poodinis.context;
 import poodinis.container;
 import poodinis.registration;
 import poodinis.factory;
+import poodinis.polyfill;
 
 import std.traits;
 
