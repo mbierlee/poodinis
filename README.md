@@ -10,7 +10,7 @@ Poodinis is a dependency injection framework for the D programming language. It 
 
 Requires at least a D 2.066.1 compatible compiler  
 Uses the Phobos standard library  
-Can be built with DUB 0.9.24 or higher
+Can be built with DUB 1.1.1 or higher
 
 Features
 --------
