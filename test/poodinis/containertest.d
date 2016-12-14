@@ -12,52 +12,6 @@ import std.exception;
 import core.thread;
 
 version(unittest) {
-	class TestContext : ApplicationContext {
-		public override void registerDependencies(shared(DependencyContainer) container) {
-			container.register!TestClass;
-		}
-
-		@Component
-		public UnrelatedClass unrelated() {
-			return new UnrelatedClass();
-		}
-	}
-
-	class AutowiredTestContext : ApplicationContext {
-
-		@Autowire
-		private UnrelatedClass unrelatedClass;
-
-		@Component
-		public ClassWrapper wrapper() {
-			return new ClassWrapper(unrelatedClass);
-		}
-	}
-
-	class ComplexAutowiredTestContext : ApplicationContext {
-
-		@Autowire
-		private UnrelatedClass unrelatedClass;
-
-		@Autowire
-		protected ClassWrapper classWrapper;
-
-		public override void registerDependencies(shared(DependencyContainer) container) {
-			container.register!UnrelatedClass;
-		}
-
-		@Component
-		public ClassWrapper wrapper() {
-			return new ClassWrapper(unrelatedClass);
-		}
-
-		@Component
-		public ClassWrapperWrapper wrapperWrapper() {
-			return new ClassWrapperWrapper(classWrapper);
-		}
-
-	}
-
 	interface TestInterface {
 	}
 
@@ -163,22 +117,6 @@ version(unittest) {
 	class John {
 		@Autowire
 		public Wants wants;
-	}
-
-	class ClassWrapper {
-		public Object someClass;
-
-		this(Object someClass) {
-			this.someClass = someClass;
-		}
-	}
-
-	class ClassWrapperWrapper {
-		public ClassWrapper wrapper;
-
-		this(ClassWrapper wrapper) {
-			this.wrapper = wrapper;
-		}
 	}
 
 	class Cocktail {
@@ -586,55 +524,6 @@ version(unittest) {
 		auto instance = cast(TestClassDeux) instances[0];
 
 		assert(instance.unrelated !is null);
-	}
-
-	// Test setting up simple dependencies through application context
-	unittest {
-		auto container = new shared DependencyContainer();
-		container.registerContext!TestContext;
-		auto instance = container.resolve!TestClass;
-
-		assert(instance !is null);
-	}
-
-	// Test resolving dependency from registered application context
-	unittest {
-		auto container = new shared DependencyContainer();
-		container.registerContext!TestContext;
-		auto instance = container.resolve!UnrelatedClass;
-
-		assert(instance !is null);
-	}
-
-	// Test autowiring application context
-	unittest {
-		auto container = new shared DependencyContainer();
-		container.register!UnrelatedClass;
-		container.registerContext!AutowiredTestContext;
-		auto instance = container.resolve!ClassWrapper;
-
-		assert(instance !is null);
-		assert(instance.someClass !is null);
-	}
-
-	// Test autowiring application context with dependencies registered in same context
-	unittest {
-		auto container = new shared DependencyContainer();
-		container.registerContext!ComplexAutowiredTestContext;
-		auto instance = container.resolve!ClassWrapperWrapper;
-		auto wrapper = container.resolve!ClassWrapper;
-		auto someClass = container.resolve!UnrelatedClass;
-
-		assert(instance !is null);
-		assert(instance.wrapper is wrapper);
-		assert(instance.wrapper.someClass is someClass);
-	}
-
-	// Test resolving registered context
-	unittest {
-		auto container = new shared DependencyContainer();
-		container.registerContext!TestContext;
-		container.resolve!ApplicationContext;
 	}
 
 	// Test set persistent registration options

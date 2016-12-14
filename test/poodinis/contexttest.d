@@ -49,6 +49,70 @@ version(unittest) {
 
 	class PieChart {}
 
+	class CakeChart : PieChart {}
+
+	class ClassWrapper {
+		public Object someClass;
+
+		this(Object someClass) {
+			this.someClass = someClass;
+		}
+	}
+
+	class ClassWrapperWrapper {
+		public ClassWrapper wrapper;
+
+		this(ClassWrapper wrapper) {
+			this.wrapper = wrapper;
+		}
+	}
+
+	class SimpleContext : ApplicationContext {
+		public override void registerDependencies(shared(DependencyContainer) container) {
+			container.register!CakeChart;
+		}
+
+		@Component
+		public Apple apple() {
+			return new Apple();
+		}
+	}
+
+	class ComplexAutowiredTestContext : ApplicationContext {
+
+		@Autowire
+		private Apple apple;
+
+		@Autowire
+		protected ClassWrapper classWrapper;
+
+		public override void registerDependencies(shared(DependencyContainer) container) {
+			container.register!Apple;
+		}
+
+		@Component
+		public ClassWrapper wrapper() {
+			return new ClassWrapper(apple);
+		}
+
+		@Component
+		public ClassWrapperWrapper wrapperWrapper() {
+			return new ClassWrapperWrapper(classWrapper);
+		}
+
+	}
+
+	class AutowiredTestContext : ApplicationContext {
+
+		@Autowire
+		private Apple apple;
+
+		@Component
+		public ClassWrapper wrapper() {
+			return new ClassWrapper(apple);
+		}
+	}
+
 	class TestContext : ApplicationContext {
 
 		@Component
@@ -138,4 +202,52 @@ version(unittest) {
 		assert(firstInstance !is secondInstance);
 	}
 
+	// Test setting up simple dependencies through application context
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.registerContext!SimpleContext;
+		auto instance = container.resolve!CakeChart;
+
+		assert(instance !is null);
+	}
+
+	// Test resolving dependency from registered application context
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.registerContext!SimpleContext;
+		auto instance = container.resolve!Apple;
+
+		assert(instance !is null);
+	}
+
+	// Test autowiring application context
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!Apple;
+		container.registerContext!AutowiredTestContext;
+		auto instance = container.resolve!ClassWrapper;
+
+		assert(instance !is null);
+		assert(instance.someClass !is null);
+	}
+
+	// Test autowiring application context with dependencies registered in same context
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.registerContext!ComplexAutowiredTestContext;
+		auto instance = container.resolve!ClassWrapperWrapper;
+		auto wrapper = container.resolve!ClassWrapper;
+		auto someClass = container.resolve!Apple;
+
+		assert(instance !is null);
+		assert(instance.wrapper is wrapper);
+		assert(instance.wrapper.someClass is someClass);
+	}
+
+	// Test resolving registered context
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.registerContext!TestContext;
+		container.resolve!ApplicationContext;
+	}
 }

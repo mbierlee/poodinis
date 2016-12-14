@@ -17,6 +17,7 @@ import poodinis.container;
 import poodinis.registration;
 import poodinis.factory;
 import poodinis.polyfill;
+import poodinis.autowire;
 
 import std.traits;
 
@@ -43,6 +44,21 @@ struct RegisterByType(Type) {
 * new instances every time they are resolved. The factory method will be called repeatedly.
 */
 struct Prototype {}
+
+/**
+* Register dependencies through an application context.
+*
+* An application context allows you to fine-tune dependency set-up and instantiation.
+* It is mostly used for dependencies which come from an external library or when you don't
+* want to use annotations to set-up dependencies in your classes.
+*/
+public void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container) {
+	auto context = new Context();
+	context.registerDependencies(container);
+	context.registerContextComponents(container);
+	container.register!(ApplicationContext, Context)().existingInstance(context);
+	autowire(container, context);
+}
 
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(ApplicationContextType context, shared(DependencyContainer) container) {
 	foreach (member ; __traits(allMembers, ApplicationContextType)) {

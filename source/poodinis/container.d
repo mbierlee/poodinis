@@ -385,21 +385,6 @@ synchronized class DependencyContainer {
 	}
 
 	/**
-	* Register dependencies through an application context.
-	*
-	* An application context allows you to fine-tune dependency set-up and instantiation.
-	* It is mostly used for dependencies which come from an external library or when you don't
-	* want to use annotations to set-up dependencies in your classes.
-	*/
-	public void registerContext(Context : ApplicationContext)() {
-		auto context = new Context();
-		context.registerDependencies(this);
-		context.registerContextComponents(this);
-		this.register!(ApplicationContext, Context)().existingInstance(context);
-		autowire(this, context);
-	}
-
-	/**
 	 * Returns a global singleton instance of a dependency container.
 	 * Deprecated: create new instance with new keyword or implement your own singleton factory (method)
 	 */
