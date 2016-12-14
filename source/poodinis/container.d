@@ -419,7 +419,7 @@ synchronized class DependencyContainer {
 	}
 
 	/**
-	 * Unsets all applied registration options
+	 * Unsets all applied persistent registration options
 	 */
 	public void unsetPersistentRegistrationOptions() {
 		persistentRegistrationOptions = RegistrationOption.none;
@@ -433,7 +433,7 @@ synchronized class DependencyContainer {
 	}
 
 	/**
-	 * Unsets all applied registration options
+	 * Unsets all applied persistent resolve options
 	 */
 	public void unsetPersistentResolveOptions() {
 		persistentResolveOptions = ResolveOption.none;
