@@ -162,6 +162,44 @@ version(unittest) {
 		this(Ola ola) {}
 	}
 
+	class PostConstructionDependency {
+		public bool postConstructWasCalled = false;
+
+		@PostConstruct
+		public void callMeMaybe() {
+			postConstructWasCalled = true;
+		}
+	}
+
+	class ChildOfPostConstruction : PostConstructionDependency {}
+
+	interface ThereWillBePostConstruction {
+		@PostConstruct
+		void constructIt();
+	}
+
+	class ButThereWontBe : ThereWillBePostConstruction {
+		public bool postConstructWasCalled = false;
+
+		public override void constructIt() {
+			postConstructWasCalled = true;
+		}
+	}
+
+	class PostConstructWithAutowiring {
+		@Autowire
+		private PostConstructionDependency dependency;
+
+		@Value("")
+		private int theNumber = 1;
+
+		@PostConstruct
+		public void doIt() {
+			assert(theNumber == 8783);
+			assert(dependency !is null);
+		}
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -635,5 +673,47 @@ version(unittest) {
 		container.register!Ola;
 		container.register!Hello;
 		container.resolve!Hello;
+	}
+
+	// Test PostConstruct method is called after resolving a dependency
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!PostConstructionDependency;
+
+		auto instance = container.resolve!PostConstructionDependency;
+		assert(instance.postConstructWasCalled == true);
+	}
+
+	// Test PostConstruct of base type is called
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!ChildOfPostConstruction;
+
+		auto instance = container.resolve!ChildOfPostConstruction;
+		assert(instance.postConstructWasCalled == true);
+	}
+
+	// Test PostConstruct of class implementing interface is not called
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!ButThereWontBe;
+
+		auto instance = container.resolve!ButThereWontBe;
+		assert(instance.postConstructWasCalled == false);
+	}
+
+	// Test postconstruction happens after autowiring and value injection
+	unittest {
+		class IntInjector : ValueInjector!int {
+			int get(string key) {
+				return 8783;
+			}
+		}
+
+		auto container = new shared DependencyContainer();
+		container.register!(ValueInjector!int, IntInjector);
+		container.register!PostConstructionDependency;
+		container.register!PostConstructWithAutowiring;
+		auto instance = container.resolve!PostConstructWithAutowiring;
 	}
 }

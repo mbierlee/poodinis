@@ -13,19 +13,21 @@
 
 module poodinis.container;
 
-import std.string;
-import std.algorithm;
-import std.concurrency;
-
-debug {
-	import std.stdio;
-}
-
 import poodinis.registration;
 import poodinis.autowire;
 import poodinis.context;
 import poodinis.factory;
 import poodinis.valueinjection;
+import poodinis.polyfill;
+
+import std.string;
+import std.algorithm;
+import std.concurrency;
+import std.traits;
+
+debug {
+	import std.stdio;
+}
 
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
@@ -79,6 +81,15 @@ public enum ResolveOption {
 	 */
 	noResolveException = 1 << 1
 }
+
+/**
+ * Methods marked with this UDA within dependencies are called after that dependency
+ * is constructed by the dependency container.
+ *
+ * Multiple methods can be marked and will all be called after construction. The order in which
+ * methods are called is undetermined. Methods should have the signature void(void).
+ */
+struct PostConstruct {}
 
 /**
  * The dependency container maintains all dependencies registered with it.
@@ -293,7 +304,9 @@ synchronized class DependencyContainer {
 		Registration registration = getQualifiedRegistration(resolveType, qualifierType, cast(Registration[]) *candidates);
 
 		try {
-			return resolveAutowiredInstance!QualifierType(registration);
+			QualifierType newInstance = resolveAutowiredInstance!QualifierType(registration);
+			callPostConstructors(newInstance);
+			return newInstance;
 		} catch (ValueInjectionException e) {
 			throw new ResolveException(e, resolveType);
 		}
@@ -361,6 +374,16 @@ synchronized class DependencyContainer {
 		}
 
 		return getRegistration(candidates, qualifierType);
+	}
+
+	private void callPostConstructors(Type)(Type instance) {
+		foreach (memberName; __traits(allMembers, Type)) {
+			static if (__traits(getProtection, __traits(getMember, instance, memberName)) == "public"
+						&& isCallable!(__traits(getMember, instance, memberName))
+						&& hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
+				__traits(getMember, instance, memberName)();
+			}
+		}
 	}
 
 	/**

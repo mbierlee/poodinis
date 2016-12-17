@@ -3,6 +3,7 @@ Poodinis Changelog
 **Version NEXT**
 * ADD value injection. Members with UDA @Value will be attempted to be injected with a value-type. See tutorial and examples for more info.
 * ADD Phobos 2.072.1 forwards-compatibility for D/Phobos 2.066.1. This means you can use Poodinis with D/Phobos 2.066.1 compatible compilers such as GDC.
+* ADD @PostConstruct UDA for marking methods which should be called after a dependency is resolved and autowired.
 * FIX nullpointer exception in instance factory when debugging with poodinisVerbose
 
 **Version 7.0.1**
