@@ -22,6 +22,7 @@ class Registration {
 	private Registration linkedRegistration;
 	private shared(DependencyContainer) _originatingContainer;
 	private InstanceFactory _instanceFactory;
+	private void delegate() _preDestructor;
 
 	public @property registeredType() {
 		return _registeredType;
@@ -37,6 +38,14 @@ class Registration {
 
 	public @property instanceFactory() {
 		return _instanceFactory;
+	}
+
+	public @property preDestructor() {
+		return _preDestructor;
+	}
+
+	protected @property preDestructor(void delegate() preDestructor) {
+		_preDestructor = preDestructor;
 	}
 
 	this(TypeInfo registeredType, TypeInfo_Class instanceType, InstanceFactory instanceFactory, shared(DependencyContainer) originatingContainer) {

@@ -37,32 +37,99 @@ version(unittest) {
 		int nums;
 	}
 
+	class IntInjector : ValueInjector!int {
+		public override int get(string key) {
+			assert(key == "conf.stuffs");
+			return 364;
+		}
+	}
+
+	class StringInjector : ValueInjector!string {
+		public override string get(string key) {
+			assert(key == "conf.name");
+			return "Le Chef";
+		}
+	}
+
+	class ThingInjector : ValueInjector!Thing {
+		public override Thing get(string key) {
+			assert(key == "conf.thing");
+			return Thing(8899);
+		}
+	}
+
+	class DefaultIntInjector : ValueInjector!int {
+		public override int get(string key) {
+			throw new ValueNotAvailableException(key);
+		}
+	}
+
+	class MandatoryAvailableIntInjector : ValueInjector!int {
+		public override int get(string key) {
+			return 7466;
+		}
+	}
+
+	class MandatoryUnavailableIntInjector : ValueInjector!int {
+		public override int get(string key) {
+			throw new ValueNotAvailableException(key);
+		}
+	}
+
+	class DependencyInjectedIntInjector : ValueInjector!int {
+		@Autowire
+		public Dependency dependency;
+
+		public override int get(string key) {
+			return 2345;
+		}
+	}
+
+	class CircularIntInjector : ValueInjector!int {
+		@Autowire
+		public ValueInjector!int dependency;
+
+		private int count = 0;
+
+		public override int get(string key) {
+			count += 1;
+			if (count >= 3) {
+				return count;
+			}
+			return dependency.get(key);
+		}
+	}
+
+	class ValueInjectedIntInjector : ValueInjector!int {
+		@Value("five")
+		public int count = 0;
+
+		public override int get(string key) {
+			if (key == "five") {
+				return 5;
+			}
+
+			return count;
+		}
+	}
+
+	class DependencyValueInjectedIntInjector : ValueInjector!int {
+		@Autowire
+		public ConfigWithDefaults config;
+
+		public override int get(string key) {
+			if (key == "conf.missing") {
+				return 8899;
+			}
+
+			return 0;
+		}
+	}
+
 	// Test injection of values
 	unittest {
 		auto container = new shared DependencyContainer();
 		container.register!MyConfig;
-
-		class IntInjector : ValueInjector!int {
-			public override int get(string key) {
-				assert(key == "conf.stuffs");
-				return 364;
-			}
-		}
-
-		class StringInjector : ValueInjector!string {
-			public override string get(string key) {
-				assert(key == "conf.name");
-				return "Le Chef";
-			}
-		}
-
-		class ThingInjector : ValueInjector!Thing {
-			public override Thing get(string key) {
-				assert(key == "conf.thing");
-				return Thing(8899);
-			}
-		}
-
 		container.register!(ValueInjector!int, IntInjector);
 		container.register!(ValueInjector!string, StringInjector);
 		container.register!(ValueInjector!Thing, ThingInjector);
@@ -86,14 +153,7 @@ version(unittest) {
 	unittest {
 		auto container = new shared DependencyContainer();
 		container.register!ConfigWithDefaults;
-
-		class IntInjector : ValueInjector!int {
-			public override int get(string key) {
-				throw new ValueNotAvailableException(key);
-			}
-		}
-
-		container.register!(ValueInjector!int, IntInjector);
+		container.register!(ValueInjector!int, DefaultIntInjector);
 
 		auto instance = container.resolve!ConfigWithDefaults;
 		assert(instance.noms == 9);
@@ -103,14 +163,7 @@ version(unittest) {
 	unittest {
 		auto container = new shared DependencyContainer();
 		container.register!ConfigWithMandatory;
-
-		class IntInjector : ValueInjector!int {
-			public override int get(string key) {
-				return 7466;
-			}
-		}
-
-		container.register!(ValueInjector!int, IntInjector);
+		container.register!(ValueInjector!int, MandatoryAvailableIntInjector);
 
 		auto instance = container.resolve!ConfigWithMandatory;
 		assert(instance.nums == 7466);
@@ -120,14 +173,7 @@ version(unittest) {
 	unittest {
 		auto container = new shared DependencyContainer();
 		container.register!ConfigWithMandatory;
-
-		class IntInjector : ValueInjector!int {
-			public override int get(string key) {
-				throw new ValueNotAvailableException(key);
-			}
-		}
-
-		container.register!(ValueInjector!int, IntInjector);
+		container.register!(ValueInjector!int, MandatoryUnavailableIntInjector);
 
 		assertThrown!ResolveException(container.resolve!ConfigWithMandatory);
 		assertThrown!ValueInjectionException(autowire(container, new ConfigWithMandatory()));
@@ -138,19 +184,8 @@ version(unittest) {
 		auto container = new shared DependencyContainer();
 		auto dependency = new Dependency();
 		container.register!Dependency.existingInstance(dependency);
-
-		class IntInjector : ValueInjector!int {
-
-			@Autowire
-			public Dependency dependency;
-
-			public override int get(string key) {
-				return 2345;
-			}
-		}
-
-		container.register!(ValueInjector!int, IntInjector);
-		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+		container.register!(ValueInjector!int, DependencyInjectedIntInjector);
+		auto injector = cast(DependencyInjectedIntInjector) container.resolve!(ValueInjector!int);
 
 		assert(injector.dependency is dependency);
 	}
@@ -158,25 +193,8 @@ version(unittest) {
 	// Test injecting circular dependencies within value injectors
 	unittest {
 		auto container = new shared DependencyContainer();
-
-		class IntInjector : ValueInjector!int {
-
-			@Autowire
-			public ValueInjector!int dependency;
-
-			private int count = 0;
-
-			public override int get(string key) {
-				count += 1;
-				if (count >= 3) {
-					return count;
-				}
-				return dependency.get(key);
-			}
-		}
-
-		container.register!(ValueInjector!int, IntInjector);
-		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+		container.register!(ValueInjector!int, CircularIntInjector);
+		auto injector = cast(CircularIntInjector) container.resolve!(ValueInjector!int);
 
 		assert(injector.dependency is injector);
 		assert(injector.get("whatever") == 3);
@@ -185,23 +203,8 @@ version(unittest) {
 	// Test value injection within value injectors
 	unittest {
 		auto container = new shared DependencyContainer();
-
-		class IntInjector : ValueInjector!int {
-
-			@Value("five")
-			public int count = 0;
-
-			public override int get(string key) {
-				if (key == "five") {
-					return 5;
-				}
-
-				return count;
-			}
-		}
-
-		container.register!(ValueInjector!int, IntInjector);
-		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+		container.register!(ValueInjector!int, ValueInjectedIntInjector);
+		auto injector = cast(ValueInjectedIntInjector) container.resolve!(ValueInjector!int);
 
 		assert(injector.count == 5);
 	}
@@ -211,22 +214,8 @@ version(unittest) {
 		auto container = new shared DependencyContainer();
 		container.register!ConfigWithDefaults;
 
-		class IntInjector : ValueInjector!int {
-
-			@Autowire
-			public ConfigWithDefaults config;
-
-			public override int get(string key) {
-				if (key == "conf.missing") {
-					return 8899;
-				}
-
-				return 0;
-			}
-		}
-
-		container.register!(ValueInjector!int, IntInjector);
-		auto injector = cast(IntInjector) container.resolve!(ValueInjector!int);
+		container.register!(ValueInjector!int, DependencyValueInjectedIntInjector);
+		auto injector = cast(DependencyValueInjectedIntInjector) container.resolve!(ValueInjector!int);
 
 		assert(injector.config.noms == 8899);
 	}

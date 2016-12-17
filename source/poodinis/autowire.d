@@ -257,9 +257,23 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
 			originatingContainer.autowire(instance);
 		}
 
+		this.preDestructor = getPreDestructor(instance);
+
 		return instance;
 	}
 
+	private void delegate() getPreDestructor(RegistrationType instance) {
+		void delegate() preDestructor = null;
+		foreach (memberName; __traits(allMembers, RegistrationType)) {
+			static if (__traits(getProtection, __traits(getMember, instance, memberName)) == "public"
+						&& isCallable!(__traits(getMember, instance, memberName))
+						&& hasUDA!(__traits(getMember, instance, memberName), PreDestroy)) {
+				preDestructor = &__traits(getMember, instance, memberName);
+			}
+		}
+
+		return preDestructor;
+	}
 }
 
 class AutowireInstantiationContext : InstantiationContext {

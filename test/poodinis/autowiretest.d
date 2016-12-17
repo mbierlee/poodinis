@@ -95,6 +95,13 @@ version(unittest) {
 		public ComponentA unrelated;
 	}
 
+	class TestInjector : ValueInjector!int {
+		public override int get(string key) {
+			assert(key == "values.int");
+			return 8;
+		}
+	}
+
 	// Test autowiring concrete type to existing instance
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -252,12 +259,6 @@ version(unittest) {
 	// Test autowiring class using value injection
 	unittest {
 		auto container = new shared DependencyContainer();
-		class TestInjector : ValueInjector!int {
-			public override int get(string key) {
-				assert(key == "values.int");
-				return 8;
-			}
-		}
 
 		container.register!(ValueInjector!int, TestInjector);
 		container.register!ComponentA;

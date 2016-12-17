@@ -92,6 +92,15 @@ public enum ResolveOption {
 struct PostConstruct {}
 
 /**
+ * Methods marked with this UDA within dependencies are called before the container
+ * loses the dependency's registration.
+ *
+ * This method is called when removeRegistration or clearAllRegistrations is called.
+ * It will also be called when the container's destructor is called.
+ */
+struct PreDestroy {}
+
+/**
  * The dependency container maintains all dependencies registered with it.
  *
  * Dependencies registered by a container can be resolved as long as they are still registered with the container.
@@ -108,6 +117,10 @@ synchronized class DependencyContainer {
 
 	private RegistrationOption persistentRegistrationOptions;
 	private ResolveOption persistentResolveOptions;
+
+	~this() {
+		clearAllRegistrations();
+	}
 
 	/**
 	 * Register a dependency by concrete class type.
@@ -390,6 +403,9 @@ synchronized class DependencyContainer {
 	 * Clears all dependency registrations managed by this container.
 	 */
 	public void clearAllRegistrations() {
+		foreach(registrationsOfType; registrations) {
+			callPreDestructorsOfRegistrations(registrationsOfType);
+		}
 		registrations.destroy();
 	}
 
@@ -404,7 +420,18 @@ synchronized class DependencyContainer {
 	 * ---
 	 */
 	public void removeRegistration(RegistrationType)() {
+		auto registrationsOfType = *(typeid(RegistrationType) in registrations);
+		callPreDestructorsOfRegistrations(registrationsOfType);
 		registrations.remove(typeid(RegistrationType));
+	}
+
+	private void callPreDestructorsOfRegistrations(shared(Registration[]) registrations) {
+		foreach(registration; registrations) {
+			Registration unsharedRegistration = cast(Registration) registration;
+			if (unsharedRegistration.preDestructor !is null) {
+				unsharedRegistration.preDestructor()();
+			}
+		}
 	}
 
 	/**

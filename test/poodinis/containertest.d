@@ -200,6 +200,21 @@ version(unittest) {
 		}
 	}
 
+	class PreDestroyerOfFates {
+		public bool preDestroyWasCalled = false;
+
+		@PreDestroy
+		public void callMeMaybe() {
+			preDestroyWasCalled = true;
+		}
+	}
+
+	class IntInjector : ValueInjector!int {
+		int get(string key) {
+			return 8783;
+		}
+	}
+
 	// Test register concrete type
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -704,16 +719,28 @@ version(unittest) {
 
 	// Test postconstruction happens after autowiring and value injection
 	unittest {
-		class IntInjector : ValueInjector!int {
-			int get(string key) {
-				return 8783;
-			}
-		}
-
 		auto container = new shared DependencyContainer();
 		container.register!(ValueInjector!int, IntInjector);
 		container.register!PostConstructionDependency;
 		container.register!PostConstructWithAutowiring;
 		auto instance = container.resolve!PostConstructWithAutowiring;
+	}
+
+	// Test PreDestroy is called when removing a registration
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!PreDestroyerOfFates;
+		auto instance = container.resolve!PreDestroyerOfFates;
+		container.removeRegistration!PreDestroyerOfFates;
+		assert(instance.preDestroyWasCalled == true);
+	}
+
+	// Test PreDestroy is called when removing all registrations
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!PreDestroyerOfFates;
+		auto instance = container.resolve!PreDestroyerOfFates;
+		container.clearAllRegistrations();
+		assert(instance.preDestroyWasCalled == true);
 	}
 }
