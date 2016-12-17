@@ -6,17 +6,11 @@
  */
 
 import poodinis;
+import poodinis.test.testClasses;
 
 import std.exception;
 
 version(unittest) {
-	class TestType {}
-
-	interface TestInterface {}
-
-	class TestImplementation : TestInterface {
-		public string someContent = "";
-	}
 
 	// Test getting instance without scope defined throws exception
 	unittest {

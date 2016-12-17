@@ -6,214 +6,13 @@
  */
 
 import poodinis;
+import poodinis.test.testClasses;
 import poodinis.test.foreignDependencies;
 
 import std.exception;
 import core.thread;
 
 version(unittest) {
-	interface TestInterface {
-	}
-
-	class TestClass : TestInterface {
-	}
-
-	class TestClassDeux : TestInterface {
-		@Autowire
-		public UnrelatedClass unrelated;
-	}
-
-	class UnrelatedClass{
-	}
-
-	class FailOnCreationClass {
-		this() {
-			throw new Exception("This class should not be instantiated");
-		}
-	}
-
-	class AutowiredClass {
-	}
-
-	class ComponentClass {
-		@Autowire
-		public AutowiredClass autowiredClass;
-	}
-
-	class ComponentCat {
-		@Autowire
-		public ComponentMouse mouse;
-	}
-
-	class ComponentMouse {
-		@Autowire
-		public ComponentCat cat;
-	}
-
-	class Eenie {
-		@Autowire
-		public Meenie meenie;
-	}
-
-	class Meenie {
-		@Autowire
-		public Moe moe;
-	}
-
-	class Moe {
-		@Autowire
-		public Eenie eenie;
-	}
-
-	class Ittie {
-		@Autowire
-		public Bittie bittie;
-	}
-
-	class Bittie {
-		@Autowire
-		public Banana banana;
-	}
-
-	class Banana {
-		@Autowire
-		public Bittie bittie;
-	}
-
-	interface SuperInterface {
-	}
-
-	class SuperImplementation : SuperInterface {
-		@Autowire
-		public Banana banana;
-	}
-
-	interface Color {
-	}
-
-	class Blue : Color {
-	}
-
-	class Red : Color {
-	}
-
-	class Spiders {
-		@Autowire
-		public TestInterface testMember;
-	}
-
-	class Recursive {
-		@Autowire
-		public Recursive recursive;
-	}
-
-	class Moolah {}
-
-	class Wants {
-		@Autowire
-		public Moolah moolah;
-	}
-
-	class John {
-		@Autowire
-		public Wants wants;
-	}
-
-	class Cocktail {
-		@Autowire
-		public Moolah moolah;
-
-		public Red red;
-
-		this(Red red) {
-			this.red = red;
-		}
-	}
-
-	class Wallpaper {
-		public Color color;
-
-		this(Color color) {
-			this.color = color;
-		}
-	}
-
-	class Pot {
-		this(Kettle kettle) {}
-	}
-
-	class Kettle {
-		this(Pot pot) {}
-	}
-
-	class Rock {
-		this(Scissors scissors) {}
-	}
-
-	class Paper {
-		this(Rock rock) {}
-	}
-
-	class Scissors {
-		this(Paper paper) {}
-	}
-
-	class Hello {
-		this(Ola ola) {}
-	}
-
-	class PostConstructionDependency {
-		public bool postConstructWasCalled = false;
-
-		@PostConstruct
-		public void callMeMaybe() {
-			postConstructWasCalled = true;
-		}
-	}
-
-	class ChildOfPostConstruction : PostConstructionDependency {}
-
-	interface ThereWillBePostConstruction {
-		@PostConstruct
-		void constructIt();
-	}
-
-	class ButThereWontBe : ThereWillBePostConstruction {
-		public bool postConstructWasCalled = false;
-
-		public override void constructIt() {
-			postConstructWasCalled = true;
-		}
-	}
-
-	class PostConstructWithAutowiring {
-		@Autowire
-		private PostConstructionDependency dependency;
-
-		@Value("")
-		private int theNumber = 1;
-
-		@PostConstruct
-		public void doIt() {
-			assert(theNumber == 8783);
-			assert(dependency !is null);
-		}
-	}
-
-	class PreDestroyerOfFates {
-		public bool preDestroyWasCalled = false;
-
-		@PreDestroy
-		public void callMeMaybe() {
-			preDestroyWasCalled = true;
-		}
-	}
-
-	class IntInjector : ValueInjector!int {
-		int get(string key) {
-			return 8783;
-		}
-	}
 
 	// Test register concrete type
 	unittest {
@@ -348,7 +147,7 @@ version(unittest) {
 		auto container = new shared DependencyContainer();
 		container.register!Ittie;
 		container.register!Bittie;
-		container.register!Banana;
+		container.register!Bunena;
 
 		auto ittie = container.resolve!Ittie;
 
@@ -360,7 +159,7 @@ version(unittest) {
 		auto container = new shared DependencyContainer();
 		container.register!Ittie.newInstance();
 		container.register!Bittie.newInstance();
-		container.register!Banana.newInstance();
+		container.register!Bunena.newInstance();
 
 		auto ittie = container.resolve!Ittie;
 
@@ -370,7 +169,7 @@ version(unittest) {
 	// Test autowiring type registered by interface
 	unittest {
 		auto container = new shared DependencyContainer();
-		container.register!Banana;
+		container.register!Bunena;
 		container.register!Bittie;
 		container.register!(SuperInterface, SuperImplementation);
 
@@ -720,7 +519,7 @@ version(unittest) {
 	// Test postconstruction happens after autowiring and value injection
 	unittest {
 		auto container = new shared DependencyContainer();
-		container.register!(ValueInjector!int, IntInjector);
+		container.register!(ValueInjector!int, PostConstructingIntInjector);
 		container.register!PostConstructionDependency;
 		container.register!PostConstructWithAutowiring;
 		auto instance = container.resolve!PostConstructWithAutowiring;

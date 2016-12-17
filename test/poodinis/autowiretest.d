@@ -6,101 +6,11 @@
  */
 
 import poodinis;
+import poodinis.test.testClasses;
 
 import std.exception;
 
 version(unittest) {
-	class ComponentA {}
-
-	class ComponentB {
-		public @Autowire ComponentA componentA;
-	}
-
-	interface InterfaceA {}
-
-	class ComponentC : InterfaceA {}
-
-	class ComponentD {
-		public @Autowire InterfaceA componentC = null;
-		private @Autowire InterfaceA privateComponentC = null;
-	}
-
-	class DummyAttribute{};
-
-	class ComponentE {
-		@DummyAttribute
-		public ComponentC componentC;
-	}
-
-	class ComponentDeclarationCocktail {
-		alias noomer = int;
-
-		@Autowire
-		public ComponentA componentA;
-
-		public void doesNothing() {
-		}
-
-		~this(){
-		}
-	}
-
-	class ComponentX : InterfaceA {}
-
-	class ComponentZ : ComponentB {
-	}
-
-	class MonkeyShine {
-		@Autowire!ComponentX
-		public InterfaceA component;
-	}
-
-	class BootstrapBootstrap {
-		@Autowire!ComponentX
-		public InterfaceA componentX;
-
-		@Autowire!ComponentC
-		public InterfaceA componentC;
-	}
-
-	class LordOfTheComponents {
-		@Autowire
-		public InterfaceA[] components;
-	}
-	class ComponentCharlie {
-		@Autowire
-		@AssignNewInstance
-		public ComponentA componentA;
-	}
-
-	class OuttaTime {
-		@Autowire
-		@OptionalDependency
-		public InterfaceA interfaceA;
-
-		@Autowire
-		@OptionalDependency
-		public ComponentA componentA;
-
-		@Autowire
-		@OptionalDependency
-		public ComponentC[] componentCs;
-	}
-
-	class ValuedClass {
-		@Value("values.int")
-		public int intValue;
-
-		@Autowire
-		public ComponentA unrelated;
-	}
-
-	class TestInjector : ValueInjector!int {
-		public override int get(string key) {
-			assert(key == "values.int");
-			return 8;
-		}
-	}
 
 	// Test autowiring concrete type to existing instance
 	unittest {

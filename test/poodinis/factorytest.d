@@ -6,78 +6,11 @@
  */
 
 import poodinis;
+import poodinis.test.testClasses;
 
 import std.exception;
 
 version(unittest) {
-
-	interface TestInterface {}
-
-	class TestImplementation : TestInterface {
-		public string someContent = "";
-	}
-
-	class SomeOtherClassThen {
-	}
-
-	class ClassWithConstructor {
-		public TestImplementation testImplementation;
-
-		this(TestImplementation testImplementation) {
-			this.testImplementation = testImplementation;
-		}
-	}
-
-	class ClassWithMultipleConstructors {
-		public SomeOtherClassThen someOtherClassThen;
-		public TestImplementation testImplementation;
-
-		this(SomeOtherClassThen someOtherClassThen) {
-			this.someOtherClassThen = someOtherClassThen;
-		}
-
-		this(SomeOtherClassThen someOtherClassThen, TestImplementation testImplementation) {
-			this.someOtherClassThen = someOtherClassThen;
-			this.testImplementation = testImplementation;
-		}
-	}
-
-	class ClassWithConstructorWithMultipleParameters {
-		public SomeOtherClassThen someOtherClassThen;
-		public TestImplementation testImplementation;
-
-		this(SomeOtherClassThen someOtherClassThen, TestImplementation testImplementation) {
-			this.someOtherClassThen = someOtherClassThen;
-			this.testImplementation = testImplementation;
-		}
-	}
-
-	class ClassWithPrimitiveConstructor {
-		public SomeOtherClassThen someOtherClassThen;
-
-		this(string willNotBePicked) {
-		}
-
-		this(SomeOtherClassThen someOtherClassThen) {
-			this.someOtherClassThen = someOtherClassThen;
-		}
-	}
-
-	class ClassWithEmptyConstructor {
-		public SomeOtherClassThen someOtherClassThen;
-
-		this() {
-		}
-
-		this(SomeOtherClassThen someOtherClassThen) {
-			this.someOtherClassThen = someOtherClassThen;
-		}
-	}
-
-	class ClassWithNonInjectableConstructor {
-		this(string myName) {
-		}
-	}
 
 	// Test instance factory with singletons
 	unittest {
