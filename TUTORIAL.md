@@ -2,7 +2,7 @@ Poodinis Tutorial
 =================
 This tutorial will give you an overview of all functionality offered by Poodinis and how to use them.
 
-The container
+The Container
 -------------
 To register a class, a new dependency container must be instantiated:
 ```d
@@ -10,7 +10,7 @@ To register a class, a new dependency container must be instantiated:
 auto dependencies = new shared DependencyContainer();
 ```
 A shared dependency container is thread-safe and resolves the same dependencies across all threads.
-###Registering dependencies
+###Registering Dependencies
 To make dependencies available, they have to be registered:
 ```d
 // Register concrete class
@@ -25,7 +25,7 @@ If you want to prevent registrations from being both registered by interface and
 dependencies.register!(ExampleInterface, ExampleClass)([RegistrationOption.doNotAddConcreteTypeRegistration]);
 ```
 
-Resolving dependencies
+Resolving Dependencies
 ----------------------
 To manually resolve a dependency, all you have to do is resolve the dependency's type using the container in which it is registered:
 ```d
@@ -45,7 +45,7 @@ dependencies.resolve!ExampleClass([ResolveOption.registerBeforeResolving]);
 ```
 Naturally this can only be done when you are resolving a concrete type or an interface type by qualifier.
 
-Dependency creation behaviour
+Dependency Creation Behaviour
 -----------------
 You can control how a dependency is resolved by specifying a creation scope during registration. The scope determines which instance is returned, be it the same each time or a new one. The following scopes are available:
 
@@ -69,7 +69,7 @@ dependencies.register!ExampleClass.existingInstance(preExistingInstance);
 Automatic Injection
 ----------
 The real value of any dependency injection framework comes from its ability to automatically inject dependencies. Poodinis supports automatic injection either through autowiring members annotated with the `@Autowire` UDA or through constructor injection.
-### UDA-based autowiring
+### UDA-based Autowiring
 UDA-based autowiring can be achieved by annotating members of a class with the `@Autowire` UDA:
 ```d
 class ExampleClassA {}
@@ -106,7 +106,7 @@ class ExampleClass {
 }
 ```
 
-### Constructor injection
+### Constructor Injection
 Poodinis also supports automatic injection of dependencies through constructors:
 ```d
 class ExampleClassA {}
@@ -135,16 +135,16 @@ Classes with multiple constructors can be injected. The following rules apply to
 If the constructors of a class are not suitable for injection, you could manually configure its creation using Application Contexts (see chapter further down).  
 Constructor injection has the advantage of not having to import Poodinis throughout your application.
 
-### Value injection
+### Value Injection
 Besides injecting class instances, Poodinis can also inject values:
-```
+```d
 class ExampleClass {
 	@Value("a.key.for.this.value")
 	private int someNumber = 9; // Assignment is kept when the injector cannot find the value associated with key
 }
 ```
 The value will automatically be injected during the autowiring process. In order for Poodinis to be able to inject values, ValueInjectors must be available and registered with the dependency container:
-```
+```d
 class MyIntInjector : ValueInjector!int {
 	int get(string key) {
 		// read from some value source, such as a configuration file.
@@ -163,11 +163,11 @@ Value injectors will also be autowired before being used. Value injectors will e
 
 Poodinis doesn't come with any value injector implementations. In the [README.md](README.md) you will find a list of projects which use different libraries as value sources.
 
-Circular dependencies
+Circular Dependencies
 ---------------------
 Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop. Circular dependencies are only supported when autowiring members through the `@Autowire` UDA; circular dependencies in constructors are not supported and will result in an `InstanceCreationException`.
 
-Registering and resolving using qualifiers
+Registering and Resolving Using Qualifiers
 ------------------------------------------
 You can register multiple concrete types to a super type. When doing so, you will need to specify a qualifier when resolving that type:
 ```d
@@ -185,7 +185,7 @@ class BluePaint {
 ```
 If you registered multiple concrete types to the same supertype and you do not resolve using a qualifier, a `ResolveException` is thrown stating that there are multiple candidates for the type to be resolved.
 
-Autowiring all registered instances to an array
+Autowiring All Registered Instances to an Array
 -----------------------------------------------
 If you have registered multiple concrete types to a super type, you can autowire them all to an array, in which case you can easily operate on them all:
 ```d
@@ -206,7 +206,7 @@ Application Contexts
 --------------------
 You can fine-tune dependency configuration using application contexts. Application contexts allow you to centralize all dependency configuration as well as define how instances of certain classes should be constructed using factory methods.
 
-###Defining and using application contexts
+###Defining and Using Application Contexts
 An application context is defined as follows:
 ```d
 class Context : ApplicationContext {
@@ -237,7 +237,7 @@ container.registerContext!Context;
 All registered dependencies can now be resolved by the same dependency container. Registering a context will also register it as a dependency, meaning you can autowire the application context in other classes. 
 You can register as many types of application contexts as you like.
 
-###Autowiring application contexts
+###Autowiring Application Contexts
 Application contexts can make use of autowired dependencies like any other dependency. When registering an application context, all its components are registered first after which the application context is autowired. 
 This means that after the registration of an application context some dependencies will already be resolved and instantiated. The following example illustrates how autowired members can be used in a context:
 ```d
@@ -264,7 +264,7 @@ application context, but don't neccesarily have to be. You can even autowire dep
 
 Application contexts are directly autowired after they have been registered. This means that all autowired dependencies which are not registered in the application context itself need to be registered before registering the application context.
 
-###Controlling component registration
+###Controlling Component Registration
 You can further influence how components are registered and created with additional UDAs:
 ```d
 class Context : ApplicationContext {
@@ -278,7 +278,7 @@ class Context : ApplicationContext {
 ```
 
 Persistent Registration and Resolve Options
--------------------------------
+-------------------------------------------
 If you want registration options to be persistent (applicable for every call to `register()`), you can use the container method `setPersistentRegistrationOptions()`:
 ```d
 dependencies.setPersistentRegistrationOptions(RegistrationOption.doNotAddConcreteTypeRegistration); // Sets the options
@@ -290,3 +290,21 @@ dependencies.setPersistentResolveOptions(ResolveOption.registerBeforeResolving);
 dependencies.unsetPersistentResolveOptions(); // Clears the persistentent options
 ```
 Please note that setting options will unset previously set options; the options specified will be the only ones in effect.
+
+Post-Constructors and Pre-Destructors
+-------------------------------------
+Using the `@PostConstruct` and `@PreDestroy` UDAs you can let the container call public methods in your class right after the container constructed it or when it loses its registration for your class. The pre-constructor is called right after the container has created a new instance of your class and has autowired its members. The post-construtor is called when `removeRegistration` or `clearAllRegistrations` is called, or when the container's destructor is called. A post-constructor or pre-destructor must have the signature `void(void)`.
+```d
+class MyFineClass {
+	@PostConstruct
+	void postConstructor() {
+		// Is called right after MyFineClass is created and autowired
+	}
+	
+	@PreDestroy
+	void preDestructor() {
+		// Is called right before MyFineClass's registration is removed from the container
+	}
+}
+```
+You can have multiple post-constructors and pre-destructors, they will all be called; however, the order in which they are called is undetermined.
