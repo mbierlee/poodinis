@@ -24,6 +24,7 @@ import std.string;
 import std.algorithm;
 import std.concurrency;
 import std.traits;
+import std.compiler;
 
 debug {
 	import std.stdio;
@@ -119,7 +120,10 @@ synchronized class DependencyContainer {
 	private ResolveOption persistentResolveOptions;
 
 	~this() {
-		clearAllRegistrations();
+		pragma(msg, __VERSION__);
+		if (!(vendor == Vendor.digitalMars && __VERSION__ == 2066)) {
+			clearAllRegistrations();
+		}
 	}
 
 	/**
