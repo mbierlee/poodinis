@@ -9,7 +9,7 @@ d:
   - dmd-2.067.1
   - dmd-2.066.1
   - ldc
-  - ldc-1.1.0-beta5
+  - ldc-1.1.0-beta6
   - ldc-0.17.2
   - gdc
 
@@ -26,4 +26,3 @@ script:
   - dub build --build=release --config=registerOnResolveExample
   - dub build --build=release --config=constructorInjectionExample
   - dub build --build=release --config=valueInjectionExample
-# - dub build --build=ddox
