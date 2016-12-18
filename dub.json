@@ -122,6 +122,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "postConstructorPreDestructorExample",
+			"description" : "Example where the usage of post-constructors and pre-destructors are demonstrated.",
+			"targetType": "executable",
+			"targetName": "postConstructorPreDestructorExample",
+			"sourcePaths": [
+				"example/postconstructorpredestructor"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }

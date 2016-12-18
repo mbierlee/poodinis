@@ -26,3 +26,4 @@ script:
   - dub build --build=release --config=registerOnResolveExample
   - dub build --build=release --config=constructorInjectionExample
   - dub build --build=release --config=valueInjectionExample
+  - dub build --build=release --config=postConstructorPreDestructorExample
