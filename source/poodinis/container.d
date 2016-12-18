@@ -120,8 +120,7 @@ synchronized class DependencyContainer {
 	private ResolveOption persistentResolveOptions;
 
 	~this() {
-		pragma(msg, __VERSION__);
-		if (!(vendor == Vendor.digitalMars && __VERSION__ == 2066)) {
+		if (!((vendor == Vendor.digitalMars || vendor == Vendor.gnu) && __VERSION__ == 2066)) {
 			clearAllRegistrations();
 		}
 	}
