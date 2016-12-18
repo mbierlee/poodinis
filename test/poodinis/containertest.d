@@ -542,4 +542,24 @@ version(unittest) {
 		container.clearAllRegistrations();
 		assert(instance.preDestroyWasCalled == true);
 	}
+
+	// Test PreDestroy is called when the container is destroyed
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!PreDestroyerOfFates;
+		auto instance = container.resolve!PreDestroyerOfFates;
+		container.destroy();
+
+		/* Due to a bug in D 2.066.1 a memory violation occurs when class destructors are
+		 called under certain circumstances. Poodinis works around this issue and
+		 sacrifices the ability to call pre-destructors when the container is destroyed
+		 in D 2.066.1
+		*/
+		import std.compiler;
+		if ((vendor == Vendor.digitalMars || vendor == Vendor.gnu) && __VERSION__ == 2066) {
+			assert(instance.preDestroyWasCalled == false);
+		} else {
+			assert(instance.preDestroyWasCalled == true);
+		}
+	}
 }
