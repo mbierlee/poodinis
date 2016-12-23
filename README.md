@@ -81,6 +81,11 @@ Value Injectors
 ---------------
 Poodinis doesn't come with implementations of value injectors. Have you made any or do you know of any? Please add them to this section via a pull request or open an issue.
 
+Projects Using Poodinis
+-----------------------
+* [Eloquent](https://github.com/SingingBush/eloquent): A lightweight web application written in D
+* [ioc](https://github.com/FilipMalczak/ioc): Slow approach to Inversion of Control in D2 language
+
 Future Work
 -----------
 * Component scan (auto-registration)
