@@ -65,7 +65,9 @@ Dependency set-up can further be reduced by enabling "Register on resolve". For 
 
 Documentation
 -------------
-You can generate Public API documentation from the source code using DUB:
+You can find the public API documentation [here](http://docs.lostmoment.com/poodinis/).
+
+Alternatively you can generate documentation from the source code using DUB:
 ```
 dub build --build=ddox
 ```
