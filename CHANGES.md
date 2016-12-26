@@ -1,6 +1,6 @@
 Poodinis Changelog
 ==================
-**Version NEXT**
+**Version 8.0.0**
 * ADD value injection. Members with UDA @Value will be attempted to be injected with a value-type. See tutorial and examples for more info.
 * ADD @PostConstruct UDA for marking methods which should be called after a dependency is resolved and autowired.
 * ADD @PreDestroy UDA for marking methods which should be called when the container loses a dependency's registration. It is called when
