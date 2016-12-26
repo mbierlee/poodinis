@@ -390,9 +390,10 @@ synchronized class DependencyContainer {
 
 	private void callPostConstructors(Type)(Type instance) {
 		foreach (memberName; __traits(allMembers, Type)) {
+			mixin(`import ` ~ moduleName!Type ~ `;`);
 			static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
 						&& __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-						&& isCallable!(__traits(getMember, instance, memberName))
+						&& isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
 						&& hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
 				__traits(getMember, instance, memberName)();
 			}
