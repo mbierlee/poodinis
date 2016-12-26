@@ -18,7 +18,6 @@ import std.exception;
 import std.traits;
 import std.string;
 import std.stdio;
-import poodinis.polyfill;
 
 alias CreatesSingleton = Flag!"CreatesSingleton";
 alias InstanceFactoryMethod = Object delegate();
