@@ -5,7 +5,8 @@ Poodinis Changelog
 * ADD @PostConstruct UDA for marking methods which should be called after a dependency is resolved and autowired.
 * ADD @PreDestroy UDA for marking methods which should be called when the container loses a dependency's registration. It is called when
 removeRegistration or clearAllRegistrations is called. It is also called when the container is destroyed.
-* FIX nullpointer exception in instance factory when debugging with poodinisVerbose
+* FIX nullpointer exception in instance factory when debugging with poodinisVerbose.
+* REMOVE previously deprecated getInstance().
 
 **Version 7.0.1**
 * FIX codegeneration of constructor injection factories for constructors with dependencies from foreign modules, 

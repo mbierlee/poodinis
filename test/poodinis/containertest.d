@@ -53,13 +53,6 @@ version(unittest) {
 		assertThrown!ResolveException(container.resolve!TestClass, "Resolving cleared type does not fail");
 	}
 
-	// Test get singleton of container (DEPRECATED)
-	unittest {
-		auto instance1 = DependencyContainer.getInstance();
-		auto instance2 = DependencyContainer.getInstance();
-		assert(instance1 is instance2, "getInstance does not return the same instance");
-	}
-
 	// Test resolve single instance for type
 	unittest {
 		auto container = new shared DependencyContainer();
