@@ -79,7 +79,10 @@ For a full overview of changes, see [CHANGES.md](CHANGES.md)
 
 Value Injectors
 ---------------
-Poodinis doesn't come with implementations of value injectors. Have you made any or do you know of any? Please add them to this section via a pull request or open an issue.
+Poodinis doesn't come with implementations of value injectors. Value injectors are available in separate projects:
+* [Proper-d value injector](https://github.com/mbierlee/poodinis-proper-d-injector)
+
+Have you made any or do you know of any? Please add them to this section via a pull request or open an issue.
 
 Projects Using Poodinis
 -----------------------
