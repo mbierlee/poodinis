@@ -21,6 +21,7 @@ import poodinis.container;
 import poodinis.registration;
 import poodinis.factory;
 import poodinis.valueinjection;
+import poodinis.polyfill;
 
 import std.exception;
 import std.stdio;

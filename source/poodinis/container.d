@@ -18,6 +18,7 @@ import poodinis.autowire;
 import poodinis.context;
 import poodinis.factory;
 import poodinis.valueinjection;
+import poodinis.polyfill;
 
 import std.string;
 import std.algorithm;
