@@ -17,12 +17,12 @@ sudo: false
 script:
   - dub build --build=release --config=library
   - dub test --build=unittest --config=unittest
-  - dub build --build=release --config=quickstartExample
-  - dub build --build=release --config=qualifiersExample
-  - dub build --build=release --config=arrayCompletionExample
-  - dub build --build=release --config=annotationsExample
-  - dub build --build=release --config=applicationContextExample
-  - dub build --build=release --config=registerOnResolveExample
-  - dub build --build=release --config=constructorInjectionExample
-  - dub build --build=release --config=valueInjectionExample
-  - dub build --build=release --config=postConstructorPreDestructorExample
+  - dub run --build=release --config=quickstartExample
+  - dub run --build=release --config=qualifiersExample
+  - dub run --build=release --config=arrayCompletionExample
+  - dub run --build=release --config=annotationsExample
+  - dub run --build=release --config=applicationContextExample
+  - dub run --build=release --config=registerOnResolveExample
+  - dub run --build=release --config=constructorInjectionExample
+  - dub run --build=release --config=valueInjectionExample
+  - dub run --build=release --config=postConstructorPreDestructorExample
