@@ -2,14 +2,14 @@ language: d
 
 d:
   - dmd
+  - dmd-2.072.2
   - dmd-2.071.2
   - dmd-2.070.2
   - dmd-2.069.2
   - dmd-2.068.2
-  - dmd-2.073.0-b2
   - ldc
-  - ldc-1.1.0-beta6
-  - ldc-0.17.2
+  - ldc-1.0.0
+  - ldc-0.17.3
   - gdc
 
 sudo: false
