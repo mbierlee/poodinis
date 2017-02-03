@@ -9,7 +9,7 @@ d:
   - dmd-2.068.2
   - ldc
   - ldc-1.0.0
-  - ldc-0.17.3
+  - ldc-0.17.2
   - gdc
 
 sudo: false
