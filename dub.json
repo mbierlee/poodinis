@@ -3,7 +3,7 @@
 	"description" : "A dependency injection framework with support for autowiring.",
 	"homepage": "http://lostmoment.com/open-source/poodinis",
 	"authors": ["Mike Bierlee"],
-	"copyright": "Copyright 2014-2016 Mike Bierlee",
+	"copyright": "Copyright 2014-2017 Mike Bierlee",
 	"license": "MIT",
 	"configurations": [
 		{
