@@ -5,6 +5,7 @@
 	"authors": ["Mike Bierlee"],
 	"copyright": "Copyright 2014-2017 Mike Bierlee",
 	"license": "MIT",
+	"-ddoxTool": "scod",
 	"configurations": [
 		{
 			"name": "library",
