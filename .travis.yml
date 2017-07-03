@@ -1,17 +1,16 @@
 language: d
 
 # For available compilers see: https://semitwist.com/travis-d-compilers
-# there's also dmd-beta and ldc-beta
 d:
+  - dmd
   - dmd-beta
-  - dmd-2.074.1
   - dmd-2.073.2
   - dmd-2.072.2
   - dmd-2.071.2
   - dmd-2.070.2
   - dmd-2.069.2
+  - ldc
   - ldc-beta
-  - ldc-1.2.0 # eq to dmd v2.072.2
   - ldc-1.1.1 # eq to dmd v2.071.2
   - gdc
 
