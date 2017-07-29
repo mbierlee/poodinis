@@ -27,10 +27,10 @@ See the [TUTORIAL.md](TUTORIAL.md) and [examples](example) for a complete walkth
 
 Getting started
 ---------------
-###DUB Dependency
+### DUB Dependency
 See the Poodinis [DUB project page] for instructions on how to include Poodinis into your project.
 
-###Quickstart
+### Quickstart
 The following example shows the typical usage of Poodinis:
 ```d
 import poodinis;
