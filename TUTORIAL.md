@@ -10,7 +10,7 @@ To register a class, a new dependency container must be instantiated:
 auto dependencies = new shared DependencyContainer();
 ```
 A shared dependency container is thread-safe and resolves the same dependencies across all threads.
-###Registering Dependencies
+### Registering Dependencies
 To make dependencies available, they have to be registered:
 ```d
 // Register concrete class
@@ -206,7 +206,7 @@ Application Contexts
 --------------------
 You can fine-tune dependency configuration using application contexts. Application contexts allow you to centralize all dependency configuration as well as define how instances of certain classes should be constructed using factory methods.
 
-###Defining and Using Application Contexts
+### Defining and Using Application Contexts
 An application context is defined as follows:
 ```d
 class Context : ApplicationContext {
@@ -237,7 +237,7 @@ container.registerContext!Context;
 All registered dependencies can now be resolved by the same dependency container. Registering a context will also register it as a dependency, meaning you can autowire the application context in other classes. 
 You can register as many types of application contexts as you like.
 
-###Autowiring Application Contexts
+### Autowiring Application Contexts
 Application contexts can make use of autowired dependencies like any other dependency. When registering an application context, all its components are registered first after which the application context is autowired. 
 This means that after the registration of an application context some dependencies will already be resolved and instantiated. The following example illustrates how autowired members can be used in a context:
 ```d
@@ -264,7 +264,7 @@ application context, but don't neccesarily have to be. You can even autowire dep
 
 Application contexts are directly autowired after they have been registered. This means that all autowired dependencies which are not registered in the application context itself need to be registered before registering the application context.
 
-###Controlling Component Registration
+### Controlling Component Registration
 You can further influence how components are registered and created with additional UDAs:
 ```d
 class Context : ApplicationContext {
