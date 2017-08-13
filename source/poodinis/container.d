@@ -22,6 +22,7 @@ import poodinis.polyfill;
 
 import std.string;
 import std.algorithm;
+import std.array;
 import std.concurrency;
 import std.traits;
 
@@ -389,9 +390,20 @@ synchronized class DependencyContainer {
 		return getRegistration(candidates, qualifierType);
 	}
 
+	private static string[] createModuleList(Type)() {
+		string[] ret = [moduleName!Type];
+		static if (__traits(compiles, TemplateArgsOf!Type)) {
+			foreach (TemplateArg; TemplateArgsOf!Type) {
+				static if (!isBuiltinType!TemplateArg)
+					ret ~= createModuleList!TemplateArg;
+			}
+		}
+		return ret;
+	}
+
 	private void callPostConstructors(Type)(Type instance) {
 		foreach (memberName; __traits(allMembers, Type)) {
-			mixin(`import ` ~ moduleName!Type ~ `;`);
+			mixin(createModuleList!Type.map!(moduleName => `import ` ~ moduleName ~ `;`).join);
 			static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
 						&& __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
 						&& isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
