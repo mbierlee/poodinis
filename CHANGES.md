@@ -1,7 +1,7 @@
 Poodinis Changelog
 ==================
 **Unreleased**
-* FIX value injectors failing to resolve in certain situations when they inject structs
+* FIX value injectors failing to resolve in certain situations when they inject structs (Fixes issue #20)
 
 **Version 8.0.0**
 * ADD value injection. Members with UDA @Value will be attempted to be injected with a value-type. See tutorial and examples for more info.
