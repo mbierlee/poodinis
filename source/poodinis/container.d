@@ -407,7 +407,7 @@ synchronized class DependencyContainer {
 		static if (__traits(compiles, TemplateArgsOf!Type)) {
 			foreach(TemplateArgType; TemplateArgsOf!Type) {
 				static if (!isBuiltinType!TemplateArgType) {
-					imports ~= "import " ~ moduleName!TemplateArgType ~ ";";
+					imports ~= createImportsString!TemplateArgType;
 				}
 			}
 		}
