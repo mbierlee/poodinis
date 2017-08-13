@@ -1,6 +1,6 @@
 Poodinis Changelog
 ==================
-**Unreleased**
+**Version 8.0.1**
 * FIX value injectors failing to resolve in certain situations when they inject structs (Fixes issue #20)
 
 **Version 8.0.0**
