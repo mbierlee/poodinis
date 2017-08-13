@@ -12,6 +12,22 @@ import std.exception;
 
 version(unittest) {
 
+	struct LocalStruct {
+		bool wasInjected = false;
+	}
+
+	class LocalStructInjector : ValueInjector!LocalStruct {
+		public override LocalStruct get(string key) {
+			auto data = LocalStruct(true);
+			return data;
+		}
+	}
+
+	class LocalClassWithStruct {
+		@Value("")
+		public LocalStruct localStruct;
+	}
+
 	// Test injection of values
 	unittest {
 		auto container = new shared DependencyContainer();
@@ -104,5 +120,18 @@ version(unittest) {
 		auto injector = cast(DependencyValueInjectedIntInjector) container.resolve!(ValueInjector!int);
 
 		assert(injector.config.noms == 8899);
+	}
+
+	// Test resolving locally defined struct injector (github issue #20)
+	unittest {
+		auto container = new shared DependencyContainer();
+		container.register!(ValueInjector!LocalStruct, LocalStructInjector);
+		container.register!LocalClassWithStruct;
+
+		auto injector = container.resolve!(ValueInjector!LocalStruct);
+		assert(injector !is null);
+
+		auto localClass = container.resolve!LocalClassWithStruct;
+		assert(localClass.localStruct.wasInjected);
 	}
 }

@@ -391,7 +391,8 @@ synchronized class DependencyContainer {
 
 	private void callPostConstructors(Type)(Type instance) {
 		foreach (memberName; __traits(allMembers, Type)) {
-			mixin(`import ` ~ moduleName!Type ~ `;`);
+			mixin(createImportsString!Type);
+
 			static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
 						&& __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
 						&& isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
@@ -399,6 +400,19 @@ synchronized class DependencyContainer {
 				__traits(getMember, instance, memberName)();
 			}
 		}
+	}
+
+	private static string createImportsString(Type)() {
+		string imports = `import ` ~ moduleName!Type ~ `;`;
+		static if (__traits(compiles, TemplateArgsOf!Type)) {
+			foreach(TemplateArgType; TemplateArgsOf!Type) {
+				static if (!isBuiltinType!TemplateArgType) {
+					imports ~= "import " ~ moduleName!TemplateArgType ~ ";";
+				}
+			}
+		}
+
+		return imports;
 	}
 
 	/**
