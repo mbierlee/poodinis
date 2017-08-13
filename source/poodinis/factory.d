@@ -12,6 +12,7 @@
 module poodinis.factory;
 
 import poodinis.container;
+import poodinis.imports;
 
 import std.typecons;
 import std.exception;
@@ -122,7 +123,7 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
 	private static string createImportList(Params...)() {
 		string importList = "";
 		foreach(param; Params) {
-			importList ~= "import " ~ moduleName!param ~ ";";
+			importList ~= createImportsString!param;
 		}
 		return importList;
 	}
@@ -148,9 +149,8 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
 			foreach(ctor ; __traits(getOverloads, InstanceType, `__ctor`)) {
 				static if (parametersAreValid!(Parameters!ctor)) {
 					isBeingInjected = true;
-					mixin(`
-						import ` ~ moduleName!InstanceType ~ `;
-						` ~ createImportList!(Parameters!ctor) ~ `
+					mixin(createImportsString!InstanceType
+						~ createImportList!(Parameters!ctor) ~ `
 						instance = new ` ~ fullyQualifiedName!InstanceType ~ `(` ~ createArgumentList!(Parameters!ctor) ~ `);
 					`);
 					isBeingInjected = false;

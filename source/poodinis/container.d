@@ -19,6 +19,7 @@ import poodinis.context;
 import poodinis.factory;
 import poodinis.valueinjection;
 import poodinis.polyfill;
+import poodinis.imports;
 
 import std.string;
 import std.algorithm;
@@ -400,19 +401,6 @@ synchronized class DependencyContainer {
 				__traits(getMember, instance, memberName)();
 			}
 		}
-	}
-
-	private static string createImportsString(Type)() {
-		string imports = `import ` ~ moduleName!Type ~ `;`;
-		static if (__traits(compiles, TemplateArgsOf!Type)) {
-			foreach(TemplateArgType; TemplateArgsOf!Type) {
-				static if (!isBuiltinType!TemplateArgType) {
-					imports ~= createImportsString!TemplateArgType;
-				}
-			}
-		}
-
-		return imports;
 	}
 
 	/**

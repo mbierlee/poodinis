@@ -22,6 +22,7 @@ import poodinis.registration;
 import poodinis.factory;
 import poodinis.valueinjection;
 import poodinis.polyfill;
+import poodinis.imports;
 
 import std.exception;
 import std.stdio;
@@ -265,7 +266,7 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
 	private void delegate() getPreDestructor(RegistrationType instance) {
 		void delegate() preDestructor = null;
 		foreach (memberName; __traits(allMembers, RegistrationType)) {
-			mixin(`import ` ~ moduleName!RegistrationType ~ `;`);
+			mixin(createImportsString!RegistrationType);
 			static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
 						&& __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
 						&& isFunction!(mixin(fullyQualifiedName!RegistrationType ~ `.` ~ memberName))
