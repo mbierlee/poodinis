@@ -14,7 +14,8 @@ d:
   - dmd-2.069.2
   - ldc
   - ldc-beta
-  - ldc-1.1.1 # eq to dmd v2.071.2
+  - ldc-1.2.0 # D v2.072.2
+  - ldc-1.1.1 # D v2.071.2
   - gdc
 
 sudo: false
