@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<title>Struct Autowire</title>
+		<link rel="stylesheet" href="../../css/style.min.css"/>
+		<script type="text/javascript" src="../../js/script.min.js"></script>
+	</head>
+	<body onload="setupDdox();">
+		<header></header>
+		<nav id="main-nav">
+			<div>
+				<noscript>
+					<p style="color: red">The search functionality needs JavaScript enabled</p>
+				</noscript>
+				<div id="symbolSearchPane" style="display: none">
+					<form action="#" method="GET">
+						<input id="symbolSearch" type="text" name="q" placeholder="Search for symbols" autocomplete="off" onchange="performSymbolSearch(24);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" autofocus/>
+					</form>
+					<ul id="symbolSearchResults" class="symbolList" style="display: none"></ul><script type="application/javascript" src="../../symbols.js"></script><script type="application/javascript">var symbolSearchRootDir = "../../";
+document.getElementById('symbolSearchPane').style.display = 'block';</script>
+				</div>
+				<ul class="tree-view">
+					<li class="tree-view ">
+						<div class="package ">
+							<a href="../../poodinis.html">poodinis</a>
+						</div>
+				<ul class="tree-view">
+					<li>
+						<div class="module selected">
+							<a href="../../poodinis/autowire.html">autowire</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../../poodinis/container.html">container</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../../poodinis/context.html">context</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../../poodinis/factory.html">factory</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../../poodinis/polyfill.html">polyfill</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../../poodinis/registration.html">registration</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../../poodinis/valueinjection.html">valueinjection</a>
+						</div>
+					</li>
+				</ul>
+					</li>
+				</ul>
+			</div>
+			<p id="main-nav-footer">
+				Built with
+				<a href="https://github.com/MartinNowak/scod">scod</a>
+			</p>
+		</nav>
+		<div id="main-contents">
+			<div>
+				<h1>Struct Autowire</h1><p>UDA for annotating class members as candidates for autowiring.
+</p>
+				<div class="prototype">
+					<code class="lang-d">
+						<div class="single-prototype">
+				<span class="kwd">struct</span> <span class="typ">Autowire</span>(QualifierType)
+				<span class="pun">;</span>
+						</div>
+					</code>
+				</div>
+				<section><p>Optionally a template parameter can be supplied to specify the type of a qualified class. The qualified type
+ of a concrete class is used to autowire members declared by supertype. If no qualifier is supplied, the type
+ of the member is used as qualifier.
+</p>
+</section>
+
+				<section><h2>Examples</h2>
+<p>Annotate member of class to be autowired:
+</p>
+<pre class="code"><code class="lang-d"><span class="kwd">class </span><span class="typ">Car </span><span class="pun">{
+   @</span><span class="typ">Autowire
+   </span><span class="kwd">public </span><span class="typ">Engine </span><span class="pln">engine</span><span class="pun">;
+}</span></code></pre>
+
+<p> Annotate member of class with qualifier:
+</p>
+<pre class="code"><code class="lang-d"><span class="kwd">class </span><span class="typ">FuelEngine </span><span class="pun">: </span><span class="typ">Engine </span><span class="pun">{ ... }
+</span><span class="kwd">class </span><span class="typ">ElectricEngine </span><span class="pun">: </span><span class="typ">Engine </span><span class="pun">{ ... }
+
+</span><span class="kwd">class </span><span class="typ">HybridCar </span><span class="pun">{
+   @</span><span class="typ">Autowire</span><span class="pun">!</span><span class="typ">FuelEngine
+   </span><span class="kwd">public </span><span class="typ">Engine </span><span class="pln">fuelEngine</span><span class="pun">;
+
+   @</span><span class="typ">Autowire</span><span class="pun">!</span><span class="typ">ElectricEngine
+   </span><span class="kwd">public </span><span class="typ">Engine </span><span class="pln">electricEngine</span><span class="pun">;
+}</span></code></pre>
+<p> The members of an instance of "HybridCar" will now be autowired properly, because the autowire mechanism will
+ autowire member "fuelEngine" as if it's of type "FuelEngine". This means that the members of instance "fuelEngine"
+ will also be autowired because the autowire mechanism knows that member "fuelEngine" is an instance of "FuelEngine"
+</p>
+</section>
+
+			</div>
+			<footer>
+				<div id="license-info">
+					<p>Mike Bierlee, m.bierlee@lostmoment.com
+</p>
+
+					<p>2014-2017 Mike Bierlee
+</p>
+
+					<p>This software is licensed under the terms of the MIT license.
+  The full terms of the license can be found in the LICENSE file.
+</p>
+
+				</div>
+			</footer>
+		</div>
+	</body>
+</html>
