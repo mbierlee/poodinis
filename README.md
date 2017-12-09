@@ -65,7 +65,7 @@ Dependency set-up can further be reduced by enabling "Register on resolve". For 
 
 Documentation
 -------------
-You can find the public API documentation [here](http://docs.lostmoment.com/poodinis/).
+You can find the public API documentation [here](https://mbierlee.github.io/poodinis/).
 
 Alternatively you can generate documentation from the source code using DUB:
 ```
