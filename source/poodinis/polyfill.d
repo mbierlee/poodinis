@@ -19,7 +19,7 @@
  *            Kenji Hara,
  *            Shoichi Kato,
  *            Mike Bierlee (m.bierlee@lostmoment.com)
- * Copyright: Copyright Digital Mars 2005 - 2009., Copyright Andrei Alexandrescu 2008-, Jonathan M Davis 2011-., 2014-2017 Mike Bierlee
+ * Copyright: Copyright Digital Mars 2005 - 2009., Copyright Andrei Alexandrescu 2008-, Jonathan M Davis 2011-., 2014-2018 Mike Bierlee
  * License:  $(HTTP boost.org/LICENSE_1_0.txt, Boost License 1.0)
  */
 
@@ -29,35 +29,35 @@ import std.exception;
 import std.traits;
 
 static if (!__traits(compiles, basicExceptionCtors)) {
-	mixin template basicExceptionCtors()
-	{
-		this(string msg, string file = __FILE__, size_t line = __LINE__, Throwable next = null) @safe pure nothrow
-		{
-			super(msg, file, line, next);
-		}
+    mixin template basicExceptionCtors()
+    {
+        this(string msg, string file = __FILE__, size_t line = __LINE__, Throwable next = null) @safe pure nothrow
+        {
+            super(msg, file, line, next);
+        }
 
-		this(string msg, Throwable next, string file = __FILE__, size_t line = __LINE__) @safe pure nothrow
-		{
-			super(msg, file, line, next);
-		}
-	}
+        this(string msg, Throwable next, string file = __FILE__, size_t line = __LINE__) @safe pure nothrow
+        {
+            super(msg, file, line, next);
+        }
+    }
 }
 
 static if (!__traits(compiles, isFunction)) {
-	template isFunction(X...) if (X.length == 1)
-	{
-		static if (is(typeof(&X[0]) U : U*) && is(U == function) ||
-					is(typeof(&X[0]) U == delegate))
-		{
-			// x is a (nested) function symbol.
-			enum isFunction = true;
-		}
-		else static if (is(X[0] T))
-		{
-			// x is a type.  Take the type of it and examine.
-			enum isFunction = is(T == function);
-		}
-		else
-			enum isFunction = false;
-	}
+    template isFunction(X...) if (X.length == 1)
+    {
+        static if (is(typeof(&X[0]) U : U*) && is(U == function) ||
+                    is(typeof(&X[0]) U == delegate))
+        {
+            // x is a (nested) function symbol.
+            enum isFunction = true;
+        }
+        else static if (is(X[0] T))
+        {
+            // x is a type.  Take the type of it and examine.
+            enum isFunction = is(T == function);
+        }
+        else
+            enum isFunction = false;
+    }
 }

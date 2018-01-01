@@ -5,7 +5,7 @@
  *
  * Authors:
  *  Mike Bierlee, m.bierlee@lostmoment.com
- * Copyright: 2014-2017 Mike Bierlee
+ * Copyright: 2014-2018 Mike Bierlee
  * License:
  *  This software is licensed under the terms of the MIT license.
  *  The full terms of the license can be found in the LICENSE file.
@@ -21,7 +21,7 @@ import poodinis.autowire;
 import std.traits;
 
 class ApplicationContext {
-	public void registerDependencies(shared(DependencyContainer) container) {}
+    public void registerDependencies(shared(DependencyContainer) container) {}
 }
 
 /**
@@ -35,7 +35,7 @@ struct Component {}
 * enables you to use type-qualified alternatives for dependencies.
 */
 struct RegisterByType(Type) {
-	Type type;
+    Type type;
 }
 
 /**
@@ -52,33 +52,33 @@ struct Prototype {}
 * want to use annotations to set-up dependencies in your classes.
 */
 public void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container) {
-	auto context = new Context();
-	context.registerDependencies(container);
-	context.registerContextComponents(container);
-	container.register!(ApplicationContext, Context)().existingInstance(context);
-	autowire(container, context);
+    auto context = new Context();
+    context.registerDependencies(container);
+    context.registerContextComponents(container);
+    container.register!(ApplicationContext, Context)().existingInstance(context);
+    autowire(container, context);
 }
 
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(ApplicationContextType context, shared(DependencyContainer) container) {
-	foreach (member ; __traits(allMembers, ApplicationContextType)) {
-		static if (__traits(getProtection, __traits(getMember, context, member)) == "public" && hasUDA!(__traits(getMember, context, member), Component)) {
-			auto factoryMethod = &__traits(getMember, context, member);
-			Registration registration = null;
-			auto createsSingleton = CreatesSingleton.yes;
+    foreach (member ; __traits(allMembers, ApplicationContextType)) {
+        static if (__traits(getProtection, __traits(getMember, context, member)) == "public" && hasUDA!(__traits(getMember, context, member), Component)) {
+            auto factoryMethod = &__traits(getMember, context, member);
+            Registration registration = null;
+            auto createsSingleton = CreatesSingleton.yes;
 
-			foreach(attribute; __traits(getAttributes, __traits(getMember, context, member))) {
-				static if (is(attribute == RegisterByType!T, T)) {
-					registration = container.register!(typeof(attribute.type), ReturnType!factoryMethod);
-				} else static if (__traits(isSame, attribute, Prototype)) {
-					createsSingleton = CreatesSingleton.no;
-				}
-			}
+            foreach(attribute; __traits(getAttributes, __traits(getMember, context, member))) {
+                static if (is(attribute == RegisterByType!T, T)) {
+                    registration = container.register!(typeof(attribute.type), ReturnType!factoryMethod);
+                } else static if (__traits(isSame, attribute, Prototype)) {
+                    createsSingleton = CreatesSingleton.no;
+                }
+            }
 
-			if (registration is null) {
-				registration = container.register!(ReturnType!factoryMethod);
-			}
+            if (registration is null) {
+                registration = container.register!(ReturnType!factoryMethod);
+            }
 
-			registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, createsSingleton, null, factoryMethod);
-		}
-	}
+            registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, createsSingleton, null, factoryMethod);
+        }
+    }
 }

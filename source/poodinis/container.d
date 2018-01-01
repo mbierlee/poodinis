@@ -5,7 +5,7 @@
  *
  * Authors:
  *  Mike Bierlee, m.bierlee@lostmoment.com
- * Copyright: 2014-2017 Mike Bierlee
+ * Copyright: 2014-2018 Mike Bierlee
  * License:
  *  This software is licensed under the terms of the MIT license.
  *  The full terms of the license can be found in the LICENSE file.
@@ -27,60 +27,60 @@ import std.concurrency;
 import std.traits;
 
 debug {
-	import std.stdio;
+    import std.stdio;
 }
 
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
  */
 class ResolveException : Exception {
-	this(string message, TypeInfo resolveType) {
-		super(format("Exception while resolving type %s: %s", resolveType.toString(), message));
-	}
+    this(string message, TypeInfo resolveType) {
+        super(format("Exception while resolving type %s: %s", resolveType.toString(), message));
+    }
 
-	this(Throwable cause, TypeInfo resolveType) {
-		super(format("Exception while resolving type %s", resolveType.toString()), cause);
-	}
+    this(Throwable cause, TypeInfo resolveType) {
+        super(format("Exception while resolving type %s", resolveType.toString()), cause);
+    }
 }
 
 /**
  * Exception thrown when errors occur while registering a type in a dependency container.
  */
 class RegistrationException : Exception {
-	this(string message, TypeInfo registrationType) {
-		super(format("Exception while registering type %s: %s", registrationType.toString(), message));
-	}
+    this(string message, TypeInfo registrationType) {
+        super(format("Exception while registering type %s: %s", registrationType.toString(), message));
+    }
 }
 
 /**
  * Options which influence the process of registering dependencies
  */
 public enum RegistrationOption {
-	none = 0,
-	/**
-	 * Prevent a concrete type being registered on itself. With this option you will always need
-	 * to use the supertype as the type of the dependency.
-	 */
-	doNotAddConcreteTypeRegistration = 1 << 0,
+    none = 0,
+    /**
+     * Prevent a concrete type being registered on itself. With this option you will always need
+     * to use the supertype as the type of the dependency.
+     */
+    doNotAddConcreteTypeRegistration = 1 << 0,
 }
 
 /**
  * Options which influence the process of resolving dependencies
  */
 public enum ResolveOption {
-	none = 0,
-	/**
-	 * Registers the type you're trying to resolve before returning it.
-	 * This essentially makes registration optional for resolving by concerete types.
-	 * Resolinvg will still fail when trying to resolve a dependency by supertype.
-	 */
-	registerBeforeResolving = 1 << 0,
+    none = 0,
+    /**
+     * Registers the type you're trying to resolve before returning it.
+     * This essentially makes registration optional for resolving by concerete types.
+     * Resolinvg will still fail when trying to resolve a dependency by supertype.
+     */
+    registerBeforeResolving = 1 << 0,
 
-	/**
-	 * Does not throw a resolve exception when a type is not registered but will
-	 * return null instead. If the type is an array, an empty array is returned instead.
-	 */
-	noResolveException = 1 << 1
+    /**
+     * Does not throw a resolve exception when a type is not registered but will
+     * return null instead. If the type is an array, an empty array is returned instead.
+     */
+    noResolveException = 1 << 1
 }
 
 /**
@@ -112,358 +112,358 @@ struct PreDestroy {}
  * You can still create new instances of this class for exceptional situations.
  */
 synchronized class DependencyContainer {
-	private Registration[][TypeInfo] registrations;
+    private Registration[][TypeInfo] registrations;
 
-	private Registration[] autowireStack;
+    private Registration[] autowireStack;
 
-	private RegistrationOption persistentRegistrationOptions;
-	private ResolveOption persistentResolveOptions;
+    private RegistrationOption persistentRegistrationOptions;
+    private ResolveOption persistentResolveOptions;
 
-	~this() {
-		clearAllRegistrations();
-	}
+    ~this() {
+        clearAllRegistrations();
+    }
 
-	/**
-	 * Register a dependency by concrete class type.
-	 *
-	 * A dependency registered by concrete class type can only be resolved by concrete class type.
-	 * No qualifiers can be used when resolving dependencies which are registered by concrete type.
-	 *
-	 * The default registration scope is "single instance" scope.
-	 *
-	 * Returns:
-	 * A registration is returned which can be used to change the registration scope.
-	 *
-	 * Examples:
-	 * Register and resolve a class by concrete type:
-	 * ---
-	 * class Cat : Animal { ... }
-	 * container.register!Cat;
-	 * ---
-	 *
-	 * See_Also: singleInstance, newInstance, existingInstance
-	 */
-	public Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none) {
-		return register!(ConcreteType, ConcreteType)(options);
-	}
+    /**
+     * Register a dependency by concrete class type.
+     *
+     * A dependency registered by concrete class type can only be resolved by concrete class type.
+     * No qualifiers can be used when resolving dependencies which are registered by concrete type.
+     *
+     * The default registration scope is "single instance" scope.
+     *
+     * Returns:
+     * A registration is returned which can be used to change the registration scope.
+     *
+     * Examples:
+     * Register and resolve a class by concrete type:
+     * ---
+     * class Cat : Animal { ... }
+     * container.register!Cat;
+     * ---
+     *
+     * See_Also: singleInstance, newInstance, existingInstance
+     */
+    public Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none) {
+        return register!(ConcreteType, ConcreteType)(options);
+    }
 
-	/**
-	 * Register a dependency by super type.
-	 *
-	 * A dependency registered by super type can only be resolved by super type. A qualifier is typically
-	 * used to resolve dependencies registered by super type.
-	 *
-	 * The default registration scope is "single instance" scope.
-	 *
-	 * Examples:
-	 * Register and resolve by super type
-	 * ---
-	 * class Cat : Animal { ... }
-	 * container.register!(Animal, Cat);
-	 * ---
-	 *
-	 * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
-	 */
-	public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options = RegistrationOption.none) {
-		TypeInfo registeredType = typeid(SuperType);
-		TypeInfo_Class concreteType = typeid(ConcreteType);
+    /**
+     * Register a dependency by super type.
+     *
+     * A dependency registered by super type can only be resolved by super type. A qualifier is typically
+     * used to resolve dependencies registered by super type.
+     *
+     * The default registration scope is "single instance" scope.
+     *
+     * Examples:
+     * Register and resolve by super type
+     * ---
+     * class Cat : Animal { ... }
+     * container.register!(Animal, Cat);
+     * ---
+     *
+     * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
+     */
+    public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options = RegistrationOption.none) {
+        TypeInfo registeredType = typeid(SuperType);
+        TypeInfo_Class concreteType = typeid(ConcreteType);
 
-		debug(poodinisVerbose) {
-			writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
-		}
+        debug(poodinisVerbose) {
+            writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
+        }
 
-		auto existingRegistration = getExistingRegistration(registeredType, concreteType);
-		if (existingRegistration) {
-			return existingRegistration;
-		}
+        auto existingRegistration = getExistingRegistration(registeredType, concreteType);
+        if (existingRegistration) {
+            return existingRegistration;
+        }
 
-		auto instanceFactory = new ConstructorInjectingInstanceFactory!ConcreteType(this);
-		auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, instanceFactory, this);
-		newRegistration.singleInstance();
+        auto instanceFactory = new ConstructorInjectingInstanceFactory!ConcreteType(this);
+        auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, instanceFactory, this);
+        newRegistration.singleInstance();
 
-		static if (!is(SuperType == ConcreteType)) {
-			if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
-				auto concreteTypeRegistration = register!ConcreteType;
-				concreteTypeRegistration.linkTo(newRegistration);
-			}
-		}
+        static if (!is(SuperType == ConcreteType)) {
+            if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
+                auto concreteTypeRegistration = register!ConcreteType;
+                concreteTypeRegistration.linkTo(newRegistration);
+            }
+        }
 
-		registrations[registeredType] ~= cast(shared(Registration)) newRegistration;
-		return newRegistration;
-	}
+        registrations[registeredType] ~= cast(shared(Registration)) newRegistration;
+        return newRegistration;
+    }
 
-	private bool hasOption(OptionType)(OptionType options, OptionType persistentOptions, OptionType option) {
-		return ((options | persistentOptions) & option) != 0;
-	}
+    private bool hasOption(OptionType)(OptionType options, OptionType persistentOptions, OptionType option) {
+        return ((options | persistentOptions) & option) != 0;
+    }
 
-	private OptionType buildFlags(OptionType)(OptionType[] options) {
-		OptionType flags;
-		foreach (option; options) {
-			flags |= option;
-		}
-		return flags;
-	}
+    private OptionType buildFlags(OptionType)(OptionType[] options) {
+        OptionType flags;
+        foreach (option; options) {
+            flags |= option;
+        }
+        return flags;
+    }
 
-	private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType) {
-		auto existingCandidates = registrationType in registrations;
-		if (existingCandidates) {
-			return getRegistration(cast(Registration[]) *existingCandidates, qualifierType);
-		}
+    private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType) {
+        auto existingCandidates = registrationType in registrations;
+        if (existingCandidates) {
+            return getRegistration(cast(Registration[]) *existingCandidates, qualifierType);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private Registration getRegistration(Registration[] candidates, TypeInfo concreteType) {
-		foreach(existingRegistration ; candidates) {
-			if (existingRegistration.instanceType == concreteType) {
-				return existingRegistration;
-			}
-		}
+    private Registration getRegistration(Registration[] candidates, TypeInfo concreteType) {
+        foreach(existingRegistration ; candidates) {
+            if (existingRegistration.instanceType == concreteType) {
+                return existingRegistration;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Resolve dependencies.
-	 *
-	 * Dependencies can only resolved using this method if they are registered by concrete type or the only
-	 * concrete type registered by super type.
-	 *
-	 * Resolved dependencies are automatically autowired before being returned.
-	 *
-	 * Returns:
-	 * An instance is returned which is created according to the registration scope with which they are registered.
-	 *
-	 * Throws:
-	 * ResolveException when type is not registered.
-	 *
-	 * Examples:
-	 * Resolve dependencies registered by super type and concrete type:
-	 * ---
-	 * class Cat : Animal { ... }
-	 * class Dog : Animal { ... }
-	 *
-	 * container.register!(Animal, Cat);
-	 * container.register!Dog;
-	 *
-	 * container.resolve!Animal;
-	 * container.resolve!Dog;
-	 * ---
-	 * You cannot resolve a dependency when it is registered by multiple super types:
-	 * ---
-	 * class Cat : Animal { ... }
-	 * class Dog : Animal { ... }
-	 *
-	 * container.register!(Animal, Cat);
-	 * container.register!(Animal, Dog);
-	 *
-	 * container.resolve!Animal; // Error: multiple candidates for type "Animal"
-	 * container.resolve!Dog; // Error: No type is registered by concrete type "Dog", only by super type "Animal"
-	 * ---
-	 * You need to use the resolve method which allows you to specify a qualifier.
-	 */
-	public RegistrationType resolve(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
-		return resolve!(RegistrationType, RegistrationType)(resolveOptions);
-	}
+    /**
+     * Resolve dependencies.
+     *
+     * Dependencies can only resolved using this method if they are registered by concrete type or the only
+     * concrete type registered by super type.
+     *
+     * Resolved dependencies are automatically autowired before being returned.
+     *
+     * Returns:
+     * An instance is returned which is created according to the registration scope with which they are registered.
+     *
+     * Throws:
+     * ResolveException when type is not registered.
+     *
+     * Examples:
+     * Resolve dependencies registered by super type and concrete type:
+     * ---
+     * class Cat : Animal { ... }
+     * class Dog : Animal { ... }
+     *
+     * container.register!(Animal, Cat);
+     * container.register!Dog;
+     *
+     * container.resolve!Animal;
+     * container.resolve!Dog;
+     * ---
+     * You cannot resolve a dependency when it is registered by multiple super types:
+     * ---
+     * class Cat : Animal { ... }
+     * class Dog : Animal { ... }
+     *
+     * container.register!(Animal, Cat);
+     * container.register!(Animal, Dog);
+     *
+     * container.resolve!Animal; // Error: multiple candidates for type "Animal"
+     * container.resolve!Dog; // Error: No type is registered by concrete type "Dog", only by super type "Animal"
+     * ---
+     * You need to use the resolve method which allows you to specify a qualifier.
+     */
+    public RegistrationType resolve(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
+        return resolve!(RegistrationType, RegistrationType)(resolveOptions);
+    }
 
-	/**
-	 * Resolve dependencies using a qualifier.
-	 *
-	 * Dependencies can only resolved using this method if they are registered by super type.
-	 *
-	 * Resolved dependencies are automatically autowired before being returned.
-	 *
-	 * Returns:
-	 * An instance is returned which is created according to the registration scope with which they are registered.
-	 *
-	 * Throws:
-	 * ResolveException when type is not registered or there are multiple candidates available for type.
-	 *
-	 * Examples:
-	 * Resolve dependencies registered by super type:
-	 * ---
-	 * class Cat : Animal { ... }
-	 * class Dog : Animal { ... }
-	 *
-	 * container.register!(Animal, Cat);
-	 * container.register!(Animal, Dog);
-	 *
-	 * container.resolve!(Animal, Cat);
-	 * container.resolve!(Animal, Dog);
-	 * ---
-	 */
-	public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
-		TypeInfo resolveType = typeid(RegistrationType);
-		TypeInfo qualifierType = typeid(QualifierType);
+    /**
+     * Resolve dependencies using a qualifier.
+     *
+     * Dependencies can only resolved using this method if they are registered by super type.
+     *
+     * Resolved dependencies are automatically autowired before being returned.
+     *
+     * Returns:
+     * An instance is returned which is created according to the registration scope with which they are registered.
+     *
+     * Throws:
+     * ResolveException when type is not registered or there are multiple candidates available for type.
+     *
+     * Examples:
+     * Resolve dependencies registered by super type:
+     * ---
+     * class Cat : Animal { ... }
+     * class Dog : Animal { ... }
+     *
+     * container.register!(Animal, Cat);
+     * container.register!(Animal, Dog);
+     *
+     * container.resolve!(Animal, Cat);
+     * container.resolve!(Animal, Dog);
+     * ---
+     */
+    public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
+        TypeInfo resolveType = typeid(RegistrationType);
+        TypeInfo qualifierType = typeid(QualifierType);
 
-		debug(poodinisVerbose) {
-			writeln("DEBUG: Resolving type " ~ resolveType.toString() ~ " with qualifier " ~ qualifierType.toString());
-		}
+        debug(poodinisVerbose) {
+            writeln("DEBUG: Resolving type " ~ resolveType.toString() ~ " with qualifier " ~ qualifierType.toString());
+        }
 
-		static if (__traits(compiles, new QualifierType())) {
-			if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.registerBeforeResolving)) {
-				register!(RegistrationType, QualifierType)();
-			}
-		}
+        static if (__traits(compiles, new QualifierType())) {
+            if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.registerBeforeResolving)) {
+                register!(RegistrationType, QualifierType)();
+            }
+        }
 
-		auto candidates = resolveType in registrations;
-		if (!candidates) {
-			if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.noResolveException)) {
-				return null;
-			}
+        auto candidates = resolveType in registrations;
+        if (!candidates) {
+            if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.noResolveException)) {
+                return null;
+            }
 
-			throw new ResolveException("Type not registered.", resolveType);
-		}
+            throw new ResolveException("Type not registered.", resolveType);
+        }
 
-		Registration registration = getQualifiedRegistration(resolveType, qualifierType, cast(Registration[]) *candidates);
+        Registration registration = getQualifiedRegistration(resolveType, qualifierType, cast(Registration[]) *candidates);
 
-		try {
-			QualifierType newInstance = resolveAutowiredInstance!QualifierType(registration);
-			callPostConstructors(newInstance);
-			return newInstance;
-		} catch (ValueInjectionException e) {
-			throw new ResolveException(e, resolveType);
-		}
-	}
+        try {
+            QualifierType newInstance = resolveAutowiredInstance!QualifierType(registration);
+            callPostConstructors(newInstance);
+            return newInstance;
+        } catch (ValueInjectionException e) {
+            throw new ResolveException(e, resolveType);
+        }
+    }
 
-	private QualifierType resolveAutowiredInstance(QualifierType)(Registration registration) {
-		QualifierType instance;
-		if (!(cast(Registration[]) autowireStack).canFind(registration)) {
-			autowireStack ~= cast(shared(Registration)) registration;
-			instance = cast(QualifierType) registration.getInstance(new AutowireInstantiationContext());
-			autowireStack = autowireStack[0 .. $-1];
-		} else {
-			auto autowireContext = new AutowireInstantiationContext();
-			autowireContext.autowireInstance = false;
-			instance = cast(QualifierType) registration.getInstance(autowireContext);
-		}
-		return instance;
-	}
+    private QualifierType resolveAutowiredInstance(QualifierType)(Registration registration) {
+        QualifierType instance;
+        if (!(cast(Registration[]) autowireStack).canFind(registration)) {
+            autowireStack ~= cast(shared(Registration)) registration;
+            instance = cast(QualifierType) registration.getInstance(new AutowireInstantiationContext());
+            autowireStack = autowireStack[0 .. $-1];
+        } else {
+            auto autowireContext = new AutowireInstantiationContext();
+            autowireContext.autowireInstance = false;
+            instance = cast(QualifierType) registration.getInstance(autowireContext);
+        }
+        return instance;
+    }
 
-	/**
-	 * Resolve all dependencies registered to a super type.
-	 *
-	 * Returns:
-	 * An array of autowired instances is returned. The order is undetermined.
-	 *
-	 * Examples:
-	 * ---
-	 * class Cat : Animal { ... }
-	 * class Dog : Animal { ... }
-	 *
-	 * container.register!(Animal, Cat);
-	 * container.register!(Animal, Dog);
-	 *
-	 * Animal[] animals = container.resolveAll!Animal;
-	 * ---
-	 */
-	public RegistrationType[] resolveAll(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
-		RegistrationType[] instances;
-		TypeInfo resolveType = typeid(RegistrationType);
+    /**
+     * Resolve all dependencies registered to a super type.
+     *
+     * Returns:
+     * An array of autowired instances is returned. The order is undetermined.
+     *
+     * Examples:
+     * ---
+     * class Cat : Animal { ... }
+     * class Dog : Animal { ... }
+     *
+     * container.register!(Animal, Cat);
+     * container.register!(Animal, Dog);
+     *
+     * Animal[] animals = container.resolveAll!Animal;
+     * ---
+     */
+    public RegistrationType[] resolveAll(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
+        RegistrationType[] instances;
+        TypeInfo resolveType = typeid(RegistrationType);
 
-		auto qualifiedRegistrations = resolveType in registrations;
-		if (!qualifiedRegistrations) {
-			if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.noResolveException)) {
-				return [];
-			}
+        auto qualifiedRegistrations = resolveType in registrations;
+        if (!qualifiedRegistrations) {
+            if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption.noResolveException)) {
+                return [];
+            }
 
-			throw new ResolveException("Type not registered.", resolveType);
-		}
+            throw new ResolveException("Type not registered.", resolveType);
+        }
 
-		foreach(registration ; cast(Registration[]) *qualifiedRegistrations) {
-			instances ~= resolveAutowiredInstance!RegistrationType(registration);
-		}
+        foreach(registration ; cast(Registration[]) *qualifiedRegistrations) {
+            instances ~= resolveAutowiredInstance!RegistrationType(registration);
+        }
 
-		return instances;
-	}
+        return instances;
+    }
 
-	private Registration getQualifiedRegistration(TypeInfo resolveType, TypeInfo qualifierType, Registration[] candidates) {
-		if (resolveType == qualifierType) {
-			if (candidates.length > 1) {
-				string candidateList = candidates.toConcreteTypeListString();
-				throw new ResolveException("Multiple qualified candidates available: " ~ candidateList ~ ". Please use a qualifier.", resolveType);
-			}
+    private Registration getQualifiedRegistration(TypeInfo resolveType, TypeInfo qualifierType, Registration[] candidates) {
+        if (resolveType == qualifierType) {
+            if (candidates.length > 1) {
+                string candidateList = candidates.toConcreteTypeListString();
+                throw new ResolveException("Multiple qualified candidates available: " ~ candidateList ~ ". Please use a qualifier.", resolveType);
+            }
 
-			return candidates[0];
-		}
+            return candidates[0];
+        }
 
-		return getRegistration(candidates, qualifierType);
-	}
+        return getRegistration(candidates, qualifierType);
+    }
 
-	private void callPostConstructors(Type)(Type instance) {
-		foreach (memberName; __traits(allMembers, Type)) {
-			mixin(createImportsString!Type);
+    private void callPostConstructors(Type)(Type instance) {
+        foreach (memberName; __traits(allMembers, Type)) {
+            mixin(createImportsString!Type);
 
-			static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
-						&& __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-						&& isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
-						&& hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
-				__traits(getMember, instance, memberName)();
-			}
-		}
-	}
+            static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
+                        && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
+                        && isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
+                        && hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
+                __traits(getMember, instance, memberName)();
+            }
+        }
+    }
 
-	/**
-	 * Clears all dependency registrations managed by this container.
-	 */
-	public void clearAllRegistrations() {
-		foreach(registrationsOfType; registrations) {
-			callPreDestructorsOfRegistrations(registrationsOfType);
-		}
-		registrations.destroy();
-	}
+    /**
+     * Clears all dependency registrations managed by this container.
+     */
+    public void clearAllRegistrations() {
+        foreach(registrationsOfType; registrations) {
+            callPreDestructorsOfRegistrations(registrationsOfType);
+        }
+        registrations.destroy();
+    }
 
-	/**
-	 * Removes a registered dependency by type.
-	 *
-	 * A dependency can be removed either by super type or concrete type, depending on how they are registered.
-	 *
-	 * Examples:
-	 * ---
-	 * container.removeRegistration!Animal;
-	 * ---
-	 */
-	public void removeRegistration(RegistrationType)() {
-		auto registrationsOfType = *(typeid(RegistrationType) in registrations);
-		callPreDestructorsOfRegistrations(registrationsOfType);
-		registrations.remove(typeid(RegistrationType));
-	}
+    /**
+     * Removes a registered dependency by type.
+     *
+     * A dependency can be removed either by super type or concrete type, depending on how they are registered.
+     *
+     * Examples:
+     * ---
+     * container.removeRegistration!Animal;
+     * ---
+     */
+    public void removeRegistration(RegistrationType)() {
+        auto registrationsOfType = *(typeid(RegistrationType) in registrations);
+        callPreDestructorsOfRegistrations(registrationsOfType);
+        registrations.remove(typeid(RegistrationType));
+    }
 
-	private void callPreDestructorsOfRegistrations(shared(Registration[]) registrations) {
-		foreach(registration; registrations) {
-			Registration unsharedRegistration = cast(Registration) registration;
-			if (unsharedRegistration.preDestructor !is null) {
-				unsharedRegistration.preDestructor()();
-			}
-		}
-	}
+    private void callPreDestructorsOfRegistrations(shared(Registration[]) registrations) {
+        foreach(registration; registrations) {
+            Registration unsharedRegistration = cast(Registration) registration;
+            if (unsharedRegistration.preDestructor !is null) {
+                unsharedRegistration.preDestructor()();
+            }
+        }
+    }
 
-	/**
-	 * Apply persistent registration options which will be used everytime register() is called.
-	 */
-	public void setPersistentRegistrationOptions(RegistrationOption options) {
-		persistentRegistrationOptions = options;
-	}
+    /**
+     * Apply persistent registration options which will be used everytime register() is called.
+     */
+    public void setPersistentRegistrationOptions(RegistrationOption options) {
+        persistentRegistrationOptions = options;
+    }
 
-	/**
-	 * Unsets all applied persistent registration options
-	 */
-	public void unsetPersistentRegistrationOptions() {
-		persistentRegistrationOptions = RegistrationOption.none;
-	}
+    /**
+     * Unsets all applied persistent registration options
+     */
+    public void unsetPersistentRegistrationOptions() {
+        persistentRegistrationOptions = RegistrationOption.none;
+    }
 
-	/**
-	 * Apply persistent resolve options which will be used everytime resolve() is called.
-	 */
-	public void setPersistentResolveOptions(ResolveOption options) {
-		persistentResolveOptions = options;
-	}
+    /**
+     * Apply persistent resolve options which will be used everytime resolve() is called.
+     */
+    public void setPersistentResolveOptions(ResolveOption options) {
+        persistentResolveOptions = options;
+    }
 
-	/**
-	 * Unsets all applied persistent resolve options
-	 */
-	public void unsetPersistentResolveOptions() {
-		persistentResolveOptions = ResolveOption.none;
-	}
+    /**
+     * Unsets all applied persistent resolve options
+     */
+    public void unsetPersistentResolveOptions() {
+        persistentResolveOptions = ResolveOption.none;
+    }
 
 }

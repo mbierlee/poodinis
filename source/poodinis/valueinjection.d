@@ -4,7 +4,7 @@
  *
  * Authors:
  *  Mike Bierlee, m.bierlee@lostmoment.com
- * Copyright: 2014-2017 Mike Bierlee
+ * Copyright: 2014-2018 Mike Bierlee
  * License:
  *  This software is licensed under the terms of the MIT license.
  *  The full terms of the license can be found in the LICENSE file.
@@ -19,20 +19,20 @@ import poodinis.polyfill;
  * Thrown when something goes wrong during value injection.
  */
 class ValueInjectionException : Exception {
-	mixin basicExceptionCtors;
+    mixin basicExceptionCtors;
 }
 
 /**
  * Thrown by injectors when the value with the given key cannot be found.
  */
 class ValueNotAvailableException : Exception {
-	this(string key) {
-		super(format("Value for key %s is not available", key));
-	}
+    this(string key) {
+        super(format("Value for key %s is not available", key));
+    }
 
-	this(string key, Throwable cause) {
-		super(format("Value for key %s is not available", key), cause);
-	}
+    this(string key, Throwable cause) {
+        super(format("Value for key %s is not available", key), cause);
+    }
 }
 
 /**
@@ -53,12 +53,12 @@ class ValueNotAvailableException : Exception {
  * ---
  */
 struct Value {
-	/**
-	 * The textual key used to find the value by injectors.
-	 *
-	 * The format is injector-specific.
-	 */
-	string key;
+    /**
+     * The textual key used to find the value by injectors.
+     *
+     * The format is injector-specific.
+     */
+    string key;
 }
 
 /**
@@ -79,12 +79,12 @@ struct Value {
  * ---
  */
 struct MandatoryValue {
-	/**
-	 * The textual key used to find the value by injectors.
-	 *
-	 * The format is injector-specific.
-	 */
-	string key;
+    /**
+     * The textual key used to find the value by injectors.
+     *
+     * The format is injector-specific.
+     */
+    string key;
 }
 
 /**
@@ -110,14 +110,14 @@ struct MandatoryValue {
  * ---
  */
 interface ValueInjector(Type) {
-	/**
-	 * Get a value from the injector by key.
-	 *
-	 * The key can have any format. Generally you are encouraged
-	 * to accept a dot separated path, for example: server.http.port
-	 *
-	 * Throws: ValueNotAvailableException when the value for the given key is not available for any reason
-	 */
-	Type get(string key);
+    /**
+     * Get a value from the injector by key.
+     *
+     * The key can have any format. Generally you are encouraged
+     * to accept a dot separated path, for example: server.http.port
+     *
+     * Throws: ValueNotAvailableException when the value for the given key is not available for any reason
+     */
+    Type get(string key);
 }
 
