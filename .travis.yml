@@ -15,6 +15,7 @@ d:
   - dmd-2.069.2
   - ldc
   - ldc-beta
+  - ldc-1.6.0 # D v2.076.1
   - ldc-1.5.0 # D v2.075.1
   - ldc-1.4.0 # D v2.074.1
   - ldc-1.3.0 # D v2.073.2
@@ -44,6 +45,10 @@ script:
 matrix:
   allow_failures:
     - d: gdc
+      os: osx
+    - d: ldc-1.4.0
+      os: osx
+    - d: ldc-1.3.0
       os: osx
     - d: ldc-1.2.0
       os: osx
