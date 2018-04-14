@@ -11,14 +11,15 @@
 
 module poodinis.imports;
 
+import std.meta;
 import std.traits;
 
-public static string createImportsString(Type)() {
+public static string createImportsString(Type, ParentTypeList...)() {
     string imports = `import ` ~ moduleName!Type ~ `;`;
     static if (__traits(compiles, TemplateArgsOf!Type)) {
         foreach(TemplateArgType; TemplateArgsOf!Type) {
-            static if (!isBuiltinType!TemplateArgType) {
-                imports ~= createImportsString!TemplateArgType;
+            static if (!isBuiltinType!TemplateArgType && staticIndexOf!(TemplateArgType, ParentTypeList) == -1) {
+                imports ~= createImportsString!(TemplateArgType, ParentTypeList, Type);
             }
         }
     }
