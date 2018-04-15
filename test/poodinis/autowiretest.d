@@ -9,7 +9,6 @@ import poodinis;
 import poodinis.test.testClasses;
 
 import std.exception;
-import std.meta;
 
 version(unittest) {
 
