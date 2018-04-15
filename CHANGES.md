@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.0.2**
+* FIX resolving types which use template types with circular type arguments (Thanks to aruthane for fixing this.)
+
 **Version 8.0.1**
 * FIX value injectors failing to resolve in certain situations when they inject structs (Fixes issue #20)
 
