@@ -630,4 +630,17 @@ version(unittest) {
             return 0;
         }
     }
+
+    class TemplatedComponent(T) {
+        @Autowire
+        T instance;
+    }
+
+    class CircularTemplateComponentA : TemplatedComponent!CircularTemplateComponentB {
+
+    }
+
+    class CircularTemplateComponentB : TemplatedComponent!CircularTemplateComponentA {
+
+    }
 }

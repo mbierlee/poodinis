@@ -9,6 +9,7 @@ import poodinis;
 import poodinis.test.testClasses;
 
 import std.exception;
+import std.meta;
 
 version(unittest) {
 
@@ -178,5 +179,21 @@ version(unittest) {
 
         assert(instance.intValue == 8);
         assert(instance.unrelated !is null);
+    }
+
+    // Test autowiring classes with recursive template parameters
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!CircularTemplateComponentA;
+        container.register!CircularTemplateComponentB;
+
+        auto componentA = container.resolve!CircularTemplateComponentA;
+        auto componentB = container.resolve!CircularTemplateComponentB;
+
+        assert(componentA !is null);
+        assert(componentB !is null);
+
+        assert(componentA.instance is componentB);
+        assert(componentB.instance is componentA);
     }
 }
