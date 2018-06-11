@@ -1,6 +1,6 @@
 Poodinis Dependency Injection Framework
 =======================================
-Version 8.0.2  
+Version 8.0.3  
 Copyright 2014-2018 Mike Bierlee  
 Licensed under the terms of the MIT license - See [LICENSE.txt](LICENSE.txt)
 

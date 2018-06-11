@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.0.3**
+* FIX struct types being injected into constructors (Fixes issue #25)
+
 **Version 8.0.2**
 * FIX resolving types which use template types with circular type arguments (Thanks to aruthane for fixing this.)
 
