@@ -131,7 +131,7 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
     private static bool parametersAreValid(Params...)() {
         bool isValid = true;
         foreach(param; Params) {
-            if (isBuiltinType!param) {
+            if (isBuiltinType!param || is(param == struct)) {
                 isValid = false;
                 break;
             }

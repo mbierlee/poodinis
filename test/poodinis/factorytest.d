@@ -124,6 +124,17 @@ version(unittest) {
         assert(instance.someOtherClassThen is container.resolve!SomeOtherClassThen);
     }
 
+    // Test injecting constructor of class with struct constructor parameters
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!SomeOtherClassThen;
+
+        auto factory = new ConstructorInjectingInstanceFactory!ClassWithStructConstructor(container);
+        auto instance = cast(ClassWithStructConstructor) factory.getInstance();
+
+        assert(instance !is null);
+        assert(instance.someOtherClassThen is container.resolve!SomeOtherClassThen);
+    }
 
     // Test injecting constructor of class with empty constructor will skip injection
     unittest {

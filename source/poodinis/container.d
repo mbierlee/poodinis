@@ -164,7 +164,7 @@ synchronized class DependencyContainer {
      *
      * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
      */
-    public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options = RegistrationOption.none) {
+    public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options = RegistrationOption.none) if (!is(ConcreteType == struct)) {
         TypeInfo registeredType = typeid(SuperType);
         TypeInfo_Class concreteType = typeid(ConcreteType);
 
@@ -262,7 +262,7 @@ synchronized class DependencyContainer {
      * ---
      * You need to use the resolve method which allows you to specify a qualifier.
      */
-    public RegistrationType resolve(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
+    public RegistrationType resolve(RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) if (!is(RegistrationType == struct)) {
         return resolve!(RegistrationType, RegistrationType)(resolveOptions);
     }
 
@@ -292,7 +292,7 @@ synchronized class DependencyContainer {
      * container.resolve!(Animal, Dog);
      * ---
      */
-    public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) {
+    public QualifierType resolve(RegistrationType, QualifierType : RegistrationType)(ResolveOption resolveOptions = ResolveOption.none) if (!is(QualifierType == struct)) {
         TypeInfo resolveType = typeid(RegistrationType);
         TypeInfo qualifierType = typeid(QualifierType);
 

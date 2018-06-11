@@ -513,6 +513,17 @@ version(unittest) {
         }
     }
 
+    class ClassWithStructConstructor {
+        public SomeOtherClassThen someOtherClassThen;
+
+        this(Thing willNotBePicked) {
+        }
+
+        this(SomeOtherClassThen someOtherClassThen) {
+            this.someOtherClassThen = someOtherClassThen;
+        }
+    }
+
     class TestType {}
 
     class Dependency {}
