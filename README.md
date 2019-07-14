@@ -1,7 +1,7 @@
 Poodinis Dependency Injection Framework
 =======================================
 Version 8.0.3  
-Copyright 2014-2018 Mike Bierlee  
+Copyright 2014-2019 Mike Bierlee  
 Licensed under the terms of the MIT license - See [LICENSE.txt](LICENSE.txt)
 
 Master: [![Build Status](https://api.travis-ci.org/mbierlee/poodinis.png?branch=master)](https://travis-ci.org/mbierlee/poodinis) - Dev: [![Build Status](https://api.travis-ci.org/mbierlee/poodinis.png?branch=develop)](https://travis-ci.org/mbierlee/poodinis)
