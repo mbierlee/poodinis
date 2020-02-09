@@ -267,9 +267,10 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
         void delegate() preDestructor = null;
         foreach (memberName; __traits(allMembers, RegistrationType)) {
             mixin(createImportsString!RegistrationType);
+            enum QualifiedName = fullyQualifiedName!RegistrationType ~ `.` ~ memberName;
             static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
                         && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-                        && isFunction!(mixin(fullyQualifiedName!RegistrationType ~ `.` ~ memberName))
+                        && isFunction!(QualifiedName)
                         && hasUDA!(__traits(getMember, instance, memberName), PreDestroy)) {
                 preDestructor = &__traits(getMember, instance, memberName);
             }
