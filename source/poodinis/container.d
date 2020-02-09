@@ -30,6 +30,8 @@ debug {
     import std.stdio;
 }
 
+alias InjectionInitializer(T) = T delegate();
+
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
  */
@@ -147,6 +149,11 @@ synchronized class DependencyContainer {
         return register!(ConcreteType, ConcreteType)(options);
     }
 
+    Registration register(ConcreteType)(InjectionInitializer!ConcreteType creator, 
+            RegistrationOption options = RegistrationOption.none) {
+        return register!(ConcreteType, ConcreteType)(creator, options);
+    }
+
     /**
      * Register a dependency by super type.
      *
@@ -164,7 +171,9 @@ synchronized class DependencyContainer {
      *
      * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
      */
-    public Registration register(SuperType, ConcreteType : SuperType)(RegistrationOption options = RegistrationOption.none) if (!is(ConcreteType == struct)) {
+    public Registration register(SuperType, ConcreteType : SuperType)(
+            RegistrationOption options = RegistrationOption.none) if (!is(ConcreteType == struct)) {
+
         TypeInfo registeredType = typeid(SuperType);
         TypeInfo_Class concreteType = typeid(ConcreteType);
 
@@ -178,6 +187,44 @@ synchronized class DependencyContainer {
         }
 
         auto instanceFactory = new ConstructorInjectingInstanceFactory!ConcreteType(this);
+        auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, instanceFactory, this);
+        newRegistration.singleInstance();
+
+        static if (!is(SuperType == ConcreteType)) {
+            if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
+                auto concreteTypeRegistration = register!ConcreteType;
+                concreteTypeRegistration.linkTo(newRegistration);
+            }
+        }
+
+        registrations[registeredType] ~= cast(shared(Registration)) newRegistration;
+        return newRegistration;
+    }
+
+    /**
+     * 
+     */
+    Registration register(SuperType, ConcreteType : SuperType)(InjectionInitializer!ConcreteType creator, 
+            RegistrationOption options = RegistrationOption.none) if (!is(ConcreteType == struct)) {
+
+        TypeInfo registeredType = typeid(SuperType);
+        TypeInfo_Class concreteType = typeid(ConcreteType);
+
+        debug(poodinisVerbose) {
+            writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
+        }
+
+        auto existingRegistration = getExistingRegistration(registeredType, concreteType);
+        if (existingRegistration) {
+            return existingRegistration;
+        }
+
+        InstanceFactory instanceFactory = new class InstanceFactory {
+            protected override Object createInstance() { 
+                return creator();
+            }
+        };
+
         auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, instanceFactory, this);
         newRegistration.singleInstance();
 
@@ -391,16 +438,16 @@ synchronized class DependencyContainer {
     }
 
     private void callPostConstructors(Type)(Type instance) {
-        foreach (memberName; __traits(allMembers, Type)) {
-            mixin(createImportsString!Type);
+        // foreach (memberName; __traits(allMembers, Type)) {
+        //     mixin(createImportsString!Type);
 
-            static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
-                        && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-                        && isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
-                        && hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
-                __traits(getMember, instance, memberName)();
-            }
-        }
+        //     static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
+        //                 && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
+        //                 && isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
+        //                 && hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
+        //         __traits(getMember, instance, memberName)();
+        //     }
+        // }
     }
 
     /**

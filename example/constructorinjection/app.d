@@ -36,9 +36,17 @@ class Calendar {
 	}
 }
 
+import std.stdio;
+
 class HardwareClock {
 	// Parameterless constructors will halt any further selection of constructors.
-	this() {}
+	this() {
+		writeln("default constructor");
+	}	
+	
+	this(string name) {
+		writeln(name);
+	}
 
 	// As a result, this constructor will not be used when HardwareClock is created.
 	this(Calendar calendar) {
@@ -46,7 +54,6 @@ class HardwareClock {
 	}
 
 	public void doThings() {
-		import std.stdio;
 		writeln("Things are being done!");
 	}
 }
@@ -57,7 +64,10 @@ void main() {
 	auto dependencies = new shared DependencyContainer();
 	dependencies.register!Scheduler;
 	dependencies.register!Calendar;
-	dependencies.register!HardwareClock;
+	dependencies.register!HardwareClock( {
+		writeln("Running the creator");
+		return new HardwareClock("clock name");
+	});
 
 	auto scheduler = dependencies.resolve!Scheduler;
 	scheduler.scheduleJob();
