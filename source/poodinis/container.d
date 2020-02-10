@@ -438,16 +438,16 @@ synchronized class DependencyContainer {
     }
 
     private void callPostConstructors(Type)(Type instance) {
-        // foreach (memberName; __traits(allMembers, Type)) {
-        //     mixin(createImportsString!Type);
-
-        //     static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
-        //                 && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-        //                 && isFunction!(mixin(fullyQualifiedName!Type ~ `.` ~ memberName))
-        //                 && hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
-        //         __traits(getMember, instance, memberName)();
-        //     }
-        // }
+        foreach (memberName; __traits(allMembers, Type)) {
+            mixin(createImportsString!Type);
+            enum QualifiedName = fullyQualifiedName!Type ~ `.` ~ memberName;
+            static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
+                        && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
+                        && isFunction!(QualifiedName)
+                        && hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
+                __traits(getMember, instance, memberName)();
+            }
+        }
     }
 
     /**
