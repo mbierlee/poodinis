@@ -443,7 +443,7 @@ synchronized class DependencyContainer {
             enum QualifiedName = fullyQualifiedName!Type ~ `.` ~ memberName;
             static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
                         && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-                        && isFunction!(QualifiedName)
+                        && isFunction1!(mixin(QualifiedName))
                         && hasUDA!(__traits(getMember, instance, memberName), PostConstruct)) {
                 __traits(getMember, instance, memberName)();
             }
