@@ -60,7 +60,6 @@ class Registration {
             return linkedRegistration.getInstance(context);
         }
 
-
         if (instanceFactory is null) {
             throw new InstanceCreationException("No instance factory defined for registration of type " ~ registeredType.toString());
         }
@@ -70,6 +69,12 @@ class Registration {
 
     public Registration linkTo(Registration registration) {
         this.linkedRegistration = registration;
+        return this;
+    }
+
+    Registration onConstructed(InstanceEventHandler handler) {
+        if(instanceFactory !is null)
+            instanceFactory.onConstructed(handler);
         return this;
     }
 }

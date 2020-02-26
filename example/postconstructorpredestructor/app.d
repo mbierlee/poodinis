@@ -42,8 +42,14 @@ class AClass {
 
 public void main() {
 	auto container = new shared DependencyContainer();
-	container.register!ADependency;
-	container.register!AClass;
+	container.register!(ADependency).onConstructed((Object obj) {
+		writeln("ADependency constructed");
+	});
+
+	container.register!(AClass).onConstructed((Object obj) {
+		writeln("AClass constructed");
+	});
+
 	auto instance = container.resolve!AClass; // Will cause the post constructor to be called.
 	container.removeRegistration!AClass; // Will cause the pre destructor to be called.
 
