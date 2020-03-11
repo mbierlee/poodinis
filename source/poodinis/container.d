@@ -373,6 +373,12 @@ synchronized class DependencyContainer {
         }
     }
 
+    bool isRegistered(RegistrationType)() {
+        TypeInfo typeInfo = typeid(RegistrationType);
+        auto candidates = typeInfo in registrations;
+        return candidates !is null;
+    }
+
     private QualifierType resolveAutowiredInstance(QualifierType)(Registration registration) {
         QualifierType instance;
         if (!(cast(Registration[]) autowireStack).canFind(registration)) {
