@@ -1,5 +1,9 @@
 Poodinis Changelog
 ==================
+**Version 8.1.0-beta**
+* ADD ability to provide custom instance creator when registering a dependency (PR #28)
+* ADD post-instance-consruction callback (PR #28)
+
 **Version 8.0.3**
 * FIX struct types being injected into constructors (Fixes issue #25)
 
