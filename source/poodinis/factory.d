@@ -22,6 +22,7 @@ import std.stdio;
 
 alias CreatesSingleton = Flag!"CreatesSingleton";
 alias InstanceFactoryMethod = Object delegate();
+alias InstanceEventHandler = void delegate(Object instance);
 
 class InstanceCreationException : Exception {
     this(string message, string file = __FILE__, size_t line = __LINE__) {
@@ -39,6 +40,7 @@ struct InstanceFactoryParameters {
 class InstanceFactory {
     private Object instance = null;
     private InstanceFactoryParameters _factoryParameters;
+    private InstanceEventHandler _constructionHandler;
 
     this() {
         factoryParameters = InstanceFactoryParameters();
@@ -75,7 +77,15 @@ class InstanceFactory {
         }
 
         instance = _factoryParameters.factoryMethod();
+        if(_constructionHandler !is null) {
+            _constructionHandler(instance);
+        }
+
         return instance;
+    }
+
+    void onConstructed(InstanceEventHandler handler) {
+        _constructionHandler = handler;
     }
 
     private void printDebugUseExistingInstance() {

@@ -43,21 +43,24 @@ static if (!__traits(compiles, basicExceptionCtors)) {
     }
 }
 
-static if (!__traits(compiles, isFunction)) {
-    template isFunction(X...) if (X.length == 1)
+static if (!__traits(compiles, isFunction1)) {
+    template isFunction1(X...) 
     {
+        static if (X.length > 1) {
+            enum isFunction1 = false;
+        } else
         static if (is(typeof(&X[0]) U : U*) && is(U == function) ||
                     is(typeof(&X[0]) U == delegate))
         {
             // x is a (nested) function symbol.
-            enum isFunction = true;
+            enum isFunction1 = true;
         }
         else static if (is(X[0] T))
         {
             // x is a type.  Take the type of it and examine.
-            enum isFunction = is(T == function);
+            enum isFunction1 = is(T == function);
         }
         else
-            enum isFunction = false;
+            enum isFunction1 = false;
     }
 }
