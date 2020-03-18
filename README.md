@@ -86,6 +86,7 @@ Have you made any or do you know of any? Please add them to this section via a p
 
 Projects Using Poodinis
 -----------------------
+* [Hunt Framework](https://github.com/huntlabs/hunt-framework): A Web framework for D Programming Language. Full-stack high-performance.
 * [Eloquent](https://github.com/SingingBush/eloquent): A lightweight web application written in D
 * [ioc](https://github.com/FilipMalczak/ioc): Slow approach to Inversion of Control in D2 language
 
