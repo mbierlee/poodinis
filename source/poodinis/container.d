@@ -204,8 +204,9 @@ synchronized class DependencyContainer {
     /**
      * 
      */
-    Registration register(SuperType, ConcreteType : SuperType)(InjectionInitializer!ConcreteType creator, 
-            RegistrationOption options = RegistrationOption.none) if (!is(ConcreteType == struct)) {
+    Registration register(SuperType, ConcreteType : SuperType)(InjectionInitializer!SuperType creator, 
+            RegistrationOption options = RegistrationOption.none) 
+            if (is(ConcreteType == class)) {
 
         TypeInfo registeredType = typeid(SuperType);
         TypeInfo_Class concreteType = typeid(ConcreteType);
@@ -221,7 +222,7 @@ synchronized class DependencyContainer {
 
         InstanceFactory instanceFactory = new class InstanceFactory {
             protected override Object createInstance() { 
-                return creator();
+                return cast(Object)creator();
             }
         };
 
