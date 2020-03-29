@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.1.0-beta.2**
+* FIX inheritance type template in custom instance creator (PR #29)
+
 **Version 8.1.0-beta**
 * ADD ability to provide custom instance creator when registering a dependency (PR #28)
 * ADD post-instance-consruction callback (PR #28)
