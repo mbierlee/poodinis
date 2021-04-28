@@ -5,6 +5,8 @@
  * The full terms of the license can be found in the LICENSE file.
  */
 
+ import std.stdio;
+
 class Scheduler {
 	private Calendar calendar;
 
@@ -36,18 +38,10 @@ class Calendar {
 	}
 }
 
-import std.stdio;
-
 class HardwareClock {
 	// Parameterless constructors will halt any further selection of constructors.
-	this() {
-		writeln("default constructor");
-	}	
+	this() {}	
 	
-	this(string name) {
-		writeln(name);
-	}
-
 	// As a result, this constructor will not be used when HardwareClock is created.
 	this(Calendar calendar) {
 		throw new Exception("This constructor should not be used by Poodinis");
@@ -64,10 +58,7 @@ void main() {
 	auto dependencies = new shared DependencyContainer();
 	dependencies.register!Scheduler;
 	dependencies.register!Calendar;
-	dependencies.register!HardwareClock( {
-		writeln("Running the creator");
-		return new HardwareClock("clock name");
-	});
+	dependencies.register!HardwareClock;
 
 	auto scheduler = dependencies.resolve!Scheduler;
 	scheduler.scheduleJob();

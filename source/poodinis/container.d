@@ -202,7 +202,7 @@ synchronized class DependencyContainer {
     }
 
     /**
-     * 
+     * TODO: Deduplicate code
      */
     Registration register(SuperType, ConcreteType : SuperType)(InjectionInitializer!SuperType initializer, 
             RegistrationOption options = RegistrationOption.none) 

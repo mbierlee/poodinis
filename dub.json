@@ -135,6 +135,18 @@
 			"importPaths": [
 				"source"
 			]
+		},
+		{
+			"name" : "injectionInitializerExample",
+			"description" : "Example where the usage of an injection initializer is demonstrated.",
+			"targetType": "executable",
+			"targetName": "injectionInitializerExample",
+			"sourcePaths": [
+				"example/injectioninitializer"
+			],
+			"importPaths": [
+				"source"
+			]
 		}
 	]
 }
