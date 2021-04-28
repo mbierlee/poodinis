@@ -1,5 +1,10 @@
-To build any of these examples, specify the relevant DUB configuration when building Poodinis with DUB:
+To run any of these examples, specify the relevant DUB configuration:
 ```
-dub build --build=release --config=<name>Example
+dub run --build=release --config=<name>Example
 ```
 Where \<name\> corresponds to the name of the folder where the code example is in (camel-cased).
+
+e.g:
+```
+dub run --build=release --config=constructorInjectionExample
+```
