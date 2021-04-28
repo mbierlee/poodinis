@@ -80,7 +80,7 @@ version(unittest) {
         assert(expectedInstance is actualInstance, "Resolved instance from existing instance scope is not the same as the registered instance");
     }
 
-    // Test creating instance via customer initializer on resolve
+    // Test creating instance via custom initializer on resolve
     unittest {
         auto container = new shared DependencyContainer();
         auto expectedInstance = new TestClass();
@@ -89,6 +89,28 @@ version(unittest) {
         });
         auto actualInstance = container.resolve!TestClass;
         assert(expectedInstance is actualInstance, "Resolved instance does not come from the custom initializer");
+    }
+
+    // Test creating instance via initializedBy creates new instance every time
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!TestClass.initializedBy({
+            return new TestClass();
+        });
+        auto firstInstance = container.resolve!TestClass;
+        auto secondInstance = container.resolve!TestClass;
+        assert(firstInstance !is secondInstance, "Resolved instance are not different instances");
+    }
+
+    // Test creating instance via initializedOnceBy creates a singleton instance
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!TestClass.initializedOnceBy({
+            return new TestClass();
+        });
+        auto firstInstance = container.resolve!TestClass;
+        auto secondInstance = container.resolve!TestClass;
+        assert(firstInstance is secondInstance, "Resolved instance are different instances");
     }
 
     // Test autowire resolved instances

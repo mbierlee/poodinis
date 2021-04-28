@@ -106,10 +106,21 @@ public Registration existingInstance(Registration registration, Object instance)
 }
 
 /**
- * Scopes registrations to create instances using the given initializer delegate.
+ * Scopes registrations to create new instances using the given initializer delegate.
  */
 public Registration initializedBy(T : Object)(Registration registration, T delegate() initializer) {
     registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.no, null, {
+         return cast(Object) initializer();
+    });
+    
+    return registration;
+}
+
+/**
+ * Scopes registrations to create a new instance using the given initializer delegate. On subsequent resolves the same instance is returned.
+ */
+public Registration initializedOnceBy(T : Object)(Registration registration, T delegate() initializer) {
+    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.yes, null, {
          return cast(Object) initializer();
     });
     

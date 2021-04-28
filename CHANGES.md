@@ -2,6 +2,7 @@ Poodinis Changelog
 ==================
 **Version 8.1.0-beta.3**
 * CHANGE injection initializers to be defined as a registration scope instead of via Container.register(). See initializedBy().
+* ADD initializedOnceBy() to create singleton instances via injection initializer.
 
 **Version 8.1.0-beta.2**
 * FIX inheritance type template in custom instance creator (PR #29)
