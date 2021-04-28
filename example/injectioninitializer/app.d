@@ -15,7 +15,7 @@ class Doohickey
 void main()
 {
     auto dependencies = new shared DependencyContainer();
-    dependencies.register!Doohickey({
+    dependencies.register!Doohickey.initializedBy({
         writeln("Creating Doohickey via initializer delegate.");
         return new Doohickey();
     });

@@ -30,8 +30,6 @@ debug {
     import std.stdio;
 }
 
-alias InjectionInitializer(T) = T delegate();
-
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
  */
@@ -149,11 +147,6 @@ synchronized class DependencyContainer {
         return register!(ConcreteType, ConcreteType)(options);
     }
 
-    Registration register(ConcreteType)(InjectionInitializer!ConcreteType initializer,
-            RegistrationOption options = RegistrationOption.none) {
-        return register!(ConcreteType, ConcreteType)(initializer, options);
-    }
-
     /**
      * Register a dependency by super type.
      *
@@ -187,45 +180,6 @@ synchronized class DependencyContainer {
         }
 
         auto instanceFactory = new ConstructorInjectingInstanceFactory!ConcreteType(this);
-        auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, instanceFactory, this);
-        newRegistration.singleInstance();
-
-        static if (!is(SuperType == ConcreteType)) {
-            if (!hasOption(options, persistentRegistrationOptions, RegistrationOption.doNotAddConcreteTypeRegistration)) {
-                auto concreteTypeRegistration = register!ConcreteType;
-                concreteTypeRegistration.linkTo(newRegistration);
-            }
-        }
-
-        registrations[registeredType] ~= cast(shared(Registration)) newRegistration;
-        return newRegistration;
-    }
-
-    /**
-     * TODO: Deduplicate code
-     */
-    Registration register(SuperType, ConcreteType : SuperType)(InjectionInitializer!SuperType initializer, 
-            RegistrationOption options = RegistrationOption.none) 
-            if (is(ConcreteType == class)) {
-
-        TypeInfo registeredType = typeid(SuperType);
-        TypeInfo_Class concreteType = typeid(ConcreteType);
-
-        debug(poodinisVerbose) {
-            writeln(format("DEBUG: Register type %s (as %s)", concreteType.toString(), registeredType.toString()));
-        }
-
-        auto existingRegistration = getExistingRegistration(registeredType, concreteType);
-        if (existingRegistration) {
-            return existingRegistration;
-        }
-
-        InstanceFactory instanceFactory = new class InstanceFactory {
-            protected override Object createInstance() { 
-                return cast(Object)initializer();
-            }
-        };
-
         auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType, instanceFactory, this);
         newRegistration.singleInstance();
 

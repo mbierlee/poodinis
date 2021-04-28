@@ -50,20 +50,26 @@ Dependency Creation Behaviour
 You can control how a dependency is resolved by specifying a creation scope during registration. The scope determines which instance is returned, be it the same each time or a new one. The following scopes are available:
 
 * Resolve a dependency using a single instance (default):
-
 ```d
 dependencies.register!ExampleClass.singleInstance();
 ```
-* Resolve a dependency with a new instance each time it is resolved:
 
+* Resolve a dependency with a new instance each time it is resolved:
 ```d
 dependencies.register!ExampleClass.newInstance();
 ```
-* Resolve a dependency using a pre-existing instance
 
+* Resolve a dependency using a pre-existing instance:
 ```d
 auto preExistingInstance = new ExampleClass();
 dependencies.register!ExampleClass.existingInstance(preExistingInstance);
+```
+
+* Resolve a dependency using a custom initializer delegate:
+```d
+dependencies.register!ExampleClass.initializedBy({
+	return new ExampleClass();
+});
 ```
 
 Automatic Injection

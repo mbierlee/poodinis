@@ -105,6 +105,17 @@ public Registration existingInstance(Registration registration, Object instance)
     return registration;
 }
 
+/**
+ * Scopes registrations to create instances using the given initializer delegate.
+ */
+public Registration initializedBy(T : Object)(Registration registration, T delegate() initializer) {
+    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.no, null, {
+         return cast(Object) initializer();
+    });
+    
+    return registration;
+}
+
 public string toConcreteTypeListString(Registration[] registrations) {
     auto concreteTypeListString = "";
     foreach (registration ; registrations) {

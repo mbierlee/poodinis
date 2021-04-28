@@ -80,6 +80,17 @@ version(unittest) {
         assert(expectedInstance is actualInstance, "Resolved instance from existing instance scope is not the same as the registered instance");
     }
 
+    // Test creating instance via customer initializer on resolve
+    unittest {
+        auto container = new shared DependencyContainer();
+        auto expectedInstance = new TestClass();
+        container.register!TestClass.initializedBy({
+            return expectedInstance;
+        });
+        auto actualInstance = container.resolve!TestClass;
+        assert(expectedInstance is actualInstance, "Resolved instance does not come from the custom initializer");
+    }
+
     // Test autowire resolved instances
     unittest {
         auto container = new shared DependencyContainer();
