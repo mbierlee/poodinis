@@ -149,9 +149,9 @@ synchronized class DependencyContainer {
         return register!(ConcreteType, ConcreteType)(options);
     }
 
-    Registration register(ConcreteType)(InjectionInitializer!ConcreteType creator, 
+    Registration register(ConcreteType)(InjectionInitializer!ConcreteType initializer,
             RegistrationOption options = RegistrationOption.none) {
-        return register!(ConcreteType, ConcreteType)(creator, options);
+        return register!(ConcreteType, ConcreteType)(initializer, options);
     }
 
     /**
@@ -204,7 +204,7 @@ synchronized class DependencyContainer {
     /**
      * 
      */
-    Registration register(SuperType, ConcreteType : SuperType)(InjectionInitializer!SuperType creator, 
+    Registration register(SuperType, ConcreteType : SuperType)(InjectionInitializer!SuperType initializer, 
             RegistrationOption options = RegistrationOption.none) 
             if (is(ConcreteType == class)) {
 
@@ -222,7 +222,7 @@ synchronized class DependencyContainer {
 
         InstanceFactory instanceFactory = new class InstanceFactory {
             protected override Object createInstance() { 
-                return cast(Object)creator();
+                return cast(Object)initializer();
             }
         };
 
