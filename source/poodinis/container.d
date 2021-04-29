@@ -25,6 +25,7 @@ import std.string;
 import std.algorithm;
 import std.concurrency;
 import std.traits;
+import std.meta : AliasSeq;
 
 debug {
     import std.stdio;
@@ -192,6 +193,12 @@ synchronized class DependencyContainer {
 
         registrations[registeredType] ~= cast(shared(Registration)) newRegistration;
         return newRegistration;
+    }
+
+    public Registration register(SuperType, ConcreteType)(RegistrationOption options = RegistrationOption.none)
+        if (!is(SuperType == ConcreteType) && !is(BaseTypeTuple!ConcreteType == AliasSeq!(Object, SuperType)) && !is(BaseTypeTuple!ConcreteType == AliasSeq!(SuperType))) {
+        pragma(msg, "Cannot register dependency: ", ConcreteType, " is not derived from ", SuperType);
+        static assert(0, "Cannot register dependency");
     }
 
     private bool hasOption(OptionType)(OptionType options, OptionType persistentOptions, OptionType option) {

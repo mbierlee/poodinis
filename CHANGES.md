@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.1.0-beta.4**
+* ADD compilation failure when trying to register a class by a supertype it does not inherit from. (#31)
+
 **Version 8.1.0-beta.3**
 * CHANGE injection initializers to be defined as a registration scope instead of via Container.register(). See initializedBy().
 * ADD initializedOnceBy() to create singleton instances via injection initializer.
