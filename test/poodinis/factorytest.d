@@ -10,12 +10,15 @@ import poodinis.test.testClasses;
 
 import std.exception;
 
-version(unittest) {
+version (unittest)
+{
 
     // Test instance factory with singletons
-    unittest {
+    unittest
+    {
         auto factory = new InstanceFactory();
-        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.yes);
+        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation),
+                CreatesSingleton.yes);
         auto instanceOne = factory.getInstance();
         auto instanceTwo = factory.getInstance();
 
@@ -24,9 +27,11 @@ version(unittest) {
     }
 
     // Test instance factory with new instances
-    unittest {
+    unittest
+    {
         auto factory = new InstanceFactory();
-        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.no);
+        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation),
+                CreatesSingleton.no);
         auto instanceOne = factory.getInstance();
         auto instanceTwo = factory.getInstance();
 
@@ -35,45 +40,57 @@ version(unittest) {
     }
 
     // Test instance factory with existing instances
-    unittest {
+    unittest
+    {
         auto existingInstance = new TestImplementation();
         auto factory = new InstanceFactory();
-        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.yes, existingInstance);
+        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation),
+                CreatesSingleton.yes, existingInstance);
         auto instanceOne = factory.getInstance();
         auto instanceTwo = factory.getInstance();
 
-        assert(instanceOne is existingInstance, "Created factory instance is not the existing instance");
-        assert(instanceTwo is existingInstance, "Created factory instance is not the existing instance when called again");
+        assert(instanceOne is existingInstance,
+                "Created factory instance is not the existing instance");
+        assert(instanceTwo is existingInstance,
+                "Created factory instance is not the existing instance when called again");
     }
 
     // Test instance factory with existing instances when setting singleton flag to "no"
-    unittest {
+    unittest
+    {
         auto existingInstance = new TestImplementation();
         auto factory = new InstanceFactory();
-        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation), CreatesSingleton.no, existingInstance);
+        factory.factoryParameters = InstanceFactoryParameters(typeid(TestImplementation),
+                CreatesSingleton.no, existingInstance);
         auto instance = factory.getInstance();
 
-        assert(instance is existingInstance, "Created factory instance is not the existing instance");
+        assert(instance is existingInstance,
+                "Created factory instance is not the existing instance");
     }
 
     // Test creating instance using custom factory method
-    unittest {
-        Object factoryMethod() {
+    unittest
+    {
+        Object factoryMethod()
+        {
             auto instance = new TestImplementation();
             instance.someContent = "Ducks!";
             return instance;
         }
 
         auto factory = new InstanceFactory();
-        factory.factoryParameters = InstanceFactoryParameters(null, CreatesSingleton.yes, null, &factoryMethod);
+        factory.factoryParameters = InstanceFactoryParameters(null,
+                CreatesSingleton.yes, null, &factoryMethod);
         auto instance = cast(TestImplementation) factory.getInstance();
 
-        assert(instance !is null, "No instance was created by factory or could not be cast to expected type");
+        assert(instance !is null,
+                "No instance was created by factory or could not be cast to expected type");
         assert(instance.someContent == "Ducks!");
     }
 
     // Test injecting constructor of class
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!TestImplementation;
 
@@ -85,12 +102,14 @@ version(unittest) {
     }
 
     // Test injecting constructor of class with multiple constructors injects the first candidate
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!SomeOtherClassThen;
         container.register!TestImplementation;
 
-        auto factory = new ConstructorInjectingInstanceFactory!ClassWithMultipleConstructors(container);
+        auto factory = new ConstructorInjectingInstanceFactory!ClassWithMultipleConstructors(
+                container);
         auto instance = cast(ClassWithMultipleConstructors) factory.getInstance();
 
         assert(instance !is null);
@@ -99,12 +118,14 @@ version(unittest) {
     }
 
     // Test injecting constructor of class with multiple constructor parameters
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!SomeOtherClassThen;
         container.register!TestImplementation;
 
-        auto factory = new ConstructorInjectingInstanceFactory!ClassWithConstructorWithMultipleParameters(container);
+        auto factory = new ConstructorInjectingInstanceFactory!ClassWithConstructorWithMultipleParameters(
+                container);
         auto instance = cast(ClassWithConstructorWithMultipleParameters) factory.getInstance();
 
         assert(instance !is null);
@@ -113,11 +134,13 @@ version(unittest) {
     }
 
     // Test injecting constructor of class with primitive constructor parameters
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!SomeOtherClassThen;
 
-        auto factory = new ConstructorInjectingInstanceFactory!ClassWithPrimitiveConstructor(container);
+        auto factory = new ConstructorInjectingInstanceFactory!ClassWithPrimitiveConstructor(
+                container);
         auto instance = cast(ClassWithPrimitiveConstructor) factory.getInstance();
 
         assert(instance !is null);
@@ -125,7 +148,8 @@ version(unittest) {
     }
 
     // Test injecting constructor of class with struct constructor parameters
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!SomeOtherClassThen;
 
@@ -137,7 +161,8 @@ version(unittest) {
     }
 
     // Test injecting constructor of class with empty constructor will skip injection
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
 
         auto factory = new ConstructorInjectingInstanceFactory!ClassWithEmptyConstructor(container);
@@ -148,10 +173,12 @@ version(unittest) {
     }
 
     // Test injecting constructor of class with no candidates fails
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
 
-        auto factory = new ConstructorInjectingInstanceFactory!ClassWithNonInjectableConstructor(container);
+        auto factory = new ConstructorInjectingInstanceFactory!ClassWithNonInjectableConstructor(
+                container);
 
         assertThrown!InstanceCreationException(factory.getInstance());
     }

@@ -10,31 +10,38 @@ import poodinis;
 import std.stdio;
 import std.string;
 
-class IntValueInjector : ValueInjector!int {
-	int get(string key) {
-		switch(key) {
-			case "http.port":
-				return 8080;
-			case "http.keep_alive":
-				return 60;
-			default:
-				throw new ValueNotAvailableException(key);
+class IntValueInjector : ValueInjector!int
+{
+	int get(string key)
+	{
+		switch (key)
+		{
+		case "http.port":
+			return 8080;
+		case "http.keep_alive":
+			return 60;
+		default:
+			throw new ValueNotAvailableException(key);
 		}
 	}
 }
 
-class StringValueInjector : ValueInjector!string {
-	string get(string key) {
-		switch(key) {
-			case "http.hostname":
-				return "acme.org";
-			default:
-				throw new ValueNotAvailableException(key);
+class StringValueInjector : ValueInjector!string
+{
+	string get(string key)
+	{
+		switch (key)
+		{
+		case "http.hostname":
+			return "acme.org";
+		default:
+			throw new ValueNotAvailableException(key);
 		}
 	}
 }
 
-class HttpServer {
+class HttpServer
+{
 
 	@Value("http.port")
 	private int port = 80;
@@ -48,12 +55,15 @@ class HttpServer {
 	@MandatoryValue("http.keep_alive")
 	private int keepAliveTime; // A ResolveException is thrown when the value is not available, default assignments are not used.
 
-	public void serve() {
-		writeln(format("Serving pages for %s:%s with max connection count of %s", hostName, port, maxConnections));
+	public void serve()
+	{
+		writeln(format("Serving pages for %s:%s with max connection count of %s",
+				hostName, port, maxConnections));
 	}
 }
 
-void main() {
+void main()
+{
 	auto dependencies = new shared DependencyContainer();
 	dependencies.register!(ValueInjector!int, IntValueInjector);
 	dependencies.register!(ValueInjector!string, StringValueInjector);

@@ -10,10 +10,12 @@ import poodinis.test.testClasses;
 
 import std.exception;
 
-version(unittest) {
+version (unittest)
+{
 
     // Test autowiring concrete type to existing instance
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ComponentA;
         auto componentB = new ComponentB();
@@ -22,7 +24,8 @@ version(unittest) {
     }
 
     // Test autowiring interface type to existing instance
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(InterfaceA, ComponentC);
         auto componentD = new ComponentD();
@@ -31,16 +34,19 @@ version(unittest) {
     }
 
     // Test autowiring private members
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(InterfaceA, ComponentC);
         auto componentD = new ComponentD();
         container.autowire(componentD);
-        assert(componentD.privateComponentC is componentD.componentC, "Autowire private dependency failed");
+        assert(componentD.privateComponentC is componentD.componentC,
+                "Autowire private dependency failed");
     }
 
     // Test autowiring will only happen once
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(InterfaceA, ComponentC).newInstance();
         auto componentD = new ComponentD();
@@ -48,37 +54,45 @@ version(unittest) {
         auto expectedComponent = componentD.componentC;
         container.autowire(componentD);
         auto actualComponent = componentD.componentC;
-        assert(expectedComponent is actualComponent, "Autowiring the second time wired a different instance");
+        assert(expectedComponent is actualComponent,
+                "Autowiring the second time wired a different instance");
     }
 
     // Test autowiring unregistered type
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto componentD = new ComponentD();
-        assertThrown!(ResolveException)(container.autowire(componentD), "Autowiring unregistered type should throw ResolveException");
+        assertThrown!(ResolveException)(container.autowire(componentD),
+                "Autowiring unregistered type should throw ResolveException");
     }
 
     // Test autowiring member with non-autowire attribute does not autowire
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto componentE = new ComponentE();
         container.autowire(componentE);
-        assert(componentE.componentC is null, "Autowiring should not occur for members with attributes other than @Autowire");
+        assert(componentE.componentC is null,
+                "Autowiring should not occur for members with attributes other than @Autowire");
     }
 
     // Test autowire class with alias declaration
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ComponentA;
         auto componentDeclarationCocktail = new ComponentDeclarationCocktail();
 
         container.autowire(componentDeclarationCocktail);
 
-        assert(componentDeclarationCocktail.componentA !is null, "Autowiring class with non-assignable declarations failed");
+        assert(componentDeclarationCocktail.componentA !is null,
+                "Autowiring class with non-assignable declarations failed");
     }
 
     // Test autowire class with qualifier
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(InterfaceA, ComponentC);
         container.register!(InterfaceA, ComponentX);
@@ -91,7 +105,8 @@ version(unittest) {
     }
 
     // Test autowire class with multiple qualifiers
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(InterfaceA, ComponentC);
         container.register!(InterfaceA, ComponentX);
@@ -101,23 +116,29 @@ version(unittest) {
         auto bootstrapBootstrap = new BootstrapBootstrap();
         container.autowire(bootstrapBootstrap);
 
-        assert(bootstrapBootstrap.componentX is componentX, "Autowiring class with multiple qualifiers failed");
-        assert(bootstrapBootstrap.componentC is componentC, "Autowiring class with multiple qualifiers failed");
+        assert(bootstrapBootstrap.componentX is componentX,
+                "Autowiring class with multiple qualifiers failed");
+        assert(bootstrapBootstrap.componentC is componentC,
+                "Autowiring class with multiple qualifiers failed");
     }
 
     // Test getting instance from autowired registration will autowire instance
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ComponentA;
 
-        auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB), new InstanceFactory(), container).singleInstance();
-        auto instance = cast(ComponentB) registration.getInstance(new AutowireInstantiationContext());
+        auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB),
+                new InstanceFactory(), container).singleInstance();
+        auto instance = cast(ComponentB) registration.getInstance(
+                new AutowireInstantiationContext());
 
         assert(instance.componentA !is null);
     }
 
     // Test autowiring a dynamic array with all qualified types
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(InterfaceA, ComponentC);
         container.register!(InterfaceA, ComponentX);
@@ -129,7 +150,8 @@ version(unittest) {
     }
 
     // Test autowiring new instance of singleinstance registration with newInstance UDA
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ComponentA;
 
@@ -138,11 +160,13 @@ version(unittest) {
 
         container.autowire(charlie);
 
-        assert(charlie.componentA !is regularComponentA, "Autowiring class with AssignNewInstance did not yield a different instance");
+        assert(charlie.componentA !is regularComponentA,
+                "Autowiring class with AssignNewInstance did not yield a different instance");
     }
 
     // Test autowiring members from base class
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ComponentA;
         container.register!ComponentB;
@@ -155,7 +179,8 @@ version(unittest) {
     }
 
     // Test autowiring optional dependencies
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto instance = new OuttaTime();
 
@@ -167,7 +192,8 @@ version(unittest) {
     }
 
     // Test autowiring class using value injection
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
 
         container.register!(ValueInjector!int, TestInjector);
@@ -181,7 +207,8 @@ version(unittest) {
     }
 
     // Test autowiring classes with recursive template parameters
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!CircularTemplateComponentA;
         container.register!CircularTemplateComponentB;

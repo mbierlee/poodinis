@@ -7,6 +7,9 @@
 
 module poodinis.test.foreignDependencies;
 
-version(unittest) {
-    class Ola {}
+version (unittest)
+{
+    class Ola
+    {
+    }
 }

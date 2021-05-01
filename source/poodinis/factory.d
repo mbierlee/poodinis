@@ -19,7 +19,8 @@ import std.exception : enforce;
 import std.traits : Parameters, isBuiltinType, fullyQualifiedName;
 import std.string : format;
 
-debug {
+debug
+{
     import std.stdio : writeln;
 }
 
@@ -27,34 +28,42 @@ alias CreatesSingleton = Flag!"CreatesSingleton";
 alias InstanceFactoryMethod = Object delegate();
 alias InstanceEventHandler = void delegate(Object instance);
 
-class InstanceCreationException : Exception {
-    this(string message, string file = __FILE__, size_t line = __LINE__) {
+class InstanceCreationException : Exception
+{
+    this(string message, string file = __FILE__, size_t line = __LINE__)
+    {
         super(message, file, line);
     }
 }
 
-struct InstanceFactoryParameters {
+struct InstanceFactoryParameters
+{
     TypeInfo_Class instanceType;
     CreatesSingleton createsSingleton = CreatesSingleton.yes;
     Object existingInstance;
     InstanceFactoryMethod factoryMethod;
 }
 
-class InstanceFactory {
+class InstanceFactory
+{
     private Object instance = null;
     private InstanceFactoryParameters _factoryParameters;
     private InstanceEventHandler _constructionHandler;
 
-    this() {
+    this()
+    {
         factoryParameters = InstanceFactoryParameters();
     }
 
-    public @property void factoryParameters(InstanceFactoryParameters factoryParameters) {
-        if (factoryParameters.factoryMethod is null) {
+    public @property void factoryParameters(InstanceFactoryParameters factoryParameters)
+    {
+        if (factoryParameters.factoryMethod is null)
+        {
             factoryParameters.factoryMethod = &this.createInstance;
         }
 
-        if (factoryParameters.existingInstance !is null) {
+        if (factoryParameters.existingInstance !is null)
+        {
             factoryParameters.createsSingleton = CreatesSingleton.yes;
             this.instance = factoryParameters.existingInstance;
         }
@@ -62,73 +71,99 @@ class InstanceFactory {
         _factoryParameters = factoryParameters;
     }
 
-    public @property InstanceFactoryParameters factoryParameters() {
+    public @property InstanceFactoryParameters factoryParameters()
+    {
         return _factoryParameters;
     }
 
-    public Object getInstance() {
-        if (_factoryParameters.createsSingleton && instance !is null) {
-            debug(poodinisVerbose) {
+    public Object getInstance()
+    {
+        if (_factoryParameters.createsSingleton && instance !is null)
+        {
+            debug (poodinisVerbose)
+            {
                 printDebugUseExistingInstance();
             }
 
             return instance;
         }
 
-        debug(poodinisVerbose) {
+        debug (poodinisVerbose)
+        {
             printDebugCreateNewInstance();
         }
 
         instance = _factoryParameters.factoryMethod();
-        if(_constructionHandler !is null) {
+        if (_constructionHandler !is null)
+        {
             _constructionHandler(instance);
         }
 
         return instance;
     }
 
-    void onConstructed(InstanceEventHandler handler) {
+    void onConstructed(InstanceEventHandler handler)
+    {
         _constructionHandler = handler;
     }
 
-    private void printDebugUseExistingInstance() {
-        debug {
-            if (_factoryParameters.instanceType !is null) {
-                writeln(format("DEBUG: Existing instance returned of type %s", _factoryParameters.instanceType.toString()));
-            } else {
+    private void printDebugUseExistingInstance()
+    {
+        debug
+        {
+            if (_factoryParameters.instanceType !is null)
+            {
+                writeln(format("DEBUG: Existing instance returned of type %s",
+                        _factoryParameters.instanceType.toString()));
+            }
+            else
+            {
                 writeln("DEBUG: Existing instance returned from custom factory method");
             }
         }
     }
 
-    private void printDebugCreateNewInstance() {
-        debug {
-            if (_factoryParameters.instanceType !is null) {
-                writeln(format("DEBUG: Creating new instance of type %s", _factoryParameters.instanceType.toString()));
-            } else {
+    private void printDebugCreateNewInstance()
+    {
+        debug
+        {
+            if (_factoryParameters.instanceType !is null)
+            {
+                writeln(format("DEBUG: Creating new instance of type %s",
+                        _factoryParameters.instanceType.toString()));
+            }
+            else
+            {
                 writeln("DEBUG: Creating new instance from custom factory method");
             }
         }
     }
 
-    protected Object createInstance() {
-        enforce!InstanceCreationException(_factoryParameters.instanceType, "Instance type is not defined, cannot create instance without knowing its type.");
+    protected Object createInstance()
+    {
+        enforce!InstanceCreationException(_factoryParameters.instanceType,
+                "Instance type is not defined, cannot create instance without knowing its type.");
         return _factoryParameters.instanceType.create();
     }
 }
 
-class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
+class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory
+{
     private shared DependencyContainer container;
     private bool isBeingInjected = false;
 
-    this(shared DependencyContainer container) {
+    this(shared DependencyContainer container)
+    {
         this.container = container;
     }
 
-    private static string createArgumentList(Params...)() {
+    private static string createArgumentList(Params...)()
+    {
         string argumentList = "";
-        foreach(param; Params) {
-            if (argumentList.length > 0) {
+        foreach (param; Params)
+        {
+            if (argumentList.length > 0)
+            {
                 argumentList ~= ",";
             }
 
@@ -137,18 +172,23 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
         return argumentList;
     }
 
-    private static string createImportList(Params...)() {
+    private static string createImportList(Params...)()
+    {
         string importList = "";
-        foreach(param; Params) {
+        foreach (param; Params)
+        {
             importList ~= createImportsString!param;
         }
         return importList;
     }
 
-    private static bool parametersAreValid(Params...)() {
+    private static bool parametersAreValid(Params...)()
+    {
         bool isValid = true;
-        foreach(param; Params) {
-            if (isBuiltinType!param || is(param == struct)) {
+        foreach (param; Params)
+        {
+            if (isBuiltinType!param || is(param == struct))
+            {
                 isValid = false;
                 break;
             }
@@ -157,18 +197,26 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
         return isValid;
     }
 
-    protected override Object createInstance() {
-        enforce!InstanceCreationException(container, "A dependency container is not defined. Cannot perform constructor injection without one.");
-        enforce!InstanceCreationException(!isBeingInjected, format("%s is already being created and injected; possible circular dependencies in constructors?", InstanceType.stringof));
+    protected override Object createInstance()
+    {
+        enforce!InstanceCreationException(container,
+                "A dependency container is not defined. Cannot perform constructor injection without one.");
+        enforce!InstanceCreationException(!isBeingInjected,
+                format("%s is already being created and injected; possible circular dependencies in constructors?",
+                    InstanceType.stringof));
 
         Object instance = null;
-        static if (__traits(compiles, __traits(getOverloads, InstanceType, `__ctor`))) {
-            foreach(ctor ; __traits(getOverloads, InstanceType, `__ctor`)) {
-                static if (parametersAreValid!(Parameters!ctor)) {
+        static if (__traits(compiles, __traits(getOverloads, InstanceType, `__ctor`)))
+        {
+            foreach (ctor; __traits(getOverloads, InstanceType, `__ctor`))
+            {
+                static if (parametersAreValid!(Parameters!ctor))
+                {
                     isBeingInjected = true;
-                    mixin(createImportsString!InstanceType
-                        ~ createImportList!(Parameters!ctor) ~ `
-                        instance = new ` ~ fullyQualifiedName!InstanceType ~ `(` ~ createArgumentList!(Parameters!ctor) ~ `);
+                    mixin(createImportsString!InstanceType ~ createImportList!(
+                            Parameters!ctor) ~ `
+                        instance = new ` ~ fullyQualifiedName!InstanceType ~ `(` ~ createArgumentList!(
+                            Parameters!ctor) ~ `);
                     `);
                     isBeingInjected = false;
                     break;
@@ -176,11 +224,14 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory {
             }
         }
 
-        if (instance is null) {
+        if (instance is null)
+        {
             instance = typeid(InstanceType).create();
         }
 
-        enforce!InstanceCreationException(instance !is null, "Unable to create instance of type" ~ InstanceType.stringof ~ ", does it have injectable constructors?");
+        enforce!InstanceCreationException(instance !is null,
+                "Unable to create instance of type" ~ InstanceType.stringof
+                ~ ", does it have injectable constructors?");
 
         return instance;
     }

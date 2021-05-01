@@ -20,7 +20,8 @@ module poodinis.autowire;
 import poodinis.container : DependencyContainer, PreDestroy, ResolveException, ResolveOption;
 import poodinis.registration : Registration, InstantiationContext;
 import poodinis.factory : InstanceFactory, InstanceFactoryParameters, CreatesSingleton;
-import poodinis.valueinjection : ValueInjector, ValueInjectionException, ValueNotAvailableException, Value, MandatoryValue;
+import poodinis.valueinjection : ValueInjector, ValueInjectionException,
+    ValueNotAvailableException, Value, MandatoryValue;
 import poodinis.altphobos : isFunction;
 import poodinis.imports : createImportsString;
 
@@ -29,11 +30,14 @@ import std.string : format;
 import std.traits : BaseClassesTuple, FieldNameTuple, fullyQualifiedName, hasUDA, isDynamicArray;
 import std.range : ElementType;
 
-debug {
+debug
+{
     import std.stdio : writeln;
 }
 
-private struct UseMemberType {}
+private struct UseMemberType
+{
+}
 
 /**
  * UDA for annotating class members as candidates for autowiring.
@@ -68,7 +72,8 @@ private struct UseMemberType {}
  * autowire member "fuelEngine" as if it's of type "FuelEngine". This means that the members of instance "fuelEngine"
  * will also be autowired because the autowire mechanism knows that member "fuelEngine" is an instance of "FuelEngine"
  */
-struct Autowire(QualifierType) {
+struct Autowire(QualifierType)
+{
     QualifierType qualifier;
 }
 
@@ -77,7 +82,9 @@ struct Autowire(QualifierType) {
  * Optional dependencies will not lead to a resolveException when there is no type registered for them.
  * The member will remain null.
  */
-struct OptionalDependency {}
+struct OptionalDependency
+{
+}
 
 /**
  * UDA for annotating class members to be autowired with a new instance regardless of their registration scope.
@@ -92,10 +99,14 @@ struct OptionalDependency {}
  *---
  * antenna will always be assigned a new instance of class Antenna.
  */
-struct AssignNewInstance {}
+struct AssignNewInstance
+{
+}
 
-private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAddress) {
-    debug {
+private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAddress)
+{
+    debug
+    {
         writeln(format("DEBUG: Autowiring members of [%s@%s]", instanceType, instanceAddress));
     }
 }
@@ -109,135 +120,207 @@ private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAd
  *
  * See_Also: Autowire
  */
-public void autowire(Type)(shared(DependencyContainer) container, Type instance) {
-    debug(poodinisVerbose) {
+public void autowire(Type)(shared(DependencyContainer) container, Type instance)
+{
+    debug (poodinisVerbose)
+    {
         printDebugAutowiredInstance(typeid(Type), &instance);
     }
 
     // Recurse into base class if there are more between Type and Object in the hierarchy
-    static if(BaseClassesTuple!Type.length > 1)
+    static if (BaseClassesTuple!Type.length > 1)
     {
         autowire!(BaseClassesTuple!Type[0])(container, instance);
     }
 
-    foreach(index, name; FieldNameTuple!Type) {
+    foreach (index, name; FieldNameTuple!Type)
+    {
         autowireMember!(name, index, Type)(container, instance);
     }
 }
 
-private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType, void* candidateInstanceAddress, TypeInfo instanceType, void* instanceAddress, string member) {
-    debug {
-        writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", candidateInstanceType, candidateInstanceAddress, instanceType, instanceAddress, member));
+private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType,
+        void* candidateInstanceAddress, TypeInfo instanceType, void* instanceAddress, string member)
+{
+    debug
+    {
+        writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", candidateInstanceType,
+                candidateInstanceAddress, instanceType, instanceAddress, member));
     }
 }
 
-private void printDebugAutowiringArray(TypeInfo superTypeInfo, TypeInfo instanceType, void* instanceAddress, string member) {
-    debug {
-        writeln(format("DEBUG: Autowired all registered instances of super type %s to [%s@%s].%s", superTypeInfo, instanceType, instanceAddress, member));
+private void printDebugAutowiringArray(TypeInfo superTypeInfo,
+        TypeInfo instanceType, void* instanceAddress, string member)
+{
+    debug
+    {
+        writeln(format("DEBUG: Autowired all registered instances of super type %s to [%s@%s].%s",
+                superTypeInfo, instanceType, instanceAddress, member));
     }
 }
 
-private void autowireMember(string member, size_t memberIndex, Type)(shared(DependencyContainer) container, Type instance) {
-    foreach(attribute; __traits(getAttributes, Type.tupleof[memberIndex])) {
-        static if (is(attribute == Autowire!T, T)) {
+private void autowireMember(string member, size_t memberIndex, Type)(
+        shared(DependencyContainer) container, Type instance)
+{
+    foreach (attribute; __traits(getAttributes, Type.tupleof[memberIndex]))
+    {
+        static if (is(attribute == Autowire!T, T))
+        {
             injectInstance!(member, memberIndex, typeof(attribute.qualifier))(container, instance);
-        } else static if (__traits(isSame, attribute, Autowire)) {
+        }
+        else static if (__traits(isSame, attribute, Autowire))
+        {
             injectInstance!(member, memberIndex, UseMemberType)(container, instance);
-        } else static if (is(typeof(attribute) == Value)) {
+        }
+        else static if (is(typeof(attribute) == Value))
+        {
             enum key = attribute.key;
             injectValue!(member, memberIndex, key, false)(container, instance);
-        } else static if (is(typeof(attribute) == MandatoryValue)) {
+        }
+        else static if (is(typeof(attribute) == MandatoryValue))
+        {
             enum key = attribute.key;
             injectValue!(member, memberIndex, key, true)(container, instance);
         }
     }
 }
 
-private void injectInstance(string member, size_t memberIndex, QualifierType, Type)(shared(DependencyContainer) container, Type instance) {
-    if (instance.tupleof[memberIndex] is null) {
+private void injectInstance(string member, size_t memberIndex, QualifierType, Type)(
+        shared(DependencyContainer) container, Type instance)
+{
+    if (instance.tupleof[memberIndex] is null)
+    {
         alias MemberType = typeof(Type.tupleof[memberIndex]);
         enum isOptional = hasUDA!(Type.tupleof[memberIndex], OptionalDependency);
 
-        static if (isDynamicArray!MemberType) {
-            injectMultipleInstances!(member, memberIndex, isOptional, MemberType)(container, instance);
-        } else {
-            injectSingleInstance!(member, memberIndex, isOptional, MemberType, QualifierType)(container, instance);
+        static if (isDynamicArray!MemberType)
+        {
+            injectMultipleInstances!(member, memberIndex, isOptional, MemberType)(container,
+                    instance);
+        }
+        else
+        {
+            injectSingleInstance!(member, memberIndex, isOptional, MemberType, QualifierType)(container,
+                    instance);
         }
     }
 }
 
-private void injectMultipleInstances(string member, size_t memberIndex, bool isOptional, MemberType, Type)(shared(DependencyContainer) container, Type instance) {
+private void injectMultipleInstances(string member, size_t memberIndex,
+        bool isOptional, MemberType, Type)(shared(DependencyContainer) container, Type instance)
+{
     alias MemberElementType = ElementType!MemberType;
-    static if (isOptional) {
+    static if (isOptional)
+    {
         auto instances = container.resolveAll!MemberElementType(ResolveOption.noResolveException);
-    } else {
+    }
+    else
+    {
         auto instances = container.resolveAll!MemberElementType;
     }
 
     instance.tupleof[memberIndex] = instances;
-    debug(poodinisVerbose) {
+    debug (poodinisVerbose)
+    {
         printDebugAutowiringArray(typeid(MemberElementType), typeid(Type), &instance, member);
     }
 }
 
-private void injectSingleInstance(string member, size_t memberIndex, bool isOptional, MemberType, QualifierType, Type)(shared(DependencyContainer) container, Type instance) {
-    debug(poodinisVerbose) {
+private void injectSingleInstance(string member, size_t memberIndex,
+        bool isOptional, MemberType, QualifierType, Type)(
+        shared(DependencyContainer) container, Type instance)
+{
+    debug (poodinisVerbose)
+    {
         TypeInfo qualifiedInstanceType = typeid(MemberType);
     }
 
     enum assignNewInstance = hasUDA!(Type.tupleof[memberIndex], AssignNewInstance);
 
     MemberType qualifiedInstance;
-    static if (!is(QualifierType == UseMemberType)) {
-        qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType, assignNewInstance, isOptional)(container);
-        debug(poodinisVerbose) {
+    static if (!is(QualifierType == UseMemberType))
+    {
+        qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType,
+                assignNewInstance, isOptional)(container);
+        debug (poodinisVerbose)
+        {
             qualifiedInstanceType = typeid(QualifierType);
         }
-    } else {
-        qualifiedInstance = createOrResolveInstance!(MemberType, MemberType, assignNewInstance, isOptional)(container);
+    }
+    else
+    {
+        qualifiedInstance = createOrResolveInstance!(MemberType, MemberType,
+                assignNewInstance, isOptional)(container);
     }
 
     instance.tupleof[memberIndex] = qualifiedInstance;
 
-    debug(poodinisVerbose) {
-        printDebugAutowiringCandidate(qualifiedInstanceType, &qualifiedInstance, typeid(Type), &instance, member);
+    debug (poodinisVerbose)
+    {
+        printDebugAutowiringCandidate(qualifiedInstanceType,
+                &qualifiedInstance, typeid(Type), &instance, member);
     }
 }
 
-private QualifierType createOrResolveInstance(MemberType, QualifierType, bool createNew, bool isOptional)(shared(DependencyContainer) container) {
-    static if (createNew) {
+private QualifierType createOrResolveInstance(MemberType, QualifierType,
+        bool createNew, bool isOptional)(shared(DependencyContainer) container)
+{
+    static if (createNew)
+    {
         auto instanceFactory = new InstanceFactory();
-        instanceFactory.factoryParameters = InstanceFactoryParameters(typeid(MemberType), CreatesSingleton.no);
+        instanceFactory.factoryParameters = InstanceFactoryParameters(typeid(MemberType),
+                CreatesSingleton.no);
         return cast(MemberType) instanceFactory.getInstance();
-    } else {
-        static if (isOptional) {
+    }
+    else
+    {
+        static if (isOptional)
+        {
             return container.resolve!(MemberType, QualifierType)(ResolveOption.noResolveException);
-        } else {
+        }
+        else
+        {
             return container.resolve!(MemberType, QualifierType);
         }
     }
 }
 
-private void injectValue(string member, size_t memberIndex, string key, bool mandatory, Type)(shared(DependencyContainer) container, Type instance) {
+private void injectValue(string member, size_t memberIndex, string key, bool mandatory, Type)(
+        shared(DependencyContainer) container, Type instance)
+{
     alias MemberType = typeof(Type.tupleof[memberIndex]);
-    try {
+    try
+    {
         auto injector = container.resolve!(ValueInjector!MemberType);
         instance.tupleof[memberIndex] = injector.get(key);
-        debug(poodinisVerbose) {
+        debug (poodinisVerbose)
+        {
             printDebugValueInjection(typeid(Type), &instance, member, typeid(MemberType), key);
         }
-    } catch (ResolveException e) {
-        throw new ValueInjectionException(format("Could not inject value of type %s into %s.%s: value injector is missing for this type.", typeid(MemberType), typeid(Type), member));
-    } catch (ValueNotAvailableException e) {
-        static if (mandatory) {
-            throw new ValueInjectionException(format("Could not inject value of type %s into %s.%s", typeid(MemberType), typeid(Type), member), e);
+    }
+    catch (ResolveException e)
+    {
+        throw new ValueInjectionException(format(
+                "Could not inject value of type %s into %s.%s: value injector is missing for this type.",
+                typeid(MemberType), typeid(Type), member));
+    }
+    catch (ValueNotAvailableException e)
+    {
+        static if (mandatory)
+        {
+            throw new ValueInjectionException(format("Could not inject value of type %s into %s.%s",
+                    typeid(MemberType), typeid(Type), member), e);
         }
     }
 }
 
-private void printDebugValueInjection(TypeInfo instanceType, void* instanceAddress, string member, TypeInfo valueType, string key) {
-    debug {
-        writeln(format("DEBUG: Injected value with key '%s' of type %s into [%s@%s].%s", key, valueType, instanceType, instanceAddress, member));
+private void printDebugValueInjection(TypeInfo instanceType,
+        void* instanceAddress, string member, TypeInfo valueType, string key)
+{
+    debug
+    {
+        writeln(format("DEBUG: Injected value with key '%s' of type %s into [%s@%s].%s",
+                key, valueType, instanceType, instanceAddress, member));
     }
 }
 
@@ -247,25 +330,33 @@ private void printDebugValueInjection(TypeInfo instanceType, void* instanceAddre
  * See_Also: DependencyContainer
  * Deprecated: Using the global container is undesired. See DependencyContainer.getInstance().
  */
-public deprecated void globalAutowire(Type)(Type instance) {
+public deprecated void globalAutowire(Type)(Type instance)
+{
     DependencyContainer.getInstance().autowire(instance);
 }
 
-class AutowiredRegistration(RegistrationType : Object) : Registration {
+class AutowiredRegistration(RegistrationType : Object) : Registration
+{
     private shared(DependencyContainer) container;
 
-    public this(TypeInfo registeredType, InstanceFactory instanceFactory, shared(DependencyContainer) originatingContainer) {
+    public this(TypeInfo registeredType, InstanceFactory instanceFactory,
+            shared(DependencyContainer) originatingContainer)
+    {
         super(registeredType, typeid(RegistrationType), instanceFactory, originatingContainer);
     }
 
-    public override Object getInstance(InstantiationContext context = new AutowireInstantiationContext()) {
-        enforce(!(originatingContainer is null), "The registration's originating container is null. There is no way to resolve autowire dependencies.");
+    public override Object getInstance(
+            InstantiationContext context = new AutowireInstantiationContext())
+    {
+        enforce(!(originatingContainer is null),
+                "The registration's originating container is null. There is no way to resolve autowire dependencies.");
 
         RegistrationType instance = cast(RegistrationType) super.getInstance(context);
 
         AutowireInstantiationContext autowireContext = cast(AutowireInstantiationContext) context;
         enforce(!(autowireContext is null), "Given instantiation context type could not be cast to an AutowireInstantiationContext. If you relied on using the default assigned context: make sure you're calling getInstance() on an instance of type AutowiredRegistration!");
-        if (autowireContext.autowireInstance) {
+        if (autowireContext.autowireInstance)
+        {
             originatingContainer.autowire(instance);
         }
 
@@ -274,15 +365,18 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
         return instance;
     }
 
-    private void delegate() getPreDestructor(RegistrationType instance) {
+    private void delegate() getPreDestructor(RegistrationType instance)
+    {
         void delegate() preDestructor = null;
-        foreach (memberName; __traits(allMembers, RegistrationType)) {
+        foreach (memberName; __traits(allMembers, RegistrationType))
+        {
             mixin(createImportsString!RegistrationType);
             enum QualifiedName = fullyQualifiedName!RegistrationType ~ `.` ~ memberName;
             static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
-                        && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-                        && isFunction!(mixin(QualifiedName))
-                        && hasUDA!(__traits(getMember, instance, memberName), PreDestroy)) {
+                    && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
+                    && isFunction!(mixin(QualifiedName))
+                    && hasUDA!(__traits(getMember, instance, memberName), PreDestroy))
+            {
                 preDestructor = &__traits(getMember, instance, memberName);
             }
         }
@@ -291,6 +385,7 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
     }
 }
 
-class AutowireInstantiationContext : InstantiationContext {
+class AutowireInstantiationContext : InstantiationContext
+{
     public bool autowireInstance = true;
 }

@@ -5,4 +5,6 @@
  * The full terms of the license can be found in the LICENSE file.
  */
 
-void main() {}
+void main()
+{
+}

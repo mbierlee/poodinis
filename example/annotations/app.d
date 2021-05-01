@@ -12,47 +12,53 @@ import std.digest.md;
 import std.stdio;
 import std.conv;
 
-class SecurityAuditor {
-	public void submitAudit() {
+class SecurityAuditor
+{
+	public void submitAudit()
+	{
 		writeln("Hmmmyes I have received your audit. It is.... adequate.");
 	}
 }
 
-class SuperSecurityDevice {
+class SuperSecurityDevice
+{
 	private int seed;
 
-	public this() {
+	public this()
+	{
 		auto randomGenerator = Random(unpredictableSeed);
 		seed = uniform(0, 999, randomGenerator);
 	}
 
-	public string getPassword() {
+	public string getPassword()
+	{
 		return to!string(seed) ~ "t1m3sp13!!:";
 	}
 }
 
-class SecurityManager {
-	@Autowire
-	private SuperSecurityDevice levelOneSecurity;
+class SecurityManager
+{
+	@Autowire private SuperSecurityDevice levelOneSecurity;
 
-	@Autowire
-	@AssignNewInstance
-	private SuperSecurityDevice levelTwoSecurity;
+	@Autowire @AssignNewInstance private SuperSecurityDevice levelTwoSecurity;
 
-	@Autowire
-	@OptionalDependency
-	private SecurityAuditor auditor;
+	@Autowire @OptionalDependency private SecurityAuditor auditor;
 
-	public void doAudit() {
-		if (auditor !is null) {
+	public void doAudit()
+	{
+		if (auditor !is null)
+		{
 			auditor.submitAudit();
-		} else {
+		}
+		else
+		{
 			writeln("I uh, will skip the audit for now...");
 		}
 	}
 }
 
-void main() {
+void main()
+{
 	auto dependencies = new shared DependencyContainer();
 	dependencies.register!SuperSecurityDevice; // Registered with the default "Single instance" scope
 	dependencies.register!SecurityManager;
@@ -62,9 +68,12 @@ void main() {
 	writeln("Password for user one: " ~ manager.levelOneSecurity.getPassword());
 	writeln("Password for user two: " ~ manager.levelTwoSecurity.getPassword());
 
-	if (manager.levelOneSecurity is manager.levelTwoSecurity) {
+	if (manager.levelOneSecurity is manager.levelTwoSecurity)
+	{
 		writeln("SECURITY BREACH!!!!!"); // Should not be printed since levelTwoSecurity is a new instance.
-	} else {
+	}
+	else
+	{
 		writeln("Security okay!");
 	}
 

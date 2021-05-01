@@ -10,10 +10,12 @@ import poodinis.test.testClasses;
 
 import std.exception;
 
-version(unittest) {
+version (unittest)
+{
 
     //Test register component registrations from context
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto context = new TestContext();
         context.registerContextComponents(container);
@@ -23,7 +25,8 @@ version(unittest) {
     }
 
     //Test non-annotated methods are not registered
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto context = new TestContext();
         context.registerContextComponents(container);
@@ -31,7 +34,8 @@ version(unittest) {
     }
 
     //Test register component by base type
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto context = new TestContext();
         context.registerContextComponents(container);
@@ -40,7 +44,8 @@ version(unittest) {
     }
 
     //Test register components with multiple candidates
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto context = new TestContext();
         context.registerContextComponents(container);
@@ -53,7 +58,8 @@ version(unittest) {
     }
 
     //Test register component as prototype
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto context = new TestContext();
         context.registerContextComponents(container);
@@ -66,7 +72,8 @@ version(unittest) {
     }
 
     // Test setting up simple dependencies through application context
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.registerContext!SimpleContext;
         auto instance = container.resolve!CakeChart;
@@ -75,7 +82,8 @@ version(unittest) {
     }
 
     // Test resolving dependency from registered application context
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.registerContext!SimpleContext;
         auto instance = container.resolve!Apple;
@@ -84,7 +92,8 @@ version(unittest) {
     }
 
     // Test autowiring application context
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!Apple;
         container.registerContext!AutowiredTestContext;
@@ -95,7 +104,8 @@ version(unittest) {
     }
 
     // Test autowiring application context with dependencies registered in same context
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.registerContext!ComplexAutowiredTestContext;
         auto instance = container.resolve!ClassWrapperWrapper;
@@ -108,7 +118,8 @@ version(unittest) {
     }
 
     // Test resolving registered context
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.registerContext!TestContext;
         container.resolve!ApplicationContext;

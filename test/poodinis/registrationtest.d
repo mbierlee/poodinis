@@ -10,48 +10,65 @@ import poodinis.test.testClasses;
 
 import std.exception;
 
-version(unittest) {
+version (unittest)
+{
 
     // Test getting instance without scope defined throws exception
-    unittest {
+    unittest
+    {
         Registration registration = new Registration(typeid(TestType), null, null, null);
         assertThrown!(InstanceCreationException)(registration.getInstance(), null);
     }
 
     // Test set single instance scope using scope setter
-    unittest {
-        Registration registration = new Registration(null, typeid(TestType), new InstanceFactory(), null);
+    unittest
+    {
+        Registration registration = new Registration(null, typeid(TestType),
+                new InstanceFactory(), null);
         auto chainedRegistration = registration.singleInstance();
         auto instance1 = registration.getInstance();
         auto instance2 = registration.getInstance();
-        assert(instance1 is instance2, "Registration with single instance scope did not return the same instance");
-        assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
+        assert(instance1 is instance2,
+                "Registration with single instance scope did not return the same instance");
+        assert(registration is chainedRegistration,
+                "Registration returned by scope setting is not the same as the registration being set");
     }
 
     // Test set new instance scope using scope setter
-    unittest {
-        Registration registration = new Registration(null, typeid(TestType), new InstanceFactory(), null);
+    unittest
+    {
+        Registration registration = new Registration(null, typeid(TestType),
+                new InstanceFactory(), null);
         auto chainedRegistration = registration.newInstance();
         auto instance1 = registration.getInstance();
         auto instance2 = registration.getInstance();
-        assert(instance1 !is instance2, "Registration with new instance scope did not return a different instance");
-        assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
+        assert(instance1 !is instance2,
+                "Registration with new instance scope did not return a different instance");
+        assert(registration is chainedRegistration,
+                "Registration returned by scope setting is not the same as the registration being set");
     }
 
     // Test set existing instance scope using scope setter
-    unittest {
+    unittest
+    {
         Registration registration = new Registration(null, null, new InstanceFactory(), null);
         auto expectedInstance = new TestType();
         auto chainedRegistration = registration.existingInstance(expectedInstance);
         auto actualInstance = registration.getInstance();
-        assert(expectedInstance is expectedInstance, "Registration with existing instance scope did not return the same instance");
-        assert(registration is chainedRegistration, "Registration returned by scope setting is not the same as the registration being set");
+        assert(expectedInstance is expectedInstance,
+                "Registration with existing instance scope did not return the same instance");
+        assert(registration is chainedRegistration,
+                "Registration returned by scope setting is not the same as the registration being set");
     }
 
     // Test linking registrations
-    unittest {
-        Registration firstRegistration = new Registration(typeid(TestInterface), typeid(TestImplementation), new InstanceFactory(), null).singleInstance();
-        Registration secondRegistration = new Registration(typeid(TestImplementation), typeid(TestImplementation), new InstanceFactory(), null).singleInstance().linkTo(firstRegistration);
+    unittest
+    {
+        Registration firstRegistration = new Registration(typeid(TestInterface),
+                typeid(TestImplementation), new InstanceFactory(), null).singleInstance();
+        Registration secondRegistration = new Registration(typeid(TestImplementation),
+                typeid(TestImplementation), new InstanceFactory(), null).singleInstance()
+            .linkTo(firstRegistration);
 
         auto firstInstance = firstRegistration.getInstance();
         auto secondInstance = secondRegistration.getInstance();

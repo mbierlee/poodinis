@@ -10,529 +10,630 @@ module poodinis.test.testClasses;
 import poodinis;
 import poodinis.test.foreignDependencies;
 
-version(unittest) {
-    class ComponentA {}
+version (unittest)
+{
+    class ComponentA
+    {
+    }
 
-    class ComponentB {
+    class ComponentB
+    {
         public @Autowire ComponentA componentA;
     }
 
-    interface InterfaceA {}
+    interface InterfaceA
+    {
+    }
 
-    class ComponentC : InterfaceA {}
+    class ComponentC : InterfaceA
+    {
+    }
 
-    class ComponentD {
+    class ComponentD
+    {
         public @Autowire InterfaceA componentC = null;
         private @Autowire InterfaceA _privateComponentC = null;
 
-        public InterfaceA privateComponentC() {
+        public InterfaceA privateComponentC()
+        {
             return _privateComponentC;
         }
     }
 
-    class DummyAttribute{};
+    class DummyAttribute
+    {
+    };
 
-    class ComponentE {
-        @DummyAttribute
-        public ComponentC componentC;
+    class ComponentE
+    {
+        @DummyAttribute public ComponentC componentC;
     }
 
-    class ComponentDeclarationCocktail {
+    class ComponentDeclarationCocktail
+    {
         alias noomer = int;
 
-        @Autowire
-        public ComponentA componentA;
+        @Autowire public ComponentA componentA;
 
-        public void doesNothing() {
+        public void doesNothing()
+        {
         }
 
-        ~this(){
+        ~this()
+        {
         }
     }
 
-    class ComponentX : InterfaceA {}
-
-    class ComponentZ : ComponentB {
+    class ComponentX : InterfaceA
+    {
     }
 
-    class MonkeyShine {
-        @Autowire!ComponentX
-        public InterfaceA component;
+    class ComponentZ : ComponentB
+    {
     }
 
-    class BootstrapBootstrap {
-        @Autowire!ComponentX
-        public InterfaceA componentX;
-
-        @Autowire!ComponentC
-        public InterfaceA componentC;
+    class MonkeyShine
+    {
+        @Autowire!ComponentX public InterfaceA component;
     }
 
-    class LordOfTheComponents {
-        @Autowire
-        public InterfaceA[] components;
-    }
-    class ComponentCharlie {
-        @Autowire
-        @AssignNewInstance
-        public ComponentA componentA;
+    class BootstrapBootstrap
+    {
+        @Autowire!ComponentX public InterfaceA componentX;
+
+        @Autowire!ComponentC public InterfaceA componentC;
     }
 
-    class OuttaTime {
-        @Autowire
-        @OptionalDependency
-        public InterfaceA interfaceA;
-
-        @Autowire
-        @OptionalDependency
-        public ComponentA componentA;
-
-        @Autowire
-        @OptionalDependency
-        public ComponentC[] componentCs;
+    class LordOfTheComponents
+    {
+        @Autowire public InterfaceA[] components;
     }
 
-    class ValuedClass {
+    class ComponentCharlie
+    {
+        @Autowire @AssignNewInstance public ComponentA componentA;
+    }
+
+    class OuttaTime
+    {
+        @Autowire @OptionalDependency public InterfaceA interfaceA;
+
+        @Autowire @OptionalDependency public ComponentA componentA;
+
+        @Autowire @OptionalDependency public ComponentC[] componentCs;
+    }
+
+    class ValuedClass
+    {
         @Value("values.int")
         public int intValue;
 
-        @Autowire
-        public ComponentA unrelated;
+        @Autowire public ComponentA unrelated;
     }
 
-    class TestInjector : ValueInjector!int {
-        public override int get(string key) {
+    class TestInjector : ValueInjector!int
+    {
+        public override int get(string key)
+        {
             assert(key == "values.int");
             return 8;
         }
     }
 
-    interface TestInterface {}
-
-    class TestClass : TestInterface {
+    interface TestInterface
+    {
     }
 
-    class TestClassDeux : TestInterface {
-        @Autowire
-        public UnrelatedClass unrelated;
+    class TestClass : TestInterface
+    {
     }
 
-    class UnrelatedClass{
+    class TestClassDeux : TestInterface
+    {
+        @Autowire public UnrelatedClass unrelated;
     }
 
-    class FailOnCreationClass {
-        this() {
+    class UnrelatedClass
+    {
+    }
+
+    class FailOnCreationClass
+    {
+        this()
+        {
             throw new Exception("This class should not be instantiated");
         }
     }
 
-    class AutowiredClass {
+    class AutowiredClass
+    {
     }
 
-    class ComponentClass {
-        @Autowire
-        public AutowiredClass autowiredClass;
+    class ComponentClass
+    {
+        @Autowire public AutowiredClass autowiredClass;
     }
 
-    class ComponentCat {
-        @Autowire
-        public ComponentMouse mouse;
+    class ComponentCat
+    {
+        @Autowire public ComponentMouse mouse;
     }
 
-    class ComponentMouse {
-        @Autowire
-        public ComponentCat cat;
+    class ComponentMouse
+    {
+        @Autowire public ComponentCat cat;
     }
 
-    class Eenie {
-        @Autowire
-        public Meenie meenie;
+    class Eenie
+    {
+        @Autowire public Meenie meenie;
     }
 
-    class Meenie {
-        @Autowire
-        public Moe moe;
+    class Meenie
+    {
+        @Autowire public Moe moe;
     }
 
-    class Moe {
-        @Autowire
-        public Eenie eenie;
+    class Moe
+    {
+        @Autowire public Eenie eenie;
     }
 
-    class Ittie {
-        @Autowire
-        public Bittie bittie;
+    class Ittie
+    {
+        @Autowire public Bittie bittie;
     }
 
-    class Bittie {
-        @Autowire
-        public Bunena banana;
+    class Bittie
+    {
+        @Autowire public Bunena banana;
     }
 
-    class Bunena {
-        @Autowire
-        public Bittie bittie;
+    class Bunena
+    {
+        @Autowire public Bittie bittie;
     }
 
-    interface SuperInterface {
+    interface SuperInterface
+    {
     }
 
-    class SuperImplementation : SuperInterface {
-        @Autowire
-        public Bunena banana;
+    class SuperImplementation : SuperInterface
+    {
+        @Autowire public Bunena banana;
     }
 
-    interface Color {
+    interface Color
+    {
     }
 
-    class Blue : Color {
+    class Blue : Color
+    {
     }
 
-    class Red : Color {
+    class Red : Color
+    {
     }
 
-    class Spiders {
-        @Autowire
-        public TestInterface testMember;
+    class Spiders
+    {
+        @Autowire public TestInterface testMember;
     }
 
-    class Recursive {
-        @Autowire
-        public Recursive recursive;
+    class Recursive
+    {
+        @Autowire public Recursive recursive;
     }
 
-    class Moolah {}
-
-    class Wants {
-        @Autowire
-        public Moolah moolah;
+    class Moolah
+    {
     }
 
-    class John {
-        @Autowire
-        public Wants wants;
+    class Wants
+    {
+        @Autowire public Moolah moolah;
     }
 
-    class Cocktail {
-        @Autowire
-        public Moolah moolah;
+    class John
+    {
+        @Autowire public Wants wants;
+    }
+
+    class Cocktail
+    {
+        @Autowire public Moolah moolah;
 
         public Red red;
 
-        this(Red red) {
+        this(Red red)
+        {
             this.red = red;
         }
     }
 
-    class Wallpaper {
+    class Wallpaper
+    {
         public Color color;
 
-        this(Color color) {
+        this(Color color)
+        {
             this.color = color;
         }
     }
 
-    class Pot {
-        this(Kettle kettle) {}
+    class Pot
+    {
+        this(Kettle kettle)
+        {
+        }
     }
 
-    class Kettle {
-        this(Pot pot) {}
+    class Kettle
+    {
+        this(Pot pot)
+        {
+        }
     }
 
-    class Rock {
-        this(Scissors scissors) {}
+    class Rock
+    {
+        this(Scissors scissors)
+        {
+        }
     }
 
-    class Paper {
-        this(Rock rock) {}
+    class Paper
+    {
+        this(Rock rock)
+        {
+        }
     }
 
-    class Scissors {
-        this(Paper paper) {}
+    class Scissors
+    {
+        this(Paper paper)
+        {
+        }
     }
 
-    class Hello {
-        this(Ola ola) {}
+    class Hello
+    {
+        this(Ola ola)
+        {
+        }
     }
 
-    class PostConstructionDependency {
+    class PostConstructionDependency
+    {
         public bool postConstructWasCalled = false;
 
-        @PostConstruct
-        public void callMeMaybe() {
+        @PostConstruct public void callMeMaybe()
+        {
             postConstructWasCalled = true;
         }
     }
 
-    class ChildOfPostConstruction : PostConstructionDependency {}
-
-    interface ThereWillBePostConstruction {
-        @PostConstruct
-        void constructIt();
+    class ChildOfPostConstruction : PostConstructionDependency
+    {
     }
 
-    class ButThereWontBe : ThereWillBePostConstruction {
+    interface ThereWillBePostConstruction
+    {
+        @PostConstruct void constructIt();
+    }
+
+    class ButThereWontBe : ThereWillBePostConstruction
+    {
         public bool postConstructWasCalled = false;
 
-        public override void constructIt() {
+        public override void constructIt()
+        {
             postConstructWasCalled = true;
         }
     }
 
-    class PostConstructWithAutowiring {
-        @Autowire
-        private PostConstructionDependency dependency;
+    class PostConstructWithAutowiring
+    {
+        @Autowire private PostConstructionDependency dependency;
 
         @Value("")
         private int theNumber = 1;
 
-        @PostConstruct
-        public void doIt() {
+        @PostConstruct public void doIt()
+        {
             assert(theNumber == 8783);
             assert(dependency !is null);
         }
     }
 
-    class PreDestroyerOfFates {
+    class PreDestroyerOfFates
+    {
         public bool preDestroyWasCalled = false;
 
-        @PreDestroy
-        public void callMeMaybe() {
+        @PreDestroy public void callMeMaybe()
+        {
             preDestroyWasCalled = true;
         }
     }
 
-    class PostConstructingIntInjector : ValueInjector!int {
-        int get(string key) {
+    class PostConstructingIntInjector : ValueInjector!int
+    {
+        int get(string key)
+        {
             return 8783;
         }
     }
 
-    interface Fruit {
+    interface Fruit
+    {
         string getShape();
     }
 
-    interface Animal {
+    interface Animal
+    {
         string getYell();
     }
 
-    class Banana {
+    class Banana
+    {
         public string color;
 
-        this(string color) {
+        this(string color)
+        {
             this.color = color;
         }
     }
 
-    class Apple {}
+    class Apple
+    {
+    }
 
-    class Pear : Fruit {
-        public override string getShape() {
+    class Pear : Fruit
+    {
+        public override string getShape()
+        {
             return "Pear shaped";
         }
     }
 
-    class Rabbit : Animal {
-        public override string getYell() {
+    class Rabbit : Animal
+    {
+        public override string getYell()
+        {
             return "Squeeeeeel";
         }
     }
 
-    class Wolf : Animal {
-        public override string getYell() {
+    class Wolf : Animal
+    {
+        public override string getYell()
+        {
             return "Wooooooooooo";
         }
     }
 
-    class PieChart {}
+    class PieChart
+    {
+    }
 
-    class CakeChart : PieChart {}
+    class CakeChart : PieChart
+    {
+    }
 
-    class ClassWrapper {
+    class ClassWrapper
+    {
         public Object someClass;
 
-        this(Object someClass) {
+        this(Object someClass)
+        {
             this.someClass = someClass;
         }
     }
 
-    class ClassWrapperWrapper {
+    class ClassWrapperWrapper
+    {
         public ClassWrapper wrapper;
 
-        this(ClassWrapper wrapper) {
+        this(ClassWrapper wrapper)
+        {
             this.wrapper = wrapper;
         }
     }
 
-    class SimpleContext : ApplicationContext {
-        public override void registerDependencies(shared(DependencyContainer) container) {
+    class SimpleContext : ApplicationContext
+    {
+        public override void registerDependencies(shared(DependencyContainer) container)
+        {
             container.register!CakeChart;
         }
 
-        @Component
-        public Apple apple() {
+        @Component public Apple apple()
+        {
             return new Apple();
         }
     }
 
-    class ComplexAutowiredTestContext : ApplicationContext {
+    class ComplexAutowiredTestContext : ApplicationContext
+    {
 
-        @Autowire
-        private Apple apple;
+        @Autowire private Apple apple;
 
-        @Autowire
-        protected ClassWrapper classWrapper;
+        @Autowire protected ClassWrapper classWrapper;
 
-        public override void registerDependencies(shared(DependencyContainer) container) {
+        public override void registerDependencies(shared(DependencyContainer) container)
+        {
             container.register!Apple;
         }
 
-        @Component
-        public ClassWrapper wrapper() {
+        @Component public ClassWrapper wrapper()
+        {
             return new ClassWrapper(apple);
         }
 
-        @Component
-        public ClassWrapperWrapper wrapperWrapper() {
+        @Component public ClassWrapperWrapper wrapperWrapper()
+        {
             return new ClassWrapperWrapper(classWrapper);
         }
 
     }
 
-    class AutowiredTestContext : ApplicationContext {
+    class AutowiredTestContext : ApplicationContext
+    {
 
-        @Autowire
-        private Apple apple;
+        @Autowire private Apple apple;
 
-        @Component
-        public ClassWrapper wrapper() {
+        @Component public ClassWrapper wrapper()
+        {
             return new ClassWrapper(apple);
         }
     }
 
-    class TestContext : ApplicationContext {
+    class TestContext : ApplicationContext
+    {
 
-        @Component
-        public Banana banana() {
+        @Component public Banana banana()
+        {
             return new Banana("Yellow");
         }
 
-        public Apple apple() {
+        public Apple apple()
+        {
             return new Apple();
         }
 
-        @Component
-        @RegisterByType!Fruit
-        public Pear pear() {
+        @Component @RegisterByType!Fruit public Pear pear()
+        {
             return new Pear();
         }
 
-        @Component
-        @RegisterByType!Animal
-        public Rabbit rabbit() {
+        @Component @RegisterByType!Animal public Rabbit rabbit()
+        {
             return new Rabbit();
         }
 
-        @Component
-        @RegisterByType!Animal
-        public Wolf wolf() {
+        @Component @RegisterByType!Animal public Wolf wolf()
+        {
             return new Wolf();
         }
 
-        @Component
-        @Prototype
-        public PieChart pieChart() {
+        @Component @Prototype public PieChart pieChart()
+        {
             return new PieChart();
         }
     }
 
-    class TestImplementation : TestInterface {
+    class TestImplementation : TestInterface
+    {
         public string someContent = "";
     }
 
-    class SomeOtherClassThen {
+    class SomeOtherClassThen
+    {
     }
 
-    class ClassWithConstructor {
+    class ClassWithConstructor
+    {
         public TestImplementation testImplementation;
 
-        this(TestImplementation testImplementation) {
+        this(TestImplementation testImplementation)
+        {
             this.testImplementation = testImplementation;
         }
     }
 
-    class ClassWithMultipleConstructors {
+    class ClassWithMultipleConstructors
+    {
         public SomeOtherClassThen someOtherClassThen;
         public TestImplementation testImplementation;
 
-        this(SomeOtherClassThen someOtherClassThen) {
+        this(SomeOtherClassThen someOtherClassThen)
+        {
             this.someOtherClassThen = someOtherClassThen;
         }
 
-        this(SomeOtherClassThen someOtherClassThen, TestImplementation testImplementation) {
+        this(SomeOtherClassThen someOtherClassThen, TestImplementation testImplementation)
+        {
             this.someOtherClassThen = someOtherClassThen;
             this.testImplementation = testImplementation;
         }
     }
 
-    class ClassWithConstructorWithMultipleParameters {
+    class ClassWithConstructorWithMultipleParameters
+    {
         public SomeOtherClassThen someOtherClassThen;
         public TestImplementation testImplementation;
 
-        this(SomeOtherClassThen someOtherClassThen, TestImplementation testImplementation) {
+        this(SomeOtherClassThen someOtherClassThen, TestImplementation testImplementation)
+        {
             this.someOtherClassThen = someOtherClassThen;
             this.testImplementation = testImplementation;
         }
     }
 
-    class ClassWithPrimitiveConstructor {
+    class ClassWithPrimitiveConstructor
+    {
         public SomeOtherClassThen someOtherClassThen;
 
-        this(string willNotBePicked) {
+        this(string willNotBePicked)
+        {
         }
 
-        this(SomeOtherClassThen someOtherClassThen) {
+        this(SomeOtherClassThen someOtherClassThen)
+        {
             this.someOtherClassThen = someOtherClassThen;
         }
     }
 
-    class ClassWithEmptyConstructor {
+    class ClassWithEmptyConstructor
+    {
         public SomeOtherClassThen someOtherClassThen;
 
-        this() {
+        this()
+        {
         }
 
-        this(SomeOtherClassThen someOtherClassThen) {
+        this(SomeOtherClassThen someOtherClassThen)
+        {
             this.someOtherClassThen = someOtherClassThen;
         }
     }
 
-    class ClassWithNonInjectableConstructor {
-        this(string myName) {
+    class ClassWithNonInjectableConstructor
+    {
+        this(string myName)
+        {
         }
     }
 
-    class ClassWithStructConstructor {
+    class ClassWithStructConstructor
+    {
         public SomeOtherClassThen someOtherClassThen;
 
-        this(Thing willNotBePicked) {
+        this(Thing willNotBePicked)
+        {
         }
 
-        this(SomeOtherClassThen someOtherClassThen) {
+        this(SomeOtherClassThen someOtherClassThen)
+        {
             this.someOtherClassThen = someOtherClassThen;
         }
     }
 
-    class TestType {}
+    class TestType
+    {
+    }
 
-    class Dependency {}
+    class Dependency
+    {
+    }
 
-    struct Thing {
+    struct Thing
+    {
         int x;
     }
 
-    class MyConfig {
+    class MyConfig
+    {
         @Value("conf.stuffs")
         int stuffs;
 
@@ -543,85 +644,105 @@ version(unittest) {
         Thing thing;
     }
 
-    class ConfigWithDefaults {
+    class ConfigWithDefaults
+    {
         @Value("conf.missing")
         int noms = 9;
     }
 
-    class ConfigWithMandatory {
+    class ConfigWithMandatory
+    {
         @MandatoryValue("conf.mustbethere")
         int nums;
     }
 
-    class IntInjector : ValueInjector!int {
-        public override int get(string key) {
+    class IntInjector : ValueInjector!int
+    {
+        public override int get(string key)
+        {
             assert(key == "conf.stuffs");
             return 364;
         }
     }
 
-    class StringInjector : ValueInjector!string {
-        public override string get(string key) {
+    class StringInjector : ValueInjector!string
+    {
+        public override string get(string key)
+        {
             assert(key == "conf.name");
             return "Le Chef";
         }
     }
 
-    class ThingInjector : ValueInjector!Thing {
-        public override Thing get(string key) {
+    class ThingInjector : ValueInjector!Thing
+    {
+        public override Thing get(string key)
+        {
             assert(key == "conf.thing");
             return Thing(8899);
         }
     }
 
-    class DefaultIntInjector : ValueInjector!int {
-        public override int get(string key) {
+    class DefaultIntInjector : ValueInjector!int
+    {
+        public override int get(string key)
+        {
             throw new ValueNotAvailableException(key);
         }
     }
 
-    class MandatoryAvailableIntInjector : ValueInjector!int {
-        public override int get(string key) {
+    class MandatoryAvailableIntInjector : ValueInjector!int
+    {
+        public override int get(string key)
+        {
             return 7466;
         }
     }
 
-    class MandatoryUnavailableIntInjector : ValueInjector!int {
-        public override int get(string key) {
+    class MandatoryUnavailableIntInjector : ValueInjector!int
+    {
+        public override int get(string key)
+        {
             throw new ValueNotAvailableException(key);
         }
     }
 
-    class DependencyInjectedIntInjector : ValueInjector!int {
-        @Autowire
-        public Dependency dependency;
+    class DependencyInjectedIntInjector : ValueInjector!int
+    {
+        @Autowire public Dependency dependency;
 
-        public override int get(string key) {
+        public override int get(string key)
+        {
             return 2345;
         }
     }
 
-    class CircularIntInjector : ValueInjector!int {
-        @Autowire
-        public ValueInjector!int dependency;
+    class CircularIntInjector : ValueInjector!int
+    {
+        @Autowire public ValueInjector!int dependency;
 
         private int count = 0;
 
-        public override int get(string key) {
+        public override int get(string key)
+        {
             count += 1;
-            if (count >= 3) {
+            if (count >= 3)
+            {
                 return count;
             }
             return dependency.get(key);
         }
     }
 
-    class ValueInjectedIntInjector : ValueInjector!int {
+    class ValueInjectedIntInjector : ValueInjector!int
+    {
         @Value("five")
         public int count = 0;
 
-        public override int get(string key) {
-            if (key == "five") {
+        public override int get(string key)
+        {
+            if (key == "five")
+            {
                 return 5;
             }
 
@@ -629,12 +750,14 @@ version(unittest) {
         }
     }
 
-    class DependencyValueInjectedIntInjector : ValueInjector!int {
-        @Autowire
-        public ConfigWithDefaults config;
+    class DependencyValueInjectedIntInjector : ValueInjector!int
+    {
+        @Autowire public ConfigWithDefaults config;
 
-        public override int get(string key) {
-            if (key == "conf.missing") {
+        public override int get(string key)
+        {
+            if (key == "conf.missing")
+            {
                 return 8899;
             }
 
@@ -642,16 +765,18 @@ version(unittest) {
         }
     }
 
-    class TemplatedComponent(T) {
-        @Autowire
-        T instance;
+    class TemplatedComponent(T)
+    {
+        @Autowire T instance;
     }
 
-    class CircularTemplateComponentA : TemplatedComponent!CircularTemplateComponentB {
+    class CircularTemplateComponentA : TemplatedComponent!CircularTemplateComponentB
+    {
 
     }
 
-    class CircularTemplateComponentB : TemplatedComponent!CircularTemplateComponentA {
+    class CircularTemplateComponentB : TemplatedComponent!CircularTemplateComponentA
+    {
 
     }
 }

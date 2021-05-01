@@ -9,38 +9,44 @@ import poodinis;
 
 import std.stdio;
 
-class ADependency {
-	@PostConstruct
-	public void postConstructor() {
+class ADependency
+{
+	@PostConstruct public void postConstructor()
+	{
 		writeln("The dependency is created.");
 	}
 
-	public void callMe() {
+	public void callMe()
+	{
 		writeln("The dependency was called.");
 	}
 }
 
-class AClass {
-	@Autowire
-	public ADependency dependency; // Dependencies are autowired before the post-constructor is called.
+class AClass
+{
+	@Autowire public ADependency dependency; // Dependencies are autowired before the post-constructor is called.
 
-	@PostConstruct
-	public void postConstructor() {
+	@PostConstruct public void postConstructor()
+	{
 		writeln("The class is created.");
-		if (dependency !is null) {
+		if (dependency !is null)
+		{
 			writeln("The dependency is autowired.");
-		} else {
+		}
+		else
+		{
 			writeln("The dependency was NOT autowired.");
 		}
 	}
 
-	@PreDestroy
-	public void preDestructor() {
+	@PreDestroy public void preDestructor()
+	{
 		writeln("The class is no longer registered with the container.");
 	}
 }
 
-public void main() {
+public void main()
+{
 	auto container = new shared DependencyContainer();
 	container.register!(ADependency).onConstructed((Object obj) {
 		writeln("ADependency constructed");

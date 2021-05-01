@@ -10,26 +10,32 @@ import poodinis.test.testClasses;
 
 import std.exception;
 
-version(unittest) {
+version (unittest)
+{
 
-    struct LocalStruct {
+    struct LocalStruct
+    {
         bool wasInjected = false;
     }
 
-    class LocalStructInjector : ValueInjector!LocalStruct {
-        public override LocalStruct get(string key) {
+    class LocalStructInjector : ValueInjector!LocalStruct
+    {
+        public override LocalStruct get(string key)
+        {
             auto data = LocalStruct(true);
             return data;
         }
     }
 
-    class LocalClassWithStruct {
+    class LocalClassWithStruct
+    {
         @Value("")
         public LocalStruct localStruct;
     }
 
     // Test injection of values
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!MyConfig;
         container.register!(ValueInjector!int, IntInjector);
@@ -43,7 +49,8 @@ version(unittest) {
     }
 
     // Test injection of values throws exception when injector is not there
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!MyConfig;
         assertThrown!ResolveException(container.resolve!MyConfig);
@@ -52,7 +59,8 @@ version(unittest) {
     }
 
     // Test injection of values with defaults
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ConfigWithDefaults;
         container.register!(ValueInjector!int, DefaultIntInjector);
@@ -62,7 +70,8 @@ version(unittest) {
     }
 
     // Test mandatory injection of values which are available
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ConfigWithMandatory;
         container.register!(ValueInjector!int, MandatoryAvailableIntInjector);
@@ -72,7 +81,8 @@ version(unittest) {
     }
 
     // Test mandatory injection of values which are not available
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ConfigWithMandatory;
         container.register!(ValueInjector!int, MandatoryUnavailableIntInjector);
@@ -82,7 +92,8 @@ version(unittest) {
     }
 
     // Test injecting dependencies within value injectors
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         auto dependency = new Dependency();
         container.register!Dependency.existingInstance(dependency);
@@ -93,7 +104,8 @@ version(unittest) {
     }
 
     // Test injecting circular dependencies within value injectors
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(ValueInjector!int, CircularIntInjector);
         auto injector = cast(CircularIntInjector) container.resolve!(ValueInjector!int);
@@ -103,7 +115,8 @@ version(unittest) {
     }
 
     // Test value injection within value injectors
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(ValueInjector!int, ValueInjectedIntInjector);
         auto injector = cast(ValueInjectedIntInjector) container.resolve!(ValueInjector!int);
@@ -112,18 +125,21 @@ version(unittest) {
     }
 
     // Test value injection within dependencies of value injectors
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!ConfigWithDefaults;
 
         container.register!(ValueInjector!int, DependencyValueInjectedIntInjector);
-        auto injector = cast(DependencyValueInjectedIntInjector) container.resolve!(ValueInjector!int);
+        auto injector = cast(DependencyValueInjectedIntInjector) container.resolve!(
+                ValueInjector!int);
 
         assert(injector.config.noms == 8899);
     }
 
     // Test resolving locally defined struct injector (github issue #20)
-    unittest {
+    unittest
+    {
         auto container = new shared DependencyContainer();
         container.register!(ValueInjector!LocalStruct, LocalStructInjector);
         container.register!LocalClassWithStruct;

@@ -14,9 +14,11 @@
 module poodinis.registration;
 
 import poodinis.container : DependencyContainer;
-import poodinis.factory : InstanceFactory, InstanceEventHandler, InstanceCreationException, InstanceFactoryParameters, CreatesSingleton;
+import poodinis.factory : InstanceFactory, InstanceEventHandler,
+    InstanceCreationException, InstanceFactoryParameters, CreatesSingleton;
 
-class Registration {
+class Registration
+{
     private TypeInfo _registeredType = null;
     private TypeInfo_Class _instanceType = null;
     private Registration linkedRegistration;
@@ -24,56 +26,70 @@ class Registration {
     private InstanceFactory _instanceFactory;
     private void delegate() _preDestructor;
 
-    public @property registeredType() {
+    public @property registeredType()
+    {
         return _registeredType;
     }
 
-    public @property instanceType() {
+    public @property instanceType()
+    {
         return _instanceType;
     }
 
-    public @property originatingContainer() {
+    public @property originatingContainer()
+    {
         return _originatingContainer;
     }
 
-    public @property instanceFactory() {
+    public @property instanceFactory()
+    {
         return _instanceFactory;
     }
 
-    public @property preDestructor() {
+    public @property preDestructor()
+    {
         return _preDestructor;
     }
 
-    protected @property preDestructor(void delegate() preDestructor) {
+    protected @property preDestructor(void delegate() preDestructor)
+    {
         _preDestructor = preDestructor;
     }
 
-    this(TypeInfo registeredType, TypeInfo_Class instanceType, InstanceFactory instanceFactory, shared(DependencyContainer) originatingContainer) {
+    this(TypeInfo registeredType, TypeInfo_Class instanceType,
+            InstanceFactory instanceFactory, shared(DependencyContainer) originatingContainer)
+    {
         this._registeredType = registeredType;
         this._instanceType = instanceType;
         this._originatingContainer = originatingContainer;
         this._instanceFactory = instanceFactory;
     }
 
-    public Object getInstance(InstantiationContext context = new InstantiationContext()) {
-        if (linkedRegistration !is null) {
+    public Object getInstance(InstantiationContext context = new InstantiationContext())
+    {
+        if (linkedRegistration !is null)
+        {
             return linkedRegistration.getInstance(context);
         }
 
-        if (instanceFactory is null) {
-            throw new InstanceCreationException("No instance factory defined for registration of type " ~ registeredType.toString());
+        if (instanceFactory is null)
+        {
+            throw new InstanceCreationException(
+                    "No instance factory defined for registration of type " ~ registeredType.toString());
         }
 
         return instanceFactory.getInstance();
     }
 
-    public Registration linkTo(Registration registration) {
+    public Registration linkTo(Registration registration)
+    {
         this.linkedRegistration = registration;
         return this;
     }
 
-    Registration onConstructed(InstanceEventHandler handler) {
-        if(instanceFactory !is null)
+    Registration onConstructed(InstanceEventHandler handler)
+    {
+        if (instanceFactory !is null)
             instanceFactory.onConstructed(handler);
         return this;
     }
@@ -84,53 +100,66 @@ class Registration {
  *
  * Effectively makes the given registration a singleton.
  */
-public Registration singleInstance(Registration registration) {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.yes);
+public Registration singleInstance(Registration registration)
+{
+    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
+            registration.instanceType, CreatesSingleton.yes);
     return registration;
 }
 
 /**
  * Scopes registrations to return a new instance every time the given registration is resolved.
  */
-public Registration newInstance(Registration registration) {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.no);
+public Registration newInstance(Registration registration)
+{
+    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
+            registration.instanceType, CreatesSingleton.no);
     return registration;
 }
 
 /**
  * Scopes registrations to return the given instance every time the given registration is resolved.
  */
-public Registration existingInstance(Registration registration, Object instance) {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.yes, instance);
+public Registration existingInstance(Registration registration, Object instance)
+{
+    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
+            registration.instanceType, CreatesSingleton.yes, instance);
     return registration;
 }
 
 /**
  * Scopes registrations to create new instances using the given initializer delegate.
  */
-public Registration initializedBy(T : Object)(Registration registration, T delegate() initializer) {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.no, null, {
-         return cast(Object) initializer();
+public Registration initializedBy(T : Object)(Registration registration, T delegate() initializer)
+{
+    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
+            registration.instanceType, CreatesSingleton.no, null, {
+        return cast(Object) initializer();
     });
-    
+
     return registration;
 }
 
 /**
  * Scopes registrations to create a new instance using the given initializer delegate. On subsequent resolves the same instance is returned.
  */
-public Registration initializedOnceBy(T : Object)(Registration registration, T delegate() initializer) {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, CreatesSingleton.yes, null, {
-         return cast(Object) initializer();
+public Registration initializedOnceBy(T : Object)(Registration registration, T delegate() initializer)
+{
+    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
+            registration.instanceType, CreatesSingleton.yes, null, {
+        return cast(Object) initializer();
     });
-    
+
     return registration;
 }
 
-public string toConcreteTypeListString(Registration[] registrations) {
+public string toConcreteTypeListString(Registration[] registrations)
+{
     auto concreteTypeListString = "";
-    foreach (registration ; registrations) {
-        if (concreteTypeListString.length > 0) {
+    foreach (registration; registrations)
+    {
+        if (concreteTypeListString.length > 0)
+        {
             concreteTypeListString ~= ", ";
         }
         concreteTypeListString ~= registration.instanceType.toString();
@@ -138,4 +167,6 @@ public string toConcreteTypeListString(Registration[] registrations) {
     return concreteTypeListString;
 }
 
-class InstantiationContext {}
+class InstantiationContext
+{
+}

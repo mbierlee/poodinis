@@ -20,21 +20,27 @@ import poodinis.autowire : autowire;
 
 import std.traits : hasUDA, ReturnType;
 
-class ApplicationContext {
-    public void registerDependencies(shared(DependencyContainer) container) {}
+class ApplicationContext
+{
+    public void registerDependencies(shared(DependencyContainer) container)
+    {
+    }
 }
 
 /**
 * A component annotation is used for specifying which factory methods produce components in
 * an application context.
 */
-struct Component {}
+struct Component
+{
+}
 
 /**
 * This annotation allows you to specify by which super type the component should be registered. This
 * enables you to use type-qualified alternatives for dependencies.
 */
-struct RegisterByType(Type) {
+struct RegisterByType(Type)
+{
     Type type;
 }
 
@@ -42,7 +48,9 @@ struct RegisterByType(Type) {
 * Components with the prototype registration will be scoped as dependencies which will create
 * new instances every time they are resolved. The factory method will be called repeatedly.
 */
-struct Prototype {}
+struct Prototype
+{
+}
 
 /**
 * Register dependencies through an application context.
@@ -51,7 +59,8 @@ struct Prototype {}
 * It is mostly used for dependencies which come from an external library or when you don't
 * want to use annotations to set-up dependencies in your classes.
 */
-public void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container) {
+public void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container)
+{
     auto context = new Context();
     context.registerDependencies(container);
     context.registerContextComponents(container);
@@ -59,26 +68,38 @@ public void registerContext(Context : ApplicationContext)(shared(DependencyConta
     autowire(container, context);
 }
 
-public void registerContextComponents(ApplicationContextType : ApplicationContext)(ApplicationContextType context, shared(DependencyContainer) container) {
-    foreach (member ; __traits(allMembers, ApplicationContextType)) {
-        static if (__traits(getProtection, __traits(getMember, context, member)) == "public" && hasUDA!(__traits(getMember, context, member), Component)) {
+public void registerContextComponents(ApplicationContextType : ApplicationContext)(
+        ApplicationContextType context, shared(DependencyContainer) container)
+{
+    foreach (member; __traits(allMembers, ApplicationContextType))
+    {
+        static if (__traits(getProtection, __traits(getMember, context,
+                member)) == "public" && hasUDA!(__traits(getMember, context, member), Component))
+        {
             auto factoryMethod = &__traits(getMember, context, member);
             Registration registration = null;
             auto createsSingleton = CreatesSingleton.yes;
 
-            foreach(attribute; __traits(getAttributes, __traits(getMember, context, member))) {
-                static if (is(attribute == RegisterByType!T, T)) {
-                    registration = container.register!(typeof(attribute.type), ReturnType!factoryMethod);
-                } else static if (__traits(isSame, attribute, Prototype)) {
+            foreach (attribute; __traits(getAttributes, __traits(getMember, context, member)))
+            {
+                static if (is(attribute == RegisterByType!T, T))
+                {
+                    registration = container.register!(typeof(attribute.type),
+                            ReturnType!factoryMethod);
+                }
+                else static if (__traits(isSame, attribute, Prototype))
+                {
                     createsSingleton = CreatesSingleton.no;
                 }
             }
 
-            if (registration is null) {
+            if (registration is null)
+            {
                 registration = container.register!(ReturnType!factoryMethod);
             }
 
-            registration.instanceFactory.factoryParameters = InstanceFactoryParameters(registration.instanceType, createsSingleton, null, factoryMethod);
+            registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
+                    registration.instanceType, createsSingleton, null, factoryMethod);
         }
     }
 }
