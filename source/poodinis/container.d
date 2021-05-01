@@ -18,13 +18,12 @@ import poodinis.autowire;
 import poodinis.context;
 import poodinis.factory;
 import poodinis.valueinjection;
-import poodinis.polyfill;
+import poodinis.altphobos : isFunction;
 import poodinis.imports;
 
-import std.string;
-import std.algorithm;
-import std.concurrency;
-import std.traits;
+import std.string : format;
+import std.algorithm: canFind;
+import std.traits : fullyQualifiedName, hasUDA, BaseTypeTuple;
 import std.meta : AliasSeq;
 
 debug {

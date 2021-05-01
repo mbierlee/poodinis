@@ -21,14 +21,17 @@ import poodinis.container;
 import poodinis.registration;
 import poodinis.factory;
 import poodinis.valueinjection;
-import poodinis.polyfill;
+import poodinis.altphobos : isFunction;
 import poodinis.imports;
 
-import std.exception;
-import std.stdio;
-import std.string;
-import std.traits;
-import std.range;
+import std.exception : enforce;
+import std.string : format;
+import std.traits : BaseClassesTuple, FieldNameTuple, fullyQualifiedName, hasUDA, isDynamicArray;
+import std.range : ElementType;
+
+debug {
+    import std.stdio : writeln;
+}
 
 private struct UseMemberType {}
 
@@ -92,7 +95,9 @@ struct OptionalDependency {}
 struct AssignNewInstance {}
 
 private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAddress) {
-    writeln(format("DEBUG: Autowiring members of [%s@%s]", instanceType, instanceAddress));
+    debug {
+        writeln(format("DEBUG: Autowiring members of [%s@%s]", instanceType, instanceAddress));
+    }
 }
 
 /**
@@ -121,11 +126,15 @@ public void autowire(Type)(shared(DependencyContainer) container, Type instance)
 }
 
 private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType, void* candidateInstanceAddress, TypeInfo instanceType, void* instanceAddress, string member) {
-    writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", candidateInstanceType, candidateInstanceAddress, instanceType, instanceAddress, member));
+    debug {
+        writeln(format("DEBUG: Autowired instance [%s@%s] to [%s@%s].%s", candidateInstanceType, candidateInstanceAddress, instanceType, instanceAddress, member));
+    }
 }
 
 private void printDebugAutowiringArray(TypeInfo superTypeInfo, TypeInfo instanceType, void* instanceAddress, string member) {
-    writeln(format("DEBUG: Autowired all registered instances of super type %s to [%s@%s].%s", superTypeInfo, instanceType, instanceAddress, member));
+    debug {
+        writeln(format("DEBUG: Autowired all registered instances of super type %s to [%s@%s].%s", superTypeInfo, instanceType, instanceAddress, member));
+    }
 }
 
 private void autowireMember(string member, size_t memberIndex, Type)(shared(DependencyContainer) container, Type instance) {
@@ -227,7 +236,9 @@ private void injectValue(string member, size_t memberIndex, string key, bool man
 }
 
 private void printDebugValueInjection(TypeInfo instanceType, void* instanceAddress, string member, TypeInfo valueType, string key) {
-    writeln(format("DEBUG: Injected value with key '%s' of type %s into [%s@%s].%s", key, valueType, instanceType, instanceAddress, member));
+    debug {
+        writeln(format("DEBUG: Injected value with key '%s' of type %s into [%s@%s].%s", key, valueType, instanceType, instanceAddress, member));
+    }
 }
 
 /**
