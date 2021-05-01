@@ -11,9 +11,12 @@
 
 module poodinis;
 
+public import poodinis.altphobos;
 public import poodinis.autowire;
 public import poodinis.container;
-public import poodinis.registration;
 public import poodinis.context;
 public import poodinis.factory;
+public import poodinis.imports;
+public import poodinis.polyfill;
+public import poodinis.registration;
 public import poodinis.valueinjection;

@@ -13,8 +13,8 @@
 
 module poodinis.registration;
 
-import poodinis.container;
-import poodinis.factory;
+import poodinis.container : DependencyContainer;
+import poodinis.factory : InstanceFactory, InstanceEventHandler, InstanceCreationException, InstanceFactoryParameters, CreatesSingleton;
 
 class Registration {
     private TypeInfo _registeredType = null;

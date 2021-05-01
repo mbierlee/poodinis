@@ -13,12 +13,12 @@
 
 module poodinis.context;
 
-import poodinis.container;
-import poodinis.registration;
-import poodinis.factory;
-import poodinis.autowire;
+import poodinis.container : DependencyContainer;
+import poodinis.registration : Registration, existingInstance;
+import poodinis.factory : CreatesSingleton, InstanceFactoryParameters;
+import poodinis.autowire : autowire;
 
-import std.traits;
+import std.traits : hasUDA, ReturnType;
 
 class ApplicationContext {
     public void registerDependencies(shared(DependencyContainer) container) {}

@@ -11,9 +11,9 @@
  */
 module poodinis.valueinjection;
 
-import std.exception;
-import std.string;
-import poodinis.polyfill;
+import poodinis.polyfill : basicExceptionCtors;
+
+import std.string : format;
 
 /**
  * Thrown when something goes wrong during value injection.

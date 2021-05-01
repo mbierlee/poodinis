@@ -13,13 +13,12 @@
 
 module poodinis.container;
 
-import poodinis.registration;
-import poodinis.autowire;
-import poodinis.context;
-import poodinis.factory;
-import poodinis.valueinjection;
+import poodinis.registration : Registration, singleInstance, toConcreteTypeListString;
+import poodinis.autowire : AutowiredRegistration, AutowireInstantiationContext;
+import poodinis.factory : ConstructorInjectingInstanceFactory;
+import poodinis.valueinjection : ValueInjectionException;
 import poodinis.altphobos : isFunction;
-import poodinis.imports;
+import poodinis.imports : createImportsString;
 
 import std.string : format;
 import std.algorithm: canFind;

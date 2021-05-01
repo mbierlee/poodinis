@@ -11,14 +11,17 @@
 
 module poodinis.factory;
 
-import poodinis.container;
-import poodinis.imports;
+import poodinis.container : DependencyContainer;
+import poodinis.imports : createImportsString;
 
-import std.typecons;
-import std.exception;
-import std.traits;
-import std.string;
-import std.stdio;
+import std.typecons : Flag;
+import std.exception : enforce;
+import std.traits : Parameters, isBuiltinType, fullyQualifiedName;
+import std.string : format;
+
+debug {
+    import std.stdio : writeln;
+}
 
 alias CreatesSingleton = Flag!"CreatesSingleton";
 alias InstanceFactoryMethod = Object delegate();
@@ -89,18 +92,22 @@ class InstanceFactory {
     }
 
     private void printDebugUseExistingInstance() {
-        if (_factoryParameters.instanceType !is null) {
-            writeln(format("DEBUG: Existing instance returned of type %s", _factoryParameters.instanceType.toString()));
-        } else {
-            writeln("DEBUG: Existing instance returned from custom factory method");
+        debug {
+            if (_factoryParameters.instanceType !is null) {
+                writeln(format("DEBUG: Existing instance returned of type %s", _factoryParameters.instanceType.toString()));
+            } else {
+                writeln("DEBUG: Existing instance returned from custom factory method");
+            }
         }
     }
 
     private void printDebugCreateNewInstance() {
-        if (_factoryParameters.instanceType !is null) {
-            writeln(format("DEBUG: Creating new instance of type %s", _factoryParameters.instanceType.toString()));
-        } else {
-            writeln("DEBUG: Creating new instance from custom factory method");
+        debug {
+            if (_factoryParameters.instanceType !is null) {
+                writeln(format("DEBUG: Creating new instance of type %s", _factoryParameters.instanceType.toString()));
+            } else {
+                writeln("DEBUG: Creating new instance from custom factory method");
+            }
         }
     }
 

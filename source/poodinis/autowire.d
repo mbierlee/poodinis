@@ -17,12 +17,12 @@
 
 module poodinis.autowire;
 
-import poodinis.container;
-import poodinis.registration;
-import poodinis.factory;
-import poodinis.valueinjection;
+import poodinis.container : DependencyContainer, PreDestroy, ResolveException, ResolveOption;
+import poodinis.registration : Registration, InstantiationContext;
+import poodinis.factory : InstanceFactory, InstanceFactoryParameters, CreatesSingleton;
+import poodinis.valueinjection : ValueInjector, ValueInjectionException, ValueNotAvailableException, Value, MandatoryValue;
 import poodinis.altphobos : isFunction;
-import poodinis.imports;
+import poodinis.imports : createImportsString;
 
 import std.exception : enforce;
 import std.string : format;

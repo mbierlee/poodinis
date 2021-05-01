@@ -11,8 +11,8 @@
 
 module poodinis.imports;
 
-import std.meta;
-import std.traits;
+import std.meta : staticIndexOf;
+import std.traits : moduleName, TemplateArgsOf, isBuiltinType;
 
 public static string createImportsString(Type, ParentTypeList...)() {
     string imports = `import ` ~ moduleName!Type ~ `;`;

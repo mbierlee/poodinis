@@ -26,19 +26,36 @@
 module poodinis.polyfill;
 
 import std.exception;
-import std.traits;
 
 static if (!__traits(compiles, basicExceptionCtors)) {
     mixin template basicExceptionCtors()
     {
-        this(string msg, string file = __FILE__, size_t line = __LINE__, Throwable next = null) @safe pure nothrow
+        /++
+            Params:
+                msg  = The message for the exception.
+                file = The file where the exception occurred.
+                line = The line number where the exception occurred.
+                next = The previous exception in the chain of exceptions, if any.
+        +/
+        this(string msg, string file = __FILE__, size_t line = __LINE__,
+            Throwable next = null) @nogc @safe pure nothrow
         {
             super(msg, file, line, next);
         }
 
-        this(string msg, Throwable next, string file = __FILE__, size_t line = __LINE__) @safe pure nothrow
+        /++
+            Params:
+                msg  = The message for the exception.
+                next = The previous exception in the chain of exceptions.
+                file = The file where the exception occurred.
+                line = The line number where the exception occurred.
+        +/
+        this(string msg, Throwable next, string file = __FILE__,
+            size_t line = __LINE__) @nogc @safe pure nothrow
         {
             super(msg, file, line, next);
         }
     }
+} else {
+    public import std.exception : basicExceptionCtors;
 }
