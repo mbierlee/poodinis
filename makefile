@@ -1,5 +1,6 @@
 .PHONY: build
 .PHONY: test
+.PHONY: clean
 
 build:
 	dub build --build=release
