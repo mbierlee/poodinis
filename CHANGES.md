@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.1.0-beta.5**
+* FIX initializedBy not creating objects when registering by interface (PR #34)
+
 **Version 8.1.0-beta.4**
 * ADD compilation failure when trying to register a class by a supertype it does not inherit from. (#31)
 * FIX breakage due to refactored isFunction from Phobos' traits module. (Fixes #32)
