@@ -130,7 +130,8 @@ public Registration existingInstance(Registration registration, Object instance)
 /**
  * Scopes registrations to create new instances using the given initializer delegate.
  */
-public Registration initializedBy(T : Object)(Registration registration, T delegate() initializer)
+public Registration initializedBy(T)(Registration registration, T delegate() initializer) 
+    if(is(T == class) || is(T == interface)) 
 {
     registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
             registration.instanceType, CreatesSingleton.no, null, {
