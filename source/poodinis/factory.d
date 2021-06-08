@@ -167,7 +167,7 @@ class ConstructorInjectingInstanceFactory(InstanceType) : InstanceFactory
                 argumentList ~= ",";
             }
 
-            argumentList ~= "container.resolve!" ~ param.stringof;
+            argumentList ~= "container.resolve!(" ~ param.stringof ~ ")";
         }
         return argumentList;
     }
