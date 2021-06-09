@@ -1,0 +1,14 @@
+# EditorConfig allows multiple IDE's to use same formatting rules: https://EditorConfig.org
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+charset = utf-8
+
+[*.yml]
+indent_size = 2
+insert_final_newline = false
