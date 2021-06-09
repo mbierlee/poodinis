@@ -3,6 +3,11 @@ name: CI
 # Overall Poodinis should work on a fairly wide variety of D versions. Similar to Vibe.d, the last
 # 10 compiler releases should certainly be supported. As GCC supports D version 2.076, this should 
 # continue to be supported. 
+# 
+# While testing I found:
+#   Ubuntu builds work with D >= 2.072
+#   Windows builds work with D >= 2.075
+#   Mac builds work with D >= 2.088
 
 on:
   schedule:
@@ -12,13 +17,51 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  # Make sure the latest versions of dub and ldc work on all platforms
+  build-latest:
     name: ${{ matrix.compiler }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
+        compiler:
+          - dmd-latest
+          - ldc-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install D ${{ matrix.compiler }}
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ${{ matrix.compiler }}
+
+      - name: Build library
+        run: dub build --build=release --config=library
+
+      - name: Build unittest
+        run: dub test --build=unittest --config=unittest
+
+      - name: Build examples  
+        run: |
+          dub run --build=release --config=quickstartExample
+          dub run --build=release --config=qualifiersExample
+          dub run --build=release --config=arrayCompletionExample
+          dub run --build=release --config=annotationsExample
+          dub run --build=release --config=applicationContextExample
+          dub run --build=release --config=registerOnResolveExample
+          dub run --build=release --config=constructorInjectionExample
+          dub run --build=release --config=valueInjectionExample
+          dub run --build=release --config=postConstructorPreDestructorExample
+
+  # Ensure poodinis can build on everything from 2.076 to latest. These builds are Ubuntu only for speed
+  build-older:
+    name: ${{ matrix.compiler }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
         compiler:
           - dmd-latest
           - ldc-latest
@@ -30,19 +73,12 @@ jobs:
           - dmd-2.091.1
           - dmd-2.090.1
           - dmd-2.089.1
-          - dmd-2.088.1
+          - dmd-2.088.1 # mac-latest is ok with dmd-2.088 or higher but the ldc versions can be a problem
           - dmd-2.087.1
           - dmd-2.086.1
           - dmd-2.085.1
           - dmd-2.077.1
           - dmd-2.076.1 # gdc (gcc v9 - v11.1) supports D at this version
-          - dmd-2.075.1
-          - dmd-2.074.1
-          - dmd-2.073.2
-          - dmd-2.072.2
-          - dmd-2.071.2
-          - dmd-2.070.2
-          - dmd-2.069.2
           - ldc-1.25.1 # eq to dmd v2.095.1
           - ldc-1.24.0 # eq to dmd v2.094.1
           - ldc-1.23.0 # eq to dmd v2.093.1
