@@ -115,3 +115,45 @@ jobs:
           dub run --build=release --config=constructorInjectionExample
           dub run --build=release --config=valueInjectionExample
           dub run --build=release --config=postConstructorPreDestructorExample
+
+  # On Ubuntu we can use GDC (so keep working for D version 2.076)
+  gdc-latest:
+    name: GDC on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install DMD (so dub is available)
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: dmd-latest
+
+      - name: Install GDC
+        run: |
+          sudo apt-get update
+          sudo apt-get install gdc -y
+          gdc --version
+
+      - name: Build library
+        env:
+          DC: gdc
+        run: dub build --compiler=gdc --build=release --config=library
+
+      - name: Build unittest
+        env:
+          DC: gdc
+        run: dub test --compiler=gdc --build=unittest --config=unittest
+
+      - name: Build examples
+        env:
+          DC: gdc
+        run: |
+          dub run --compiler=gdc --build=release --config=quickstartExample
+          dub run --compiler=gdc --build=release --config=qualifiersExample
+          dub run --compiler=gdc --build=release --config=arrayCompletionExample
+          dub run --compiler=gdc --build=release --config=annotationsExample
+          dub run --compiler=gdc --build=release --config=applicationContextExample
+          dub run --compiler=gdc --build=release --config=registerOnResolveExample
+          dub run --compiler=gdc --build=release --config=constructorInjectionExample
+          dub run --compiler=gdc --build=release --config=valueInjectionExample
+          dub run --compiler=gdc --build=release --config=postConstructorPreDestructorExample
