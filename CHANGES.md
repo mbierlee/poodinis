@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.1.0-beta.6**
+* FIX multiple template arguments not allowed on constructor argument injection (PR #37)
+
 **Version 8.1.0-beta.5**
 * FIX initializedBy not creating objects when registering by interface (PR #34)
 
