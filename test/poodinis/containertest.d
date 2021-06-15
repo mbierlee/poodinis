@@ -547,6 +547,20 @@ version (unittest)
         assert(instance.red is container.resolve!Red);
     }
 
+    // Test autowired, constructor injected class where constructor argument is templated
+    unittest
+    {
+        auto container = new shared DependencyContainer();
+        container.register!PieChart;
+        container.register!(TemplatedComponent!PieChart);
+        container.register!(ClassWithTemplatedConstructorArg!PieChart);
+        auto instance = container.resolve!(ClassWithTemplatedConstructorArg!PieChart);
+
+        assert(instance !is null);
+        assert(instance.dependency !is null);
+        assert(instance.dependency.instance !is null);
+    }
+
     // Test injecting constructor with super-type parameter
     unittest
     {

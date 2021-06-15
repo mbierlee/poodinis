@@ -779,4 +779,14 @@ version (unittest)
     {
 
     }
+
+    class ClassWithTemplatedConstructorArg(T)
+    {
+        public TemplatedComponent!T dependency;
+
+        this(TemplatedComponent!T assignedDependency)
+        {
+            this.dependency = assignedDependency;
+        }
+    }
 }
