@@ -1,0 +1,159 @@
+name: CI
+
+# Overall Poodinis should work on a fairly wide variety of D versions. Similar to Vibe.d, the last
+# 10 compiler releases should certainly be supported. As GCC supports D version 2.076, this should 
+# continue to be supported. 
+# 
+# While testing I found:
+#   Ubuntu builds work with D >= 2.072
+#   Windows builds work with D >= 2.075
+#   Mac builds work with D >= 2.088
+
+on:
+  schedule:
+    - cron: '45 6 1 * *'
+  push:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Make sure the latest versions of dub and ldc work on all platforms
+  build-latest:
+    name: ${{ matrix.compiler }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        compiler:
+          - dmd-latest
+          - ldc-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install D ${{ matrix.compiler }}
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ${{ matrix.compiler }}
+
+      - name: Build library
+        run: dub build --build=release --config=library
+
+      - name: Build unittest
+        run: dub test --build=unittest --config=unittest
+
+      - name: Build examples  
+        run: |
+          dub run --build=release --config=quickstartExample
+          dub run --build=release --config=qualifiersExample
+          dub run --build=release --config=arrayCompletionExample
+          dub run --build=release --config=annotationsExample
+          dub run --build=release --config=applicationContextExample
+          dub run --build=release --config=registerOnResolveExample
+          dub run --build=release --config=constructorInjectionExample
+          dub run --build=release --config=valueInjectionExample
+          dub run --build=release --config=postConstructorPreDestructorExample
+
+  # Ensure poodinis can build on everything from 2.076 to latest. These builds are Ubuntu only for speed
+  build-older:
+    name: ${{ matrix.compiler }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        compiler:
+          - dmd-latest
+          - ldc-latest
+          - dmd-2.096.1
+          - dmd-2.095.1
+          - dmd-2.094.2
+          - dmd-2.093.1
+          - dmd-2.092.1
+          - dmd-2.091.1
+          - dmd-2.090.1
+          - dmd-2.089.1
+          - dmd-2.088.1 # mac-latest is ok with dmd-2.088 or higher but the ldc versions can be a problem
+#          - dmd-2.087.1
+#          - dmd-2.086.1
+#          - dmd-2.085.1
+#          - dmd-2.077.1
+          - dmd-2.076.1 # gdc (gcc v9 - v11.1) supports D at this version
+#          - ldc-1.25.1 # eq to dmd v2.095.1 (excluded as this version seemed to be a bad release)
+          - ldc-1.24.0 # eq to dmd v2.094.1
+          - ldc-1.23.0 # eq to dmd v2.093.1
+#          - ldc-1.22.0 # eq to dmd v2.092.1
+#          - ldc-1.21.0 # eq to dmd v2.091.1
+#          - ldc-1.20.1 # eq to dmd v2.090.1
+#          - ldc-1.19.0 # eq to dmd v2.089.1
+#          - ldc-1.18.0 # eq to dmd v2.088.1
+#          - ldc-1.17.0 # eq to dmd v2.087
+#          - ldc-1.16.0 # eq to dmd v2.086.1
+          - ldc-1.15.0 # eq to dmd v2.085.1
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install D ${{ matrix.compiler }}
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: ${{ matrix.compiler }}
+
+      - name: Build library
+        run: dub build --build=release --config=library
+
+      - name: Build unittest
+        run: dub test --build=unittest --config=unittest
+
+      - name: Build examples  
+        run: |
+          dub run --build=release --config=quickstartExample
+          dub run --build=release --config=qualifiersExample
+          dub run --build=release --config=arrayCompletionExample
+          dub run --build=release --config=annotationsExample
+          dub run --build=release --config=applicationContextExample
+          dub run --build=release --config=registerOnResolveExample
+          dub run --build=release --config=constructorInjectionExample
+          dub run --build=release --config=valueInjectionExample
+          dub run --build=release --config=postConstructorPreDestructorExample
+
+  # On Ubuntu we can use GDC (so keep working for D version 2.076)
+  gdc-latest:
+    name: GDC on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install DMD (so dub is available)
+        uses: dlang-community/setup-dlang@v1
+        with:
+          compiler: dmd-latest
+
+      - name: Install GDC
+        run: |
+          sudo apt-get update
+          sudo apt-get install gdc -y
+          gdc --version
+
+      - name: Build library
+        env:
+          DC: gdc
+        run: dub build --compiler=gdc --build=release --config=library
+
+      - name: Build unittest
+        env:
+          DC: gdc
+        run: dub test --compiler=gdc --build=unittest --config=unittest
+
+      - name: Build examples
+        env:
+          DC: gdc
+        run: |
+          dub run --compiler=gdc --build=release --config=quickstartExample
+          dub run --compiler=gdc --build=release --config=qualifiersExample
+          dub run --compiler=gdc --build=release --config=arrayCompletionExample
+          dub run --compiler=gdc --build=release --config=annotationsExample
+          dub run --compiler=gdc --build=release --config=applicationContextExample
+          dub run --compiler=gdc --build=release --config=registerOnResolveExample
+          dub run --compiler=gdc --build=release --config=constructorInjectionExample
+          dub run --compiler=gdc --build=release --config=valueInjectionExample
+          dub run --compiler=gdc --build=release --config=postConstructorPreDestructorExample
