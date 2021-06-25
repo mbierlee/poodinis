@@ -8,17 +8,34 @@
 import poodinis;
 import std.stdio;
 
-class Doohickey
+
+class DoohickeyBase
 {
 }
+
+class Doohickey : DoohickeyBase
+{
+}
+
+class DoohickeyExt : Doohickey
+{
+}
+
+
 
 void main()
 {
     auto dependencies = new shared DependencyContainer();
-    dependencies.register!Doohickey.initializedBy({
+    dependencies.register!(DoohickeyBase, Doohickey).initializedBy({
         writeln("Creating Doohickey via initializer delegate.");
         return new Doohickey();
-    });
+    }).singleInstance();
 
+    dependencies.register!(DoohickeyBase, DoohickeyExt).initializedBy({
+        writeln("Creating Doohickey via initializer delegate.");
+        return new Doohickey();
+    }).singleInstance();  
+    
     dependencies.resolve!Doohickey;
+  
 }
