@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.1.0-beta.7**
+* REVERT fix for issue #31. It broke too many valid cases.
+
 **Version 8.1.0-beta.6**
 * FIX multiple template arguments not allowed on constructor argument injection (PR #37)
 

@@ -789,4 +789,19 @@ version (unittest)
             this.dependency = assignedDependency;
         }
     }
+
+    class Grandma
+    {
+
+    }
+
+    class Mommy : Grandma
+    {
+
+    }
+
+    class Kid : Mommy
+    {
+
+    }
 }

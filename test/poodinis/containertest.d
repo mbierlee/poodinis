@@ -673,4 +673,14 @@ version (unittest)
 
         assert(instance.preDestroyWasCalled == true);
     }
+
+    // Test register class by ancestor type
+    unittest
+    {
+        auto container = new shared DependencyContainer();
+        container.register!(Grandma, Kid);
+        auto instance = container.resolve!Grandma;
+
+        assert(instance !is null);
+    }
 }
