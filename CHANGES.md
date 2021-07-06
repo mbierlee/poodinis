@@ -1,28 +1,12 @@
 Poodinis Changelog
 ==================
-**Version 8.1.0-beta.7**
-* REVERT fix for issue #31. It broke too many valid cases.
-
-**Version 8.1.0-beta.6**
-* FIX multiple template arguments not allowed on constructor argument injection (PR #37)
-
-**Version 8.1.0-beta.5**
-* FIX initializedBy not creating objects when registering by interface (PR #34)
-
-**Version 8.1.0-beta.4**
-* ADD compilation failure when trying to register a class by a supertype it does not inherit from. (#31)
-* FIX breakage due to refactored isFunction from Phobos' traits module. (Fixes #32)
-
-**Version 8.1.0-beta.3**
-* CHANGE injection initializers to be defined as a registration scope instead of via Container.register(). See initializedBy().
-* ADD initializedOnceBy() to create singleton instances via injection initializer.
-
-**Version 8.1.0-beta.2**
-* FIX inheritance type template in custom instance creator (PR #29)
-
-**Version 8.1.0-beta**
+**Version 8.1.0**
 * ADD ability to provide custom instance creator when registering a dependency (PR #28)
 * ADD post-instance-consruction callback (PR #28)
+* FIX inheritance type template in custom instance creator (PR #29)
+* CHANGE injection initializers to be defined as a registration scope instead of via Container.register(). See initializedBy().
+* ADD initializedOnceBy() to create singleton instances via injection initializer.
+* FIX multiple template arguments not allowed on constructor argument injection (PR #37)
 
 **Version 8.0.3**
 * FIX struct types being injected into constructors (Fixes issue #25)
