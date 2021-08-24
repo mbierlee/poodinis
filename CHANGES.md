@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.1.1**
+* FIX issues where chained registration scopes get rid of initializedBy's and initializedOnceBy's factory method, reverting it to a default instance factory.
+
 **Version 8.1.0**
 * ADD ability to provide custom instance creator when registering a dependency (PR #28)
 * ADD post-instance-consruction callback (PR #28)
