@@ -13,7 +13,8 @@
 
 module poodinis.container;
 
-import poodinis.registration : Registration, singleInstance, toConcreteTypeListString;
+import poodinis.registration : Registration, singleInstance,
+    toConcreteTypeListString, initializeFactoryType;
 import poodinis.autowire : AutowiredRegistration, AutowireInstantiationContext;
 import poodinis.factory : ConstructorInjectingInstanceFactory;
 import poodinis.valueinjection : ValueInjectionException;
@@ -202,7 +203,7 @@ synchronized class DependencyContainer
         auto instanceFactory = new ConstructorInjectingInstanceFactory!ConcreteType(this);
         auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType,
                 instanceFactory, this);
-        newRegistration.singleInstance();
+        newRegistration.initializeFactoryType().singleInstance();
 
         static if (!is(SuperType == ConcreteType))
         {

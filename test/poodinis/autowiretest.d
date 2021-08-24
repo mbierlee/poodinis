@@ -129,7 +129,7 @@ version (unittest)
         container.register!ComponentA;
 
         auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB),
-                new InstanceFactory(), container).singleInstance();
+                new InstanceFactory(), container).initializeFactoryType().singleInstance();
         auto instance = cast(ComponentB) registration.getInstance(
                 new AutowireInstantiationContext());
 

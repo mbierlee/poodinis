@@ -95,6 +95,29 @@ class Registration
     }
 }
 
+private InstanceFactoryParameters copyFactoryParameters(Registration registration)
+{
+    return registration.instanceFactory.factoryParameters;
+}
+
+private void setFactoryParameters(Registration registration, InstanceFactoryParameters newParameters)
+{
+    registration.instanceFactory.factoryParameters = newParameters;
+}
+
+/**
+ * Sets the registration's instance factory type the same as the registration's.
+ *
+ * This is not a registration scope. Typically used by Poodinis internally only.
+ */
+public Registration initializeFactoryType(Registration registration)
+{
+    auto params = registration.copyFactoryParameters();
+    params.instanceType = registration.instanceType;
+    registration.setFactoryParameters(params);
+    return registration;
+}
+
 /**
  * Scopes registrations to return the same instance every time a given registration is resolved.
  *
@@ -102,8 +125,9 @@ class Registration
  */
 public Registration singleInstance(Registration registration)
 {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
-            registration.instanceType, CreatesSingleton.yes);
+    auto params = registration.copyFactoryParameters();
+    params.createsSingleton = CreatesSingleton.yes;
+    registration.setFactoryParameters(params);
     return registration;
 }
 
@@ -112,8 +136,10 @@ public Registration singleInstance(Registration registration)
  */
 public Registration newInstance(Registration registration)
 {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
-            registration.instanceType, CreatesSingleton.no);
+    auto params = registration.copyFactoryParameters();
+    params.createsSingleton = CreatesSingleton.no;
+    params.existingInstance = null;
+    registration.setFactoryParameters(params);
     return registration;
 }
 
@@ -122,22 +148,23 @@ public Registration newInstance(Registration registration)
  */
 public Registration existingInstance(Registration registration, Object instance)
 {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
-            registration.instanceType, CreatesSingleton.yes, instance);
+    auto params = registration.copyFactoryParameters();
+    params.createsSingleton = CreatesSingleton.yes;
+    params.existingInstance = instance;
+    registration.setFactoryParameters(params);
     return registration;
 }
 
 /**
  * Scopes registrations to create new instances using the given initializer delegate.
  */
-public Registration initializedBy(T)(Registration registration, T delegate() initializer) 
-    if(is(T == class) || is(T == interface)) 
+public Registration initializedBy(T)(Registration registration, T delegate() initializer)
+        if (is(T == class) || is(T == interface))
 {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
-            registration.instanceType, CreatesSingleton.no, null, {
-        return cast(Object) initializer();
-    });
-
+    auto params = registration.copyFactoryParameters();
+    params.createsSingleton = CreatesSingleton.no;
+    params.factoryMethod = () => cast(Object) initializer();
+    registration.setFactoryParameters(params);
     return registration;
 }
 
@@ -146,11 +173,10 @@ public Registration initializedBy(T)(Registration registration, T delegate() ini
  */
 public Registration initializedOnceBy(T : Object)(Registration registration, T delegate() initializer)
 {
-    registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
-            registration.instanceType, CreatesSingleton.yes, null, {
-        return cast(Object) initializer();
-    });
-
+    auto params = registration.copyFactoryParameters();
+    params.createsSingleton = CreatesSingleton.yes;
+    params.factoryMethod = () => cast(Object) initializer();
+    registration.setFactoryParameters(params);
     return registration;
 }
 

@@ -24,7 +24,7 @@ version (unittest)
     unittest
     {
         Registration registration = new Registration(null, typeid(TestType),
-                new InstanceFactory(), null);
+                new InstanceFactory(), null).initializeFactoryType();
         auto chainedRegistration = registration.singleInstance();
         auto instance1 = registration.getInstance();
         auto instance2 = registration.getInstance();
@@ -38,7 +38,7 @@ version (unittest)
     unittest
     {
         Registration registration = new Registration(null, typeid(TestType),
-                new InstanceFactory(), null);
+                new InstanceFactory(), null).initializeFactoryType();
         auto chainedRegistration = registration.newInstance();
         auto instance1 = registration.getInstance();
         auto instance2 = registration.getInstance();
@@ -55,7 +55,7 @@ version (unittest)
         auto expectedInstance = new TestType();
         auto chainedRegistration = registration.existingInstance(expectedInstance);
         auto actualInstance = registration.getInstance();
-        assert(expectedInstance is expectedInstance,
+        assert(expectedInstance is actualInstance,
                 "Registration with existing instance scope did not return the same instance");
         assert(registration is chainedRegistration,
                 "Registration returned by scope setting is not the same as the registration being set");
@@ -65,15 +65,75 @@ version (unittest)
     unittest
     {
         Registration firstRegistration = new Registration(typeid(TestInterface),
-                typeid(TestImplementation), new InstanceFactory(), null).singleInstance();
+                typeid(TestImplementation), new InstanceFactory(), null).initializeFactoryType()
+            .singleInstance();
         Registration secondRegistration = new Registration(typeid(TestImplementation),
-                typeid(TestImplementation), new InstanceFactory(), null).singleInstance()
-            .linkTo(firstRegistration);
+                typeid(TestImplementation), new InstanceFactory(), null).initializeFactoryType()
+            .singleInstance().linkTo(firstRegistration);
 
         auto firstInstance = firstRegistration.getInstance();
         auto secondInstance = secondRegistration.getInstance();
 
         assert(firstInstance is secondInstance);
+    }
+
+    // Test custom factory method via initializedBy
+    unittest
+    {
+        Registration registration = new Registration(typeid(TestInterface),
+                typeid(TestImplementation), new InstanceFactory(), null);
+
+        registration.initializedBy({
+            auto instance = new TestImplementation();
+            instance.someContent = "createdbyinitializer";
+            return instance;
+        });
+
+        TestImplementation instanceOne = cast(TestImplementation) registration.getInstance();
+        TestImplementation instanceTwo = cast(TestImplementation) registration.getInstance();
+        assert(instanceOne.someContent == "createdbyinitializer");
+        assert(instanceTwo.someContent == "createdbyinitializer");
+        assert(instanceOne !is instanceTwo);
+    }
+
+    // Test custom factory method via initializedOnceBy
+    unittest
+    {
+        Registration registration = new Registration(typeid(TestInterface),
+                typeid(TestImplementation), new InstanceFactory(), null);
+
+        registration.initializedOnceBy({
+            auto instance = new TestImplementation();
+            instance.someContent = "createdbyinitializer";
+            return instance;
+        });
+
+        TestImplementation instanceOne = cast(TestImplementation) registration.getInstance();
+        TestImplementation instanceTwo = cast(TestImplementation) registration.getInstance();
+        assert(instanceOne.someContent == "createdbyinitializer");
+        assert(instanceTwo.someContent == "createdbyinitializer");
+        assert(instanceOne is instanceTwo);
+    }
+
+    // Test chaining single/new instance scope to initializedBy will not overwrite the factory method.
+    unittest
+    {
+        Registration registration = new Registration(typeid(TestInterface),
+                typeid(TestImplementation), new InstanceFactory(), null);
+
+        registration.initializedBy({
+            auto instance = new TestImplementation();
+            instance.someContent = "createdbyinitializer";
+            return instance;
+        });
+
+        registration.singleInstance();
+
+        TestImplementation instanceOne = cast(TestImplementation) registration.getInstance();
+        TestImplementation instanceTwo = cast(TestImplementation) registration.getInstance();
+        assert(instanceOne.someContent == "createdbyinitializer");
+        assert(instanceTwo.someContent == "createdbyinitializer");
+        assert(instanceOne is instanceTwo);
     }
 
 }
