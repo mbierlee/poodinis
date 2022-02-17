@@ -1,5 +1,8 @@
 Poodinis Changelog
 ==================
+**Version 8.1.2**
+* FIX compilation error on importing template types that are not actually types.
+
 **Version 8.1.1**
 * FIX issues where chained registration scopes get rid of initializedBy's and initializedOnceBy's factory method, reverting it to a default instance factory.
 
