@@ -12,7 +12,7 @@
 module poodinis.imports;
 
 import std.meta : staticIndexOf;
-import std.traits : moduleName, TemplateArgsOf, isBuiltinType;
+import std.traits : moduleName, TemplateArgsOf, isBuiltinType, isType;
 
 public static string createImportsString(Type, ParentTypeList...)()
 {
@@ -21,8 +21,8 @@ public static string createImportsString(Type, ParentTypeList...)()
     {
         foreach (TemplateArgType; TemplateArgsOf!Type)
         {
-            static if (!isBuiltinType!TemplateArgType
-                    && staticIndexOf!(TemplateArgType, ParentTypeList) == -1)
+            static if (isType!TemplateArgType &&
+                (!isBuiltinType!TemplateArgType && staticIndexOf!(TemplateArgType, ParentTypeList) == -1))
             {
                 imports ~= createImportsString!(TemplateArgType, ParentTypeList, Type);
             }
