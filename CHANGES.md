@@ -8,7 +8,7 @@ Poodinis Changelog
 
 **Version 8.1.0**
 * ADD ability to provide custom instance creator when registering a dependency (PR #28)
-* ADD post-instance-consruction callback (PR #28)
+* ADD post-instance-construction callback (PR #28)
 * FIX inheritance type template in custom instance creator (PR #29)
 * CHANGE injection initializers to be defined as a registration scope instead of via Container.register(). See initializedBy().
 * ADD initializedOnceBy() to create singleton instances via injection initializer.
