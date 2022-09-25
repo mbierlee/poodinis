@@ -1,6 +1,7 @@
 /*.exe
 /poodinis.lib
 /poodinis.obj
+/poodinis.pdb
 /.settings
 /.dub
 /dub.selections.json
