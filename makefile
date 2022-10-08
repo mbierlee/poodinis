@@ -5,6 +5,9 @@
 build:
 	dub build --build=release
 
+build-docs:
+	dub build --build=ddox
+
 test:
 	dub test
 
