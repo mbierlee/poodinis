@@ -5,6 +5,9 @@
 	"copyright": "Copyright 2014-2022 Mike Bierlee",
 	"license": "MIT",
 	"-ddoxTool": "scod",
+	"-ddoxFilterArgs": [
+		
+	],
 	"configurations": [
 		{
 			"name": "library",

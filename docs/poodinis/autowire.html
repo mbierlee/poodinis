@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
 		<title>Module poodinis.autowire</title>
 		<link rel="stylesheet" href="../css/style.min.css"/>
 		<script type="text/javascript" src="../js/script.min.js"></script>
@@ -28,6 +28,11 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						</div>
 				<ul class="tree-view">
 					<li>
+						<div class="module ">
+							<a href="../poodinis/altphobos.html">altphobos</a>
+						</div>
+					</li>
+					<li>
 						<div class="module selected">
 							<a href="../poodinis/autowire.html">autowire</a>
 						</div>
@@ -45,6 +50,11 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 					<li>
 						<div class="module ">
 							<a href="../poodinis/factory.html">factory</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../poodinis/imports.html">imports</a>
 						</div>
 					</li>
 					<li>
@@ -94,7 +104,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="autowire" class="[&quot;public&quot;]" href="../poodinis/autowire/autowire.html">autowire</a><span class="decoration">(container, instance)</span>
+									<a id="autowire" class="public" href="../poodinis/autowire/autowire.html">autowire</a><span class="tableEntryAnnotation">(container, instance)</span>
 								</code>
 							</td>
 							<td>Autowires members of a given instance using dependencies registered in the given container.
@@ -103,7 +113,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="globalAutowire" class="[&quot;public&quot;]" href="../poodinis/autowire/globalAutowire.html">globalAutowire</a><span class="decoration">(instance)</span>
+									<a id="globalAutowire" class="public" href="../poodinis/autowire/globalAutowire.html">globalAutowire</a><span class="tableEntryAnnotation">(instance)</span>
 								</code>
 							</td>
 							<td>Autowire the given instance using the globally available dependency container.
@@ -121,7 +131,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="AssignNewInstance" class="[&quot;public&quot;]" href="../poodinis/autowire/AssignNewInstance.html">AssignNewInstance</a>
+									<a id="AssignNewInstance" class="public" href="../poodinis/autowire/AssignNewInstance.html">AssignNewInstance</a>
 								</code>
 							</td>
 							<td>UDA for annotating class members to be autowired with a new instance regardless of their registration scope.
@@ -130,7 +140,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="Autowire" class="[&quot;public&quot;]" href="../poodinis/autowire/Autowire.html">Autowire</a>
+									<a id="Autowire" class="public" href="../poodinis/autowire/Autowire.html">Autowire</a>
 								</code>
 							</td>
 							<td>UDA for annotating class members as candidates for autowiring.
@@ -139,7 +149,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="OptionalDependency" class="[&quot;public&quot;]" href="../poodinis/autowire/OptionalDependency.html">OptionalDependency</a>
+									<a id="OptionalDependency" class="public" href="../poodinis/autowire/OptionalDependency.html">OptionalDependency</a>
 								</code>
 							</td>
 							<td>UDA for marking autowired dependencies optional.

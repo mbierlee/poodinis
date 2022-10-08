@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8"/>
-		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
 		<title>Module poodinis.registration</title>
 		<link rel="stylesheet" href="../css/style.min.css"/>
 		<script type="text/javascript" src="../js/script.min.js"></script>
@@ -29,6 +29,11 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 				<ul class="tree-view">
 					<li>
 						<div class="module ">
+							<a href="../poodinis/altphobos.html">altphobos</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
 							<a href="../poodinis/autowire.html">autowire</a>
 						</div>
 					</li>
@@ -45,6 +50,11 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 					<li>
 						<div class="module ">
 							<a href="../poodinis/factory.html">factory</a>
+						</div>
+					</li>
+					<li>
+						<div class="module ">
+							<a href="../poodinis/imports.html">imports</a>
 						</div>
 					</li>
 					<li>
@@ -89,7 +99,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="existingInstance" class="[&quot;public&quot;]" href="../poodinis/registration/existingInstance.html">existingInstance</a><span class="decoration">(registration, instance)</span>
+									<a id="existingInstance" class="public" href="../poodinis/registration/existingInstance.html">existingInstance</a><span class="tableEntryAnnotation">(registration, instance)</span>
 								</code>
 							</td>
 							<td>Scopes registrations to return the given instance every time the given registration is resolved.
@@ -98,7 +108,34 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="newInstance" class="[&quot;public&quot;]" href="../poodinis/registration/newInstance.html">newInstance</a><span class="decoration">(registration)</span>
+									<a id="initializedBy" class="public" href="../poodinis/registration/initializedBy.html">initializedBy</a><span class="tableEntryAnnotation">(registration, initializer)</span>
+								</code>
+							</td>
+							<td>Scopes registrations to create new instances using the given initializer delegate.
+</td>
+						</tr>
+						<tr>
+							<td>
+								<code>
+									<a id="initializedOnceBy" class="public" href="../poodinis/registration/initializedOnceBy.html">initializedOnceBy</a><span class="tableEntryAnnotation">(registration, initializer)</span>
+								</code>
+							</td>
+							<td>Scopes registrations to create a new instance using the given initializer delegate. On subsequent resolves the same instance is returned.
+</td>
+						</tr>
+						<tr>
+							<td>
+								<code>
+									<a id="initializeFactoryType" class="public" href="../poodinis/registration/initializeFactoryType.html">initializeFactoryType</a><span class="tableEntryAnnotation">(registration)</span>
+								</code>
+							</td>
+							<td>Sets the registration's instance factory type the same as the registration's.
+</td>
+						</tr>
+						<tr>
+							<td>
+								<code>
+									<a id="newInstance" class="public" href="../poodinis/registration/newInstance.html">newInstance</a><span class="tableEntryAnnotation">(registration)</span>
 								</code>
 							</td>
 							<td>Scopes registrations to return a new instance every time the given registration is resolved.
@@ -107,7 +144,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						<tr>
 							<td>
 								<code>
-									<a id="singleInstance" class="[&quot;public&quot;]" href="../poodinis/registration/singleInstance.html">singleInstance</a><span class="decoration">(registration)</span>
+									<a id="singleInstance" class="public" href="../poodinis/registration/singleInstance.html">singleInstance</a><span class="tableEntryAnnotation">(registration)</span>
 								</code>
 							</td>
 							<td>Scopes registrations to return the same instance every time a given registration is resolved.

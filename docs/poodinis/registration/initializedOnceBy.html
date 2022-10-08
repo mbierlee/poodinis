@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
-		<title>Class RegistrationException</title>
+		<title>Function initializedOnceBy</title>
 		<link rel="stylesheet" href="../../css/style.min.css"/>
 		<script type="text/javascript" src="../../js/script.min.js"></script>
 	</head>
@@ -38,7 +38,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						</div>
 					</li>
 					<li>
-						<div class="module selected">
+						<div class="module ">
 							<a href="../../poodinis/container.html">container</a>
 						</div>
 					</li>
@@ -63,7 +63,7 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						</div>
 					</li>
 					<li>
-						<div class="module ">
+						<div class="module selected">
 							<a href="../../poodinis/registration.html">registration</a>
 						</div>
 					</li>
@@ -83,14 +83,19 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 		</nav>
 		<div id="main-contents">
 			<div>
-				<h1>Class RegistrationException</h1><p>Exception thrown when errors occur while registering a type in a dependency container.
+				<h1>Function initializedOnceBy</h1><p>Scopes registrations to create a new instance using the given initializer delegate. On subsequent resolves the same instance is returned.
 </p>
 				<div class="prototype">
 					<code class="lang-d">
 						<div class="single-prototype">
-				<span class="kwd">class</span> <span class="typ">RegistrationException</span>
-				<br>&nbsp;&nbsp;: <span class="pln">object<wbr/></span><span class="pun">.</span><span class="typ">Exception</span>
-				<span class="pun">;</span>
+				<span class="typ">Registration</span> <span class="pln">initializedOnceBy</span>(T)
+				<span class="pun">(</span>
+				<br/>
+				&nbsp;&nbsp;<span class="typ">Registration</span> <span class="pln">registration</span><span class="pun">,</span>
+				<br/>
+				&nbsp;&nbsp;<span class="pln">T</span> <span class="kwd">delegate</span><span class="pun">(</span><span class="pun">)</span> <span class="pln">initializer</span>
+				<br/>
+				<span class="pun">)</span><span class="pun">;</span>
 						</div>
 					</code>
 				</div>

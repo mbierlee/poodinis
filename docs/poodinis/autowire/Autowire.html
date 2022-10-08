@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0"/>
-		<title>Class RegistrationException</title>
+		<title>Function autowire</title>
 		<link rel="stylesheet" href="../../css/style.min.css"/>
 		<script type="text/javascript" src="../../js/script.min.js"></script>
 	</head>
@@ -33,12 +33,12 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 						</div>
 					</li>
 					<li>
-						<div class="module ">
+						<div class="module selected">
 							<a href="../../poodinis/autowire.html">autowire</a>
 						</div>
 					</li>
 					<li>
-						<div class="module selected">
+						<div class="module ">
 							<a href="../../poodinis/container.html">container</a>
 						</div>
 					</li>
@@ -83,19 +83,33 @@ document.getElementById('symbolSearchPane').style.display = 'block';</script>
 		</nav>
 		<div id="main-contents">
 			<div>
-				<h1>Class RegistrationException</h1><p>Exception thrown when errors occur while registering a type in a dependency container.
+				<h1>Function autowire</h1><p>Autowires members of a given instance using dependencies registered in the given container.
 </p>
 				<div class="prototype">
 					<code class="lang-d">
 						<div class="single-prototype">
-				<span class="kwd">class</span> <span class="typ">RegistrationException</span>
-				<br>&nbsp;&nbsp;: <span class="pln">object<wbr/></span><span class="pun">.</span><span class="typ">Exception</span>
-				<span class="pun">;</span>
+				<span class="typ">void</span> <span class="pln">autowire</span>(Type)
+				<span class="pun">(</span>
+				<br/>
+				&nbsp;&nbsp;<span class="kwd">shared</span><span class="pun">(</span><a href="../../poodinis/container/DependencyContainer.html"><span class="typ">DependencyContainer</span></a><span class="pun">)</span> <span class="pln">container</span><span class="pun">,</span>
+				<br/>
+				&nbsp;&nbsp;<span class="typ">Type</span> <span class="pln">instance</span>
+				<br/>
+				<span class="pun">)</span><span class="pun">;</span>
 						</div>
 					</code>
 				</div>
-				
-				
+				<section><p>All members of the given instance, which are annotated using the "Autowire" UDA, are autowired.
+ Members can have any visibility (public, private, etc). All members are resolved using the given
+ container. Qualifiers are used to determine the type of class to resolve for any member of instance.
+</p>
+</section>
+
+				<section><h2>See Also</h2>
+<p>Autowire
+</p>
+</section>
+
 			</div>
 			<footer>
 				<div id="license-info">
