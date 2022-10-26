@@ -181,7 +181,7 @@ synchronized class DependencyContainer
      * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
      */
     public Registration register(SuperType, ConcreteType:
-            SuperType)(RegistrationOption options = RegistrationOption.none)
+        SuperType)(RegistrationOption options = RegistrationOption.none)
             if (!is(ConcreteType == struct))
     {
 
@@ -202,7 +202,7 @@ synchronized class DependencyContainer
 
         auto instanceFactory = new ConstructorInjectingInstanceFactory!ConcreteType(this);
         auto newRegistration = new AutowiredRegistration!ConcreteType(registeredType,
-                instanceFactory, this);
+            instanceFactory, this);
         newRegistration.initializeFactoryType().singleInstance();
 
         static if (!is(SuperType == ConcreteType))
@@ -220,7 +220,7 @@ synchronized class DependencyContainer
     }
 
     private bool hasOption(OptionType)(OptionType options,
-            OptionType persistentOptions, OptionType option)
+        OptionType persistentOptions, OptionType option)
     {
         return ((options | persistentOptions) & option) != 0;
     }
@@ -299,7 +299,7 @@ synchronized class DependencyContainer
      * You need to use the resolve method which allows you to specify a qualifier.
      */
     public RegistrationType resolve(RegistrationType)(
-            ResolveOption resolveOptions = ResolveOption.none)
+        ResolveOption resolveOptions = ResolveOption.none)
             if (!is(RegistrationType == struct))
     {
         return resolve!(RegistrationType, RegistrationType)(resolveOptions);
@@ -332,7 +332,7 @@ synchronized class DependencyContainer
      * ---
      */
     public QualifierType resolve(RegistrationType, QualifierType:
-            RegistrationType)(ResolveOption resolveOptions = ResolveOption.none)
+        RegistrationType)(ResolveOption resolveOptions = ResolveOption.none)
             if (!is(QualifierType == struct))
     {
         TypeInfo resolveType = typeid(RegistrationType);
@@ -365,7 +365,7 @@ synchronized class DependencyContainer
         }
 
         Registration registration = getQualifiedRegistration(resolveType,
-                qualifierType, cast(Registration[])*candidates);
+            qualifierType, cast(Registration[])*candidates);
 
         try
         {
@@ -393,7 +393,7 @@ synchronized class DependencyContainer
         {
             autowireStack ~= cast(shared(Registration)) registration;
             instance = cast(QualifierType) registration.getInstance(
-                    new AutowireInstantiationContext());
+                new AutowireInstantiationContext());
             autowireStack = autowireStack[0 .. $ - 1];
         }
         else
@@ -423,7 +423,7 @@ synchronized class DependencyContainer
      * ---
      */
     public RegistrationType[] resolveAll(RegistrationType)(
-            ResolveOption resolveOptions = ResolveOption.none)
+        ResolveOption resolveOptions = ResolveOption.none)
     {
         RegistrationType[] instances;
         TypeInfo resolveType = typeid(RegistrationType);
@@ -449,7 +449,7 @@ synchronized class DependencyContainer
     }
 
     private Registration getQualifiedRegistration(TypeInfo resolveType,
-            TypeInfo qualifierType, Registration[] candidates)
+        TypeInfo qualifierType, Registration[] candidates)
     {
         if (resolveType == qualifierType)
         {
@@ -457,8 +457,8 @@ synchronized class DependencyContainer
             {
                 string candidateList = candidates.toConcreteTypeListString();
                 throw new ResolveException(
-                        "Multiple qualified candidates available: " ~ candidateList ~ ". Please use a qualifier.",
-                        resolveType);
+                    "Multiple qualified candidates available: " ~ candidateList ~ ". Please use a qualifier.",
+                    resolveType);
             }
 
             return candidates[0];
@@ -474,9 +474,9 @@ synchronized class DependencyContainer
             mixin(createImportsString!Type);
             enum QualifiedName = fullyQualifiedName!Type ~ `.` ~ memberName;
             static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
-                    && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-                    && isFunction!(mixin(QualifiedName))
-                    && hasUDA!(__traits(getMember, instance, memberName), PostConstruct))
+                && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
+                && isFunction!(mixin(QualifiedName))
+                && hasUDA!(__traits(getMember, instance, memberName), PostConstruct))
             {
                 __traits(getMember, instance, memberName)();
             }
