@@ -184,7 +184,6 @@ synchronized class DependencyContainer
         SuperType)(RegistrationOption options = RegistrationOption.none)
             if (!is(ConcreteType == struct))
     {
-
         TypeInfo registeredType = typeid(SuperType);
         TypeInfo_Class concreteType = typeid(ConcreteType);
 
@@ -346,10 +345,10 @@ synchronized class DependencyContainer
         auto candidates = resolveType in registrations;
         if (!candidates)
         {
-            if (hasOption(resolveOptions, persistentResolveOptions,
-                    ResolveOption.registerBeforeResolving))
+            static if (is(typeof(typeid(QualifierType)) == TypeInfo_Class) && !__traits(isAbstractClass, QualifierType))
             {
-                static if (__traits(compiles, new QualifierType()))
+                if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption
+                        .registerBeforeResolving))
                 {
                     register!(RegistrationType, QualifierType)();
                     return resolve!(RegistrationType, QualifierType)(resolveOptions);

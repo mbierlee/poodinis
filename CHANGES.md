@@ -3,6 +3,7 @@ Poodinis Changelog
 
 **Version NEXT**
 * FIX unnecessary re-registration of types when registerBeforeResolving is specified.
+* FIX registerOnResolve not working for classes that have no default constructor
 
 **Version 8.1.2**
 * FIX compilation error on importing template types that are not actually types.
