@@ -26,9 +26,9 @@ import std.algorithm : canFind;
 import std.traits : fullyQualifiedName, hasUDA, BaseTypeTuple;
 import std.meta : AliasSeq;
 
-debug
+debug (poodinisVerbose)
 {
-    import std.stdio;
+    import std.stdio : writeln;
 }
 
 /**
