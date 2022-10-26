@@ -343,18 +343,19 @@ synchronized class DependencyContainer
             writeln("DEBUG: Resolving type " ~ resolveType.toString() ~ " with qualifier " ~ qualifierType.toString());
         }
 
-        static if (__traits(compiles, new QualifierType()))
+        auto candidates = resolveType in registrations;
+        if (!candidates)
         {
             if (hasOption(resolveOptions, persistentResolveOptions,
                     ResolveOption.registerBeforeResolving))
             {
-                register!(RegistrationType, QualifierType)();
+                static if (__traits(compiles, new QualifierType()))
+                {
+                    register!(RegistrationType, QualifierType)();
+                    return resolve!(RegistrationType, QualifierType)(resolveOptions);
+                }
             }
-        }
 
-        auto candidates = resolveType in registrations;
-        if (!candidates)
-        {
             if (hasOption(resolveOptions, persistentResolveOptions,
                     ResolveOption.noResolveException))
             {

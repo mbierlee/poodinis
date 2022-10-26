@@ -1,5 +1,9 @@
 Poodinis Changelog
 ==================
+
+**Version NEXT**
+* FIX unnecessary re-registration of types when registerBeforeResolving is specified.
+
 **Version 8.1.2**
 * FIX compilation error on importing template types that are not actually types.
 
