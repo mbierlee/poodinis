@@ -1,7 +1,7 @@
 Poodinis Changelog
 ==================
 
-**Version NEXT**
+**Version 8.1.3**
 * FIX unnecessary re-registration of types when registerBeforeResolving is specified.
 * FIX registerBeforeResolving not working for classes that have no default constructor
 
