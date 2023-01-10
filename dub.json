@@ -32,7 +32,6 @@
 		},
 		{
 			"name" : "quickstartExample",
-			"description" : "Quickstart example from the Poodinis readme.",
 			"targetType": "executable",
 			"targetName": "quickstartExample",
 			"sourcePaths": [
@@ -44,7 +43,6 @@
 		},
 		{
 			"name" : "qualifiersExample",
-			"description" : "Example where qualifiers are used.",
 			"targetType": "executable",
 			"targetName": "qualifiersExample",
 			"sourcePaths": [
@@ -56,7 +54,6 @@
 		},
 		{
 			"name" : "arrayCompletionExample",
-			"description" : "Example where an array is autowired with all registered instances.",
 			"targetType": "executable",
 			"targetName": "arrayCompletionExample",
 			"sourcePaths": [
@@ -68,7 +65,6 @@
 		},
 		{
 			"name" : "annotationsExample",
-			"description" : "Example where several Poodinis autowire annotations are demonstrated.",
 			"targetType": "executable",
 			"targetName": "annotationsExample",
 			"sourcePaths": [
@@ -80,7 +76,6 @@
 		},
 		{
 			"name" : "applicationContextExample",
-			"description" : "Example where an application context is used to set-up dependencies.",
 			"targetType": "executable",
 			"targetName": "applicationContextExample",
 			"sourcePaths": [
@@ -92,7 +87,6 @@
 		},
 		{
 			"name" : "registerOnResolveExample",
-			"description" : "Example where dependencies are registered at the moment they are resolved.",
 			"targetType": "executable",
 			"targetName": "registerOnResolveExample",
 			"sourcePaths": [
@@ -104,7 +98,6 @@
 		},
 		{
 			"name" : "constructorInjectionExample",
-			"description" : "Example where dependencies are injected into constructors when their classes are created.",
 			"targetType": "executable",
 			"targetName": "constructorInjectionExample",
 			"sourcePaths": [
@@ -116,7 +109,6 @@
 		},
 		{
 			"name" : "valueInjectionExample",
-			"description" : "Example where values are injected into dependencies.",
 			"targetType": "executable",
 			"targetName": "valueInjectionExample",
 			"sourcePaths": [
@@ -128,7 +120,6 @@
 		},
 		{
 			"name" : "postConstructorPreDestructorExample",
-			"description" : "Example where the usage of post-constructors and pre-destructors are demonstrated.",
 			"targetType": "executable",
 			"targetName": "postConstructorPreDestructorExample",
 			"sourcePaths": [
@@ -140,7 +131,6 @@
 		},
 		{
 			"name" : "injectionInitializerExample",
-			"description" : "Example where the usage of an injection initializer is demonstrated.",
 			"targetType": "executable",
 			"targetName": "injectionInitializerExample",
 			"sourcePaths": [
