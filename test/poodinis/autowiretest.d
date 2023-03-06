@@ -41,7 +41,7 @@ version (unittest)
         auto componentD = new ComponentD();
         container.autowire(componentD);
         assert(componentD.privateComponentC is componentD.componentC,
-                "Autowire private dependency failed");
+            "Autowire private dependency failed");
     }
 
     // Test autowiring will only happen once
@@ -55,7 +55,7 @@ version (unittest)
         container.autowire(componentD);
         auto actualComponent = componentD.componentC;
         assert(expectedComponent is actualComponent,
-                "Autowiring the second time wired a different instance");
+            "Autowiring the second time wired a different instance");
     }
 
     // Test autowiring unregistered type
@@ -64,7 +64,7 @@ version (unittest)
         auto container = new shared DependencyContainer();
         auto componentD = new ComponentD();
         assertThrown!(ResolveException)(container.autowire(componentD),
-                "Autowiring unregistered type should throw ResolveException");
+            "Autowiring unregistered type should throw ResolveException");
     }
 
     // Test autowiring member with non-autowire attribute does not autowire
@@ -74,7 +74,7 @@ version (unittest)
         auto componentE = new ComponentE();
         container.autowire(componentE);
         assert(componentE.componentC is null,
-                "Autowiring should not occur for members with attributes other than @Autowire");
+            "Autowiring should not occur for members with attributes other than @Autowire");
     }
 
     // Test autowire class with alias declaration
@@ -87,7 +87,7 @@ version (unittest)
         container.autowire(componentDeclarationCocktail);
 
         assert(componentDeclarationCocktail.componentA !is null,
-                "Autowiring class with non-assignable declarations failed");
+            "Autowiring class with non-assignable declarations failed");
     }
 
     // Test autowire class with qualifier
@@ -117,9 +117,9 @@ version (unittest)
         container.autowire(bootstrapBootstrap);
 
         assert(bootstrapBootstrap.componentX is componentX,
-                "Autowiring class with multiple qualifiers failed");
+            "Autowiring class with multiple qualifiers failed");
         assert(bootstrapBootstrap.componentC is componentC,
-                "Autowiring class with multiple qualifiers failed");
+            "Autowiring class with multiple qualifiers failed");
     }
 
     // Test getting instance from autowired registration will autowire instance
@@ -129,9 +129,9 @@ version (unittest)
         container.register!ComponentA;
 
         auto registration = new AutowiredRegistration!ComponentB(typeid(ComponentB),
-                new InstanceFactory(), container).initializeFactoryType().singleInstance();
+            new InstanceFactory(), container).initializeFactoryType().singleInstance();
         auto instance = cast(ComponentB) registration.getInstance(
-                new AutowireInstantiationContext());
+            new AutowireInstantiationContext());
 
         assert(instance.componentA !is null);
     }
@@ -161,7 +161,7 @@ version (unittest)
         container.autowire(charlie);
 
         assert(charlie.componentA !is regularComponentA,
-                "Autowiring class with AssignNewInstance did not yield a different instance");
+            "Autowiring class with AssignNewInstance did not yield a different instance");
     }
 
     // Test autowiring members from base class
@@ -221,5 +221,21 @@ version (unittest)
 
         assert(componentA.instance is componentB);
         assert(componentB.instance is componentA);
+    }
+
+    // Test autowiring class where a method is marked with @Autowire does nothing
+    unittest
+    {
+        // It should also not show deprecation warning:
+        // Deprecation: `__traits(getAttributes)` may only be used for individual functions, not overload sets such as: `lala`
+        //      the result of `__traits(getOverloads)` may be used to select the desired function to extract attributes from
+
+        auto container = new shared DependencyContainer();
+        container.register!AutowiredMethod;
+        auto instance = container.resolve!AutowiredMethod;
+
+        assert(instance !is null);
+        assert(instance.lala == 42);
+        assert(instance.lala(77) == 77);
     }
 }

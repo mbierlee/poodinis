@@ -140,7 +140,7 @@ public void autowire(Type)(shared(DependencyContainer) container, Type instance)
 }
 
 private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType,
-        void* candidateInstanceAddress, TypeInfo instanceType, void* instanceAddress, string member)
+    void* candidateInstanceAddress, TypeInfo instanceType, void* instanceAddress, string member)
 {
     debug
     {
@@ -150,7 +150,7 @@ private void printDebugAutowiringCandidate(TypeInfo candidateInstanceType,
 }
 
 private void printDebugAutowiringArray(TypeInfo superTypeInfo,
-        TypeInfo instanceType, void* instanceAddress, string member)
+    TypeInfo instanceType, void* instanceAddress, string member)
 {
     debug
     {
@@ -160,7 +160,7 @@ private void printDebugAutowiringArray(TypeInfo superTypeInfo,
 }
 
 private void autowireMember(string member, size_t memberIndex, Type)(
-        shared(DependencyContainer) container, Type instance)
+    shared(DependencyContainer) container, Type instance)
 {
     foreach (attribute; __traits(getAttributes, Type.tupleof[memberIndex]))
     {
@@ -186,7 +186,7 @@ private void autowireMember(string member, size_t memberIndex, Type)(
 }
 
 private void injectInstance(string member, size_t memberIndex, QualifierType, Type)(
-        shared(DependencyContainer) container, Type instance)
+    shared(DependencyContainer) container, Type instance)
 {
     if (instance.tupleof[memberIndex] is null)
     {
@@ -196,18 +196,18 @@ private void injectInstance(string member, size_t memberIndex, QualifierType, Ty
         static if (isDynamicArray!MemberType)
         {
             injectMultipleInstances!(member, memberIndex, isOptional, MemberType)(container,
-                    instance);
+                instance);
         }
         else
         {
             injectSingleInstance!(member, memberIndex, isOptional, MemberType, QualifierType)(container,
-                    instance);
+                instance);
         }
     }
 }
 
 private void injectMultipleInstances(string member, size_t memberIndex,
-        bool isOptional, MemberType, Type)(shared(DependencyContainer) container, Type instance)
+    bool isOptional, MemberType, Type)(shared(DependencyContainer) container, Type instance)
 {
     alias MemberElementType = ElementType!MemberType;
     static if (isOptional)
@@ -227,8 +227,8 @@ private void injectMultipleInstances(string member, size_t memberIndex,
 }
 
 private void injectSingleInstance(string member, size_t memberIndex,
-        bool isOptional, MemberType, QualifierType, Type)(
-        shared(DependencyContainer) container, Type instance)
+    bool isOptional, MemberType, QualifierType, Type)(
+    shared(DependencyContainer) container, Type instance)
 {
     debug (poodinisVerbose)
     {
@@ -241,7 +241,7 @@ private void injectSingleInstance(string member, size_t memberIndex,
     static if (!is(QualifierType == UseMemberType))
     {
         qualifiedInstance = createOrResolveInstance!(MemberType, QualifierType,
-                assignNewInstance, isOptional)(container);
+            assignNewInstance, isOptional)(container);
         debug (poodinisVerbose)
         {
             qualifiedInstanceType = typeid(QualifierType);
@@ -250,7 +250,7 @@ private void injectSingleInstance(string member, size_t memberIndex,
     else
     {
         qualifiedInstance = createOrResolveInstance!(MemberType, MemberType,
-                assignNewInstance, isOptional)(container);
+            assignNewInstance, isOptional)(container);
     }
 
     instance.tupleof[memberIndex] = qualifiedInstance;
@@ -258,18 +258,18 @@ private void injectSingleInstance(string member, size_t memberIndex,
     debug (poodinisVerbose)
     {
         printDebugAutowiringCandidate(qualifiedInstanceType,
-                &qualifiedInstance, typeid(Type), &instance, member);
+            &qualifiedInstance, typeid(Type), &instance, member);
     }
 }
 
 private QualifierType createOrResolveInstance(MemberType, QualifierType,
-        bool createNew, bool isOptional)(shared(DependencyContainer) container)
+    bool createNew, bool isOptional)(shared(DependencyContainer) container)
 {
     static if (createNew)
     {
         auto instanceFactory = new InstanceFactory();
         instanceFactory.factoryParameters = InstanceFactoryParameters(typeid(MemberType),
-                CreatesSingleton.no);
+            CreatesSingleton.no);
         return cast(MemberType) instanceFactory.getInstance();
     }
     else
@@ -286,7 +286,7 @@ private QualifierType createOrResolveInstance(MemberType, QualifierType,
 }
 
 private void injectValue(string member, size_t memberIndex, string key, bool mandatory, Type)(
-        shared(DependencyContainer) container, Type instance)
+    shared(DependencyContainer) container, Type instance)
 {
     alias MemberType = typeof(Type.tupleof[memberIndex]);
     try
@@ -315,7 +315,7 @@ private void injectValue(string member, size_t memberIndex, string key, bool man
 }
 
 private void printDebugValueInjection(TypeInfo instanceType,
-        void* instanceAddress, string member, TypeInfo valueType, string key)
+    void* instanceAddress, string member, TypeInfo valueType, string key)
 {
     debug
     {
@@ -340,16 +340,16 @@ class AutowiredRegistration(RegistrationType : Object) : Registration
     private shared(DependencyContainer) container;
 
     public this(TypeInfo registeredType, InstanceFactory instanceFactory,
-            shared(DependencyContainer) originatingContainer)
+        shared(DependencyContainer) originatingContainer)
     {
         super(registeredType, typeid(RegistrationType), instanceFactory, originatingContainer);
     }
 
     public override Object getInstance(
-            InstantiationContext context = new AutowireInstantiationContext())
+        InstantiationContext context = new AutowireInstantiationContext())
     {
         enforce(!(originatingContainer is null),
-                "The registration's originating container is null. There is no way to resolve autowire dependencies.");
+            "The registration's originating container is null. There is no way to resolve autowire dependencies.");
 
         RegistrationType instance = cast(RegistrationType) super.getInstance(context);
 
