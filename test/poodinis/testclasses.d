@@ -5,10 +5,10 @@
  * The full terms of the license can be found in the LICENSE file.
  */
 
-module poodinis.test.testClasses;
+module poodinis.test.testclasses;
 
 import poodinis;
-import poodinis.test.foreignDependencies;
+import poodinis.test.foreigndependencies;
 
 version (unittest)
 {

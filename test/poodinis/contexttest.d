@@ -6,7 +6,7 @@
  */
 
 import poodinis;
-import poodinis.test.testClasses;
+import poodinis.test.testclasses;
 
 import std.exception;
 

@@ -6,8 +6,8 @@
  */
 
 import poodinis;
-import poodinis.test.testClasses;
-import poodinis.test.foreignDependencies;
+import poodinis.test.testclasses;
+import poodinis.test.foreigndependencies;
 
 import std.exception;
 import core.thread;
