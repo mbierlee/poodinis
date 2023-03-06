@@ -420,8 +420,8 @@ synchronized class DependencyContainer {
     }
 
     private void callPostConstructors(Type)(Type instance) {
-        foreach (memberName; __traits(allMembers, Type)) {
-            foreach (overload; __traits(getOverloads, instance, memberName)) {
+        static foreach (memberName; __traits(allMembers, Type)) {
+            static  foreach (overload; __traits(getOverloads, instance, memberName)) {
                 static if (__traits(compiles, __traits(getProtection, overload))
                     && __traits(getProtection, overload) == "public"
                     && isFunction!overload
