@@ -1,144 +1,98 @@
 {
-	"name" : "poodinis",
-	"description" : "A dependency injection framework with support for autowiring.",
-	"authors": ["Mike Bierlee"],
-	"copyright": "Copyright 2014-2023 Mike Bierlee",
-	"license": "MIT",
-	"-ddoxTool": "scod",
-	"-ddoxFilterArgs": [
-		
-	],
-	"configurations": [
-		{
-			"name": "library",
-			"targetType": "library"
-		},
-		{
-			"name": "unittest",
-			"targetType": "executable",
-			"sourcePaths": [
-				"test"
-			],
-			"mainSourceFile": "test/poodinis/testmain.d"
-		},
-		{
-			"name": "unittestVerbose",
-			"targetType": "executable",
-			"debugVersions": ["poodinisVerbose"],
-			"sourcePaths": [
-				"test"
-			],
-			"mainSourceFile": "test/poodinis/testmain.d"
-		},
-		{
-			"name" : "quickstartExample",
-			"targetType": "executable",
-			"targetName": "quickstartExample",
-			"sourcePaths": [
-				"example/quickstart"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "qualifiersExample",
-			"targetType": "executable",
-			"targetName": "qualifiersExample",
-			"sourcePaths": [
-				"example/qualifiers"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "arrayCompletionExample",
-			"targetType": "executable",
-			"targetName": "arrayCompletionExample",
-			"sourcePaths": [
-				"example/arraycompletion"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "annotationsExample",
-			"targetType": "executable",
-			"targetName": "annotationsExample",
-			"sourcePaths": [
-				"example/annotations"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "applicationContextExample",
-			"targetType": "executable",
-			"targetName": "applicationContextExample",
-			"sourcePaths": [
-				"example/applicationcontext"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "registerOnResolveExample",
-			"targetType": "executable",
-			"targetName": "registerOnResolveExample",
-			"sourcePaths": [
-				"example/registeronresolve"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "constructorInjectionExample",
-			"targetType": "executable",
-			"targetName": "constructorInjectionExample",
-			"sourcePaths": [
-				"example/constructorinjection"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "valueInjectionExample",
-			"targetType": "executable",
-			"targetName": "valueInjectionExample",
-			"sourcePaths": [
-				"example/valueinjection"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "postConPreDestExample",
-			"targetType": "executable",
-			"targetName": "postConPreDestExample",
-			"sourcePaths": [
-				"example/postconpredest"
-			],
-			"importPaths": [
-				"source"
-			]
-		},
-		{
-			"name" : "injectionInitializerExample",
-			"targetType": "executable",
-			"targetName": "injectionInitializerExample",
-			"sourcePaths": [
-				"example/injectioninitializer"
-			],
-			"importPaths": [
-				"source"
-			]
-		}
-	]
+    "name": "poodinis",
+    "description": "A dependency injection framework with support for autowiring.",
+    "authors": ["Mike Bierlee"],
+    "copyright": "Copyright 2014-2023 Mike Bierlee",
+    "license": "MIT",
+    "-ddoxTool": "scod",
+    "-ddoxFilterArgs": [],
+    "configurations": [
+        {
+            "name": "library",
+            "targetType": "library"
+        },
+        {
+            "name": "unittest",
+            "targetType": "executable",
+            "sourcePaths": ["test"],
+            "mainSourceFile": "test/poodinis/testmain.d"
+        },
+        {
+            "name": "unittestVerbose",
+            "targetType": "executable",
+            "debugVersions": ["poodinisVerbose"],
+            "sourcePaths": ["test"],
+            "mainSourceFile": "test/poodinis/testmain.d"
+        },
+        {
+            "name": "quickstartExample",
+            "targetType": "executable",
+            "targetName": "quickstartExample",
+            "sourcePaths": ["example/quickstart"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "qualifiersExample",
+            "targetType": "executable",
+            "targetName": "qualifiersExample",
+            "sourcePaths": ["example/qualifiers"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "arrayCompletionExample",
+            "targetType": "executable",
+            "targetName": "arrayCompletionExample",
+            "sourcePaths": ["example/arraycompletion"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "annotationsExample",
+            "targetType": "executable",
+            "targetName": "annotationsExample",
+            "sourcePaths": ["example/annotations"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "applicationContextExample",
+            "targetType": "executable",
+            "targetName": "applicationContextExample",
+            "sourcePaths": ["example/applicationcontext"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "registerOnResolveExample",
+            "targetType": "executable",
+            "targetName": "registerOnResolveExample",
+            "sourcePaths": ["example/registeronresolve"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "constructorInjectionExample",
+            "targetType": "executable",
+            "targetName": "constructorInjectionExample",
+            "sourcePaths": ["example/constructorinjection"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "valueInjectionExample",
+            "targetType": "executable",
+            "targetName": "valueInjectionExample",
+            "sourcePaths": ["example/valueinjection"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "postConPreDestExample",
+            "targetType": "executable",
+            "targetName": "postConPreDestExample",
+            "sourcePaths": ["example/postconpredest"],
+            "importPaths": ["source"]
+        },
+        {
+            "name": "injectionInitializerExample",
+            "targetType": "executable",
+            "targetName": "injectionInitializerExample",
+            "sourcePaths": ["example/injectioninitializer"],
+            "importPaths": ["source"]
+        }
+    ]
 }
