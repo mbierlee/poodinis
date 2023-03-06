@@ -804,4 +804,19 @@ version (unittest)
     {
 
     }
+
+    class AutowiredMethod
+    {
+        @Autowire
+        public int lala()
+        {
+            return 42;
+        }
+
+        @Autowire
+        public int lala(int valla)
+        {
+            return valla;
+        }
+    }
 }

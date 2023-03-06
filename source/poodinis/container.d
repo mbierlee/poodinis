@@ -471,14 +471,15 @@ synchronized class DependencyContainer
     {
         foreach (memberName; __traits(allMembers, Type))
         {
-            mixin(createImportsString!Type);
-            enum QualifiedName = fullyQualifiedName!Type ~ `.` ~ memberName;
-            static if (__traits(compiles, __traits(getProtection, __traits(getMember, instance, memberName)))
-                && __traits(getProtection, __traits(getMember, instance, memberName)) == "public"
-                && isFunction!(mixin(QualifiedName))
-                && hasUDA!(__traits(getMember, instance, memberName), PostConstruct))
+            foreach (overload; __traits(getOverloads, instance, memberName))
             {
-                __traits(getMember, instance, memberName)();
+                static if (__traits(compiles, __traits(getProtection, overload))
+                    && __traits(getProtection, overload) == "public"
+                    && isFunction!overload
+                    && hasUDA!(overload, PostConstruct))
+                {
+                    __traits(getMember, instance, memberName)();
+                }
             }
         }
     }
