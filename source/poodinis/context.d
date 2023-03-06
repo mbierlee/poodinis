@@ -69,37 +69,43 @@ public void registerContext(Context : ApplicationContext)(shared(DependencyConta
 }
 
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(
-        ApplicationContextType context, shared(DependencyContainer) container)
+    ApplicationContextType context, shared(DependencyContainer) container)
 {
-    foreach (member; __traits(allMembers, ApplicationContextType))
+    foreach (memberName; __traits(allMembers, ApplicationContextType))
     {
-        static if (__traits(getProtection, __traits(getMember, context,
-                member)) == "public" && hasUDA!(__traits(getMember, context, member), Component))
+        foreach (overload; __traits(getOverloads, context, memberName))
         {
-            auto factoryMethod = &__traits(getMember, context, member);
-            Registration registration = null;
-            auto createsSingleton = CreatesSingleton.yes;
-
-            foreach (attribute; __traits(getAttributes, __traits(getMember, context, member)))
+            static if (__traits(getProtection, overload) == "public" && hasUDA!(overload, Component))
             {
-                static if (is(attribute == RegisterByType!T, T))
+                auto factoryMethod = &__traits(getMember, context, memberName);
+                Registration registration = null;
+                auto createsSingleton = CreatesSingleton.yes;
+
+                foreach (attribute; __traits(getAttributes, overload))
                 {
-                    registration = container.register!(typeof(attribute.type),
+                    static if (is(attribute == RegisterByType!T, T))
+                    {
+                        registration = container.register!(typeof(attribute.type),
                             ReturnType!factoryMethod);
+                    }
+                    else static if (__traits(isSame, attribute, Prototype))
+                    {
+                        createsSingleton = CreatesSingleton.no;
+                    }
                 }
-                else static if (__traits(isSame, attribute, Prototype))
+
+                if (registration is null)
                 {
-                    createsSingleton = CreatesSingleton.no;
+                    registration = container.register!(ReturnType!factoryMethod);
                 }
-            }
 
-            if (registration is null)
-            {
-                registration = container.register!(ReturnType!factoryMethod);
+                registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
+                    registration.instanceType,
+                    createsSingleton,
+                    null,
+                    factoryMethod
+                );
             }
-
-            registration.instanceFactory.factoryParameters = InstanceFactoryParameters(
-                    registration.instanceType, createsSingleton, null, factoryMethod);
         }
     }
 }
