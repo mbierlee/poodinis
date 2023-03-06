@@ -19,7 +19,7 @@ run-examples: run-annotationsExample \
 	run-arrayCompletionExample \
 	run-constructorInjectionExample \
 	run-injectionInitializerExample \
-	run-postConstructorPreDestructorExample \
+	run-postConPreDestExample \
 	run-qualifiersExample \
 	run-quickstartExample \
 	run-registerOnResolveExample \
@@ -40,8 +40,8 @@ run-constructorInjectionExample:
 run-injectionInitializerExample:
 	dub run --build=release --config=injectionInitializerExample
 
-run-postConstructorPreDestructorExample:
-	dub run --build=release --config=postConstructorPreDestructorExample
+run-postConPreDestExample:
+	dub run --build=release --config=postConPreDestExample
 
 run-qualifiersExample:
 	dub run --build=release --config=qualifiersExample

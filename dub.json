@@ -119,11 +119,11 @@
 			]
 		},
 		{
-			"name" : "postConstructorPreDestructorExample",
+			"name" : "postConPreDestExample",
 			"targetType": "executable",
-			"targetName": "postConstructorPreDestructorExample",
+			"targetName": "postConPreDestExample",
 			"sourcePaths": [
-				"example/postconstructorpredestructor"
+				"example/postconpredest"
 			],
 			"importPaths": [
 				"source"
