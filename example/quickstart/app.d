@@ -7,31 +7,25 @@
 
 import poodinis;
 
-class Driver
-{
+class Driver {
 }
 
-interface Database
-{
+interface Database {
 }
 
-class RelationalDatabase : Database
-{
+class RelationalDatabase : Database {
 	private Driver driver;
 
-	this(Driver driver)
-	{ // Automatically injected on creation by container
+	this(Driver driver) { // Automatically injected on creation by container
 		this.driver = driver;
 	}
 }
 
-class DataWriter
-{
+class DataWriter {
 	@Autowire private Database database; // Automatically injected when class is resolved
 }
 
-void main()
-{
+void main() {
 	auto dependencies = new shared DependencyContainer();
 	dependencies.register!Driver;
 	dependencies.register!DataWriter;

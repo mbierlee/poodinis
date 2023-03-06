@@ -8,12 +8,10 @@
 import poodinis;
 import std.stdio;
 
-class Doohickey
-{
+class Doohickey {
 }
 
-void main()
-{
+void main() {
     auto dependencies = new shared DependencyContainer();
     dependencies.register!Doohickey.initializedBy({
         writeln("Creating Doohickey via initializer delegate.");

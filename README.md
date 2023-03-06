@@ -37,7 +37,7 @@ import poodinis;
 
 class Driver {}
 
-interface Database {};
+interface Database {}
 
 class RelationalDatabase : Database {
 	private Driver driver;

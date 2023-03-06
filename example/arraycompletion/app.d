@@ -9,50 +9,39 @@ import poodinis;
 
 import std.stdio;
 
-interface Pie
-{
+interface Pie {
 	public void eat();
 }
 
-class BlueBerryPie : Pie
-{
-	public override void eat()
-	{
+class BlueBerryPie : Pie {
+	public override void eat() {
 		writeln("Nom nom nom. I like this one!");
 	}
 }
 
-class ApplePie : Pie
-{
-	public override void eat()
-	{
+class ApplePie : Pie {
+	public override void eat() {
 		writeln("Nom nom nom. These aren't real apples...");
 	}
 }
 
-class CardboardBoxPie : Pie
-{
-	public override void eat()
-	{
+class CardboardBoxPie : Pie {
+	public override void eat() {
 		writeln("Nom nom nom. This... is not a pie.");
 	}
 }
 
-class PieEater
-{
+class PieEater {
 	@Autowire private Pie[] pies;
 
-	public void eatThemAll()
-	{
-		foreach (pie; pies)
-		{
+	public void eatThemAll() {
+		foreach (pie; pies) {
 			pie.eat();
 		}
 	}
 }
 
-void main()
-{
+void main() {
 	auto dependencies = new shared DependencyContainer();
 	dependencies.register!(Pie, BlueBerryPie);
 	dependencies.register!(Pie, ApplePie);

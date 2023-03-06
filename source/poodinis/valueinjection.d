@@ -18,23 +18,19 @@ import std.string : format;
 /**
  * Thrown when something goes wrong during value injection.
  */
-class ValueInjectionException : Exception
-{
+class ValueInjectionException : Exception {
     mixin basicExceptionCtors;
 }
 
 /**
  * Thrown by injectors when the value with the given key cannot be found.
  */
-class ValueNotAvailableException : Exception
-{
-    this(string key)
-    {
+class ValueNotAvailableException : Exception {
+    this(string key) {
         super(format("Value for key %s is not available", key));
     }
 
-    this(string key, Throwable cause)
-    {
+    this(string key, Throwable cause) {
         super(format("Value for key %s is not available", key), cause);
     }
 }
@@ -56,8 +52,7 @@ class ValueNotAvailableException : Exception
  * }
  * ---
  */
-struct Value
-{
+struct Value {
     /**
      * The textual key used to find the value by injectors.
      *
@@ -83,8 +78,7 @@ struct Value
  * }
  * ---
  */
-struct MandatoryValue
-{
+struct MandatoryValue {
     /**
      * The textual key used to find the value by injectors.
      *
@@ -115,8 +109,7 @@ struct MandatoryValue
  * container.register!(ValueInjector!int, MyIntInjector);
  * ---
  */
-interface ValueInjector(Type)
-{
+interface ValueInjector(Type) {
     /**
      * Get a value from the injector by key.
      *

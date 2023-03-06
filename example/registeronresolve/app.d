@@ -7,28 +7,23 @@
 
 import poodinis;
 
-class Violin
-{
+class Violin {
 }
 
-interface InstrumentPlayer
-{
+interface InstrumentPlayer {
 }
 
-class ViolinPlayer : InstrumentPlayer
-{
+class ViolinPlayer : InstrumentPlayer {
 	// Autowired concrete types can be registered on resolve
 	@Autowire private Violin violin;
 }
 
-class Orchestra
-{
+class Orchestra {
 	// Autowired non-concrete types can be registered on resolved, given they have a qualifier.
 	@Autowire!ViolinPlayer private InstrumentPlayer violinPlayer;
 }
 
-void main()
-{
+void main() {
 	auto dependencies = new shared DependencyContainer();
 
 	/*

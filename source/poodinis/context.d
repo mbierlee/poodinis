@@ -20,10 +20,8 @@ import poodinis.autowire : autowire;
 
 import std.traits : hasUDA, ReturnType;
 
-class ApplicationContext
-{
-    public void registerDependencies(shared(DependencyContainer) container)
-    {
+class ApplicationContext {
+    public void registerDependencies(shared(DependencyContainer) container) {
     }
 }
 
@@ -31,16 +29,14 @@ class ApplicationContext
 * A component annotation is used for specifying which factory methods produce components in
 * an application context.
 */
-struct Component
-{
+struct Component {
 }
 
 /**
 * This annotation allows you to specify by which super type the component should be registered. This
 * enables you to use type-qualified alternatives for dependencies.
 */
-struct RegisterByType(Type)
-{
+struct RegisterByType(Type) {
     Type type;
 }
 
@@ -48,8 +44,7 @@ struct RegisterByType(Type)
 * Components with the prototype registration will be scoped as dependencies which will create
 * new instances every time they are resolved. The factory method will be called repeatedly.
 */
-struct Prototype
-{
+struct Prototype {
 }
 
 /**
@@ -59,8 +54,7 @@ struct Prototype
 * It is mostly used for dependencies which come from an external library or when you don't
 * want to use annotations to set-up dependencies in your classes.
 */
-public void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container)
-{
+public void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container) {
     auto context = new Context();
     context.registerDependencies(container);
     context.registerContextComponents(container);
@@ -69,33 +63,24 @@ public void registerContext(Context : ApplicationContext)(shared(DependencyConta
 }
 
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(
-    ApplicationContextType context, shared(DependencyContainer) container)
-{
-    foreach (memberName; __traits(allMembers, ApplicationContextType))
-    {
-        foreach (overload; __traits(getOverloads, context, memberName))
-        {
-            static if (__traits(getProtection, overload) == "public" && hasUDA!(overload, Component))
-            {
+    ApplicationContextType context, shared(DependencyContainer) container) {
+    foreach (memberName; __traits(allMembers, ApplicationContextType)) {
+        foreach (overload; __traits(getOverloads, context, memberName)) {
+            static if (__traits(getProtection, overload) == "public" && hasUDA!(overload, Component)) {
                 auto factoryMethod = &__traits(getMember, context, memberName);
                 Registration registration = null;
                 auto createsSingleton = CreatesSingleton.yes;
 
-                foreach (attribute; __traits(getAttributes, overload))
-                {
-                    static if (is(attribute == RegisterByType!T, T))
-                    {
+                foreach (attribute; __traits(getAttributes, overload)) {
+                    static if (is(attribute == RegisterByType!T, T)) {
                         registration = container.register!(typeof(attribute.type),
                             ReturnType!factoryMethod);
-                    }
-                    else static if (__traits(isSame, attribute, Prototype))
-                    {
+                    } else static if (__traits(isSame, attribute, Prototype)) {
                         createsSingleton = CreatesSingleton.no;
                     }
                 }
 
-                if (registration is null)
-                {
+                if (registration is null) {
                     registration = container.register!(ReturnType!factoryMethod);
                 }
 

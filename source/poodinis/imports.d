@@ -14,16 +14,12 @@ module poodinis.imports;
 import std.meta : staticIndexOf;
 import std.traits : moduleName, TemplateArgsOf, isBuiltinType, isType;
 
-public static string createImportsString(Type, ParentTypeList...)()
-{
+public static string createImportsString(Type, ParentTypeList...)() {
     string imports = `import ` ~ moduleName!Type ~ `;`;
-    static if (__traits(compiles, TemplateArgsOf!Type))
-    {
-        foreach (TemplateArgType; TemplateArgsOf!Type)
-        {
+    static if (__traits(compiles, TemplateArgsOf!Type)) {
+        foreach (TemplateArgType; TemplateArgsOf!Type) {
             static if (isType!TemplateArgType &&
-                (!isBuiltinType!TemplateArgType && staticIndexOf!(TemplateArgType, ParentTypeList) == -1))
-            {
+                (!isBuiltinType!TemplateArgType && staticIndexOf!(TemplateArgType, ParentTypeList) == -1)) {
                 imports ~= createImportsString!(TemplateArgType, ParentTypeList, Type);
             }
         }

@@ -26,23 +26,19 @@ import std.algorithm : canFind;
 import std.traits : fullyQualifiedName, hasUDA, BaseTypeTuple;
 import std.meta : AliasSeq;
 
-debug (poodinisVerbose)
-{
+debug (poodinisVerbose) {
     import std.stdio : writeln;
 }
 
 /**
  * Exception thrown when errors occur while resolving a type in a dependency container.
  */
-class ResolveException : Exception
-{
-    this(string message, TypeInfo resolveType)
-    {
+class ResolveException : Exception {
+    this(string message, TypeInfo resolveType) {
         super(format("Exception while resolving type %s: %s", resolveType.toString(), message));
     }
 
-    this(Throwable cause, TypeInfo resolveType)
-    {
+    this(Throwable cause, TypeInfo resolveType) {
         super(format("Exception while resolving type %s", resolveType.toString()), cause);
     }
 }
@@ -50,10 +46,8 @@ class ResolveException : Exception
 /**
  * Exception thrown when errors occur while registering a type in a dependency container.
  */
-class RegistrationException : Exception
-{
-    this(string message, TypeInfo registrationType)
-    {
+class RegistrationException : Exception {
+    this(string message, TypeInfo registrationType) {
         super(format("Exception while registering type %s: %s",
                 registrationType.toString(), message));
     }
@@ -62,8 +56,7 @@ class RegistrationException : Exception
 /**
  * Options which influence the process of registering dependencies
  */
-public enum RegistrationOption
-{
+public enum RegistrationOption {
     none = 0,
     /**
      * Prevent a concrete type being registered on itself. With this option you will always need
@@ -75,8 +68,7 @@ public enum RegistrationOption
 /**
  * Options which influence the process of resolving dependencies
  */
-public enum ResolveOption
-{
+public enum ResolveOption {
     none = 0,
     /**
      * Registers the type you're trying to resolve before returning it.
@@ -99,8 +91,7 @@ public enum ResolveOption
  * Multiple methods can be marked and will all be called after construction. The order in which
  * methods are called is undetermined. Methods should have the signature void(void).
  */
-struct PostConstruct
-{
+struct PostConstruct {
 }
 
 /**
@@ -110,8 +101,7 @@ struct PostConstruct
  * This method is called when removeRegistration or clearAllRegistrations is called.
  * It will also be called when the container's destructor is called.
  */
-struct PreDestroy
-{
+struct PreDestroy {
 }
 
 /**
@@ -124,8 +114,7 @@ struct PreDestroy
  * In most cases you want to use a global singleton dependency container provided by getInstance() to manage all dependencies.
  * You can still create new instances of this class for exceptional situations.
  */
-synchronized class DependencyContainer
-{
+synchronized class DependencyContainer {
     private Registration[][TypeInfo] registrations;
 
     private Registration[] autowireStack;
@@ -133,8 +122,7 @@ synchronized class DependencyContainer
     private RegistrationOption persistentRegistrationOptions;
     private ResolveOption persistentResolveOptions;
 
-    ~this()
-    {
+    ~this() {
         clearAllRegistrations();
     }
 
@@ -158,8 +146,7 @@ synchronized class DependencyContainer
      *
      * See_Also: singleInstance, newInstance, existingInstance
      */
-    public Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none)
-    {
+    public Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none) {
         return register!(ConcreteType, ConcreteType)(options);
     }
 
@@ -182,20 +169,17 @@ synchronized class DependencyContainer
      */
     public Registration register(SuperType, ConcreteType:
         SuperType)(RegistrationOption options = RegistrationOption.none)
-            if (!is(ConcreteType == struct))
-    {
+            if (!is(ConcreteType == struct)) {
         TypeInfo registeredType = typeid(SuperType);
         TypeInfo_Class concreteType = typeid(ConcreteType);
 
-        debug (poodinisVerbose)
-        {
+        debug (poodinisVerbose) {
             writeln(format("DEBUG: Register type %s (as %s)",
                     concreteType.toString(), registeredType.toString()));
         }
 
         auto existingRegistration = getExistingRegistration(registeredType, concreteType);
-        if (existingRegistration)
-        {
+        if (existingRegistration) {
             return existingRegistration;
         }
 
@@ -204,11 +188,9 @@ synchronized class DependencyContainer
             instanceFactory, this);
         newRegistration.initializeFactoryType().singleInstance();
 
-        static if (!is(SuperType == ConcreteType))
-        {
+        static if (!is(SuperType == ConcreteType)) {
             if (!hasOption(options, persistentRegistrationOptions,
-                    RegistrationOption.doNotAddConcreteTypeRegistration))
-            {
+                    RegistrationOption.doNotAddConcreteTypeRegistration)) {
                 auto concreteTypeRegistration = register!ConcreteType;
                 concreteTypeRegistration.linkTo(newRegistration);
             }
@@ -219,38 +201,30 @@ synchronized class DependencyContainer
     }
 
     private bool hasOption(OptionType)(OptionType options,
-        OptionType persistentOptions, OptionType option)
-    {
+        OptionType persistentOptions, OptionType option) {
         return ((options | persistentOptions) & option) != 0;
     }
 
-    private OptionType buildFlags(OptionType)(OptionType[] options)
-    {
+    private OptionType buildFlags(OptionType)(OptionType[] options) {
         OptionType flags;
-        foreach (option; options)
-        {
+        foreach (option; options) {
             flags |= option;
         }
         return flags;
     }
 
-    private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType)
-    {
+    private Registration getExistingRegistration(TypeInfo registrationType, TypeInfo qualifierType) {
         auto existingCandidates = registrationType in registrations;
-        if (existingCandidates)
-        {
+        if (existingCandidates) {
             return getRegistration(cast(Registration[])*existingCandidates, qualifierType);
         }
 
         return null;
     }
 
-    private Registration getRegistration(Registration[] candidates, TypeInfo concreteType)
-    {
-        foreach (existingRegistration; candidates)
-        {
-            if (existingRegistration.instanceType == concreteType)
-            {
+    private Registration getRegistration(Registration[] candidates, TypeInfo concreteType) {
+        foreach (existingRegistration; candidates) {
+            if (existingRegistration.instanceType == concreteType) {
                 return existingRegistration;
             }
         }
@@ -299,8 +273,7 @@ synchronized class DependencyContainer
      */
     public RegistrationType resolve(RegistrationType)(
         ResolveOption resolveOptions = ResolveOption.none)
-            if (!is(RegistrationType == struct))
-    {
+            if (!is(RegistrationType == struct)) {
         return resolve!(RegistrationType, RegistrationType)(resolveOptions);
     }
 
@@ -332,32 +305,26 @@ synchronized class DependencyContainer
      */
     public QualifierType resolve(RegistrationType, QualifierType:
         RegistrationType)(ResolveOption resolveOptions = ResolveOption.none)
-            if (!is(QualifierType == struct))
-    {
+            if (!is(QualifierType == struct)) {
         TypeInfo resolveType = typeid(RegistrationType);
         TypeInfo qualifierType = typeid(QualifierType);
 
-        debug (poodinisVerbose)
-        {
+        debug (poodinisVerbose) {
             writeln("DEBUG: Resolving type " ~ resolveType.toString() ~ " with qualifier " ~ qualifierType.toString());
         }
 
         auto candidates = resolveType in registrations;
-        if (!candidates)
-        {
-            static if (is(typeof(typeid(QualifierType)) == TypeInfo_Class) && !__traits(isAbstractClass, QualifierType))
-            {
+        if (!candidates) {
+            static if (is(typeof(typeid(QualifierType)) == TypeInfo_Class) && !__traits(isAbstractClass, QualifierType)) {
                 if (hasOption(resolveOptions, persistentResolveOptions, ResolveOption
-                        .registerBeforeResolving))
-                {
+                        .registerBeforeResolving)) {
                     register!(RegistrationType, QualifierType)();
                     return resolve!(RegistrationType, QualifierType)(resolveOptions);
                 }
             }
 
             if (hasOption(resolveOptions, persistentResolveOptions,
-                    ResolveOption.noResolveException))
-            {
+                    ResolveOption.noResolveException)) {
                 return null;
             }
 
@@ -367,37 +334,29 @@ synchronized class DependencyContainer
         Registration registration = getQualifiedRegistration(resolveType,
             qualifierType, cast(Registration[])*candidates);
 
-        try
-        {
+        try {
             QualifierType newInstance = resolveAutowiredInstance!QualifierType(registration);
             callPostConstructors(newInstance);
             return newInstance;
-        }
-        catch (ValueInjectionException e)
-        {
+        } catch (ValueInjectionException e) {
             throw new ResolveException(e, resolveType);
         }
     }
 
-    bool isRegistered(RegistrationType)()
-    {
+    bool isRegistered(RegistrationType)() {
         TypeInfo typeInfo = typeid(RegistrationType);
         auto candidates = typeInfo in registrations;
         return candidates !is null;
     }
 
-    private QualifierType resolveAutowiredInstance(QualifierType)(Registration registration)
-    {
+    private QualifierType resolveAutowiredInstance(QualifierType)(Registration registration) {
         QualifierType instance;
-        if (!(cast(Registration[]) autowireStack).canFind(registration))
-        {
+        if (!(cast(Registration[]) autowireStack).canFind(registration)) {
             autowireStack ~= cast(shared(Registration)) registration;
             instance = cast(QualifierType) registration.getInstance(
                 new AutowireInstantiationContext());
             autowireStack = autowireStack[0 .. $ - 1];
-        }
-        else
-        {
+        } else {
             auto autowireContext = new AutowireInstantiationContext();
             autowireContext.autowireInstance = false;
             instance = cast(QualifierType) registration.getInstance(autowireContext);
@@ -423,25 +382,21 @@ synchronized class DependencyContainer
      * ---
      */
     public RegistrationType[] resolveAll(RegistrationType)(
-        ResolveOption resolveOptions = ResolveOption.none)
-    {
+        ResolveOption resolveOptions = ResolveOption.none) {
         RegistrationType[] instances;
         TypeInfo resolveType = typeid(RegistrationType);
 
         auto qualifiedRegistrations = resolveType in registrations;
-        if (!qualifiedRegistrations)
-        {
+        if (!qualifiedRegistrations) {
             if (hasOption(resolveOptions, persistentResolveOptions,
-                    ResolveOption.noResolveException))
-            {
+                    ResolveOption.noResolveException)) {
                 return [];
             }
 
             throw new ResolveException("Type not registered.", resolveType);
         }
 
-        foreach (registration; cast(Registration[])*qualifiedRegistrations)
-        {
+        foreach (registration; cast(Registration[])*qualifiedRegistrations) {
             instances ~= resolveAutowiredInstance!RegistrationType(registration);
         }
 
@@ -449,12 +404,9 @@ synchronized class DependencyContainer
     }
 
     private Registration getQualifiedRegistration(TypeInfo resolveType,
-        TypeInfo qualifierType, Registration[] candidates)
-    {
-        if (resolveType == qualifierType)
-        {
-            if (candidates.length > 1)
-            {
+        TypeInfo qualifierType, Registration[] candidates) {
+        if (resolveType == qualifierType) {
+            if (candidates.length > 1) {
                 string candidateList = candidates.toConcreteTypeListString();
                 throw new ResolveException(
                     "Multiple qualified candidates available: " ~ candidateList ~ ". Please use a qualifier.",
@@ -467,17 +419,13 @@ synchronized class DependencyContainer
         return getRegistration(candidates, qualifierType);
     }
 
-    private void callPostConstructors(Type)(Type instance)
-    {
-        foreach (memberName; __traits(allMembers, Type))
-        {
-            foreach (overload; __traits(getOverloads, instance, memberName))
-            {
+    private void callPostConstructors(Type)(Type instance) {
+        foreach (memberName; __traits(allMembers, Type)) {
+            foreach (overload; __traits(getOverloads, instance, memberName)) {
                 static if (__traits(compiles, __traits(getProtection, overload))
                     && __traits(getProtection, overload) == "public"
                     && isFunction!overload
-                    && hasUDA!(overload, PostConstruct))
-                {
+                    && hasUDA!(overload, PostConstruct)) {
                     __traits(getMember, instance, memberName)();
                 }
             }
@@ -487,10 +435,8 @@ synchronized class DependencyContainer
     /**
      * Clears all dependency registrations managed by this container.
      */
-    public void clearAllRegistrations()
-    {
-        foreach (registrationsOfType; registrations)
-        {
+    public void clearAllRegistrations() {
+        foreach (registrationsOfType; registrations) {
             callPreDestructorsOfRegistrations(registrationsOfType);
         }
         registrations.destroy();
@@ -506,20 +452,16 @@ synchronized class DependencyContainer
      * container.removeRegistration!Animal;
      * ---
      */
-    public void removeRegistration(RegistrationType)()
-    {
+    public void removeRegistration(RegistrationType)() {
         auto registrationsOfType = *(typeid(RegistrationType) in registrations);
         callPreDestructorsOfRegistrations(registrationsOfType);
         registrations.remove(typeid(RegistrationType));
     }
 
-    private void callPreDestructorsOfRegistrations(shared(Registration[]) registrations)
-    {
-        foreach (registration; registrations)
-        {
+    private void callPreDestructorsOfRegistrations(shared(Registration[]) registrations) {
+        foreach (registration; registrations) {
             Registration unsharedRegistration = cast(Registration) registration;
-            if (unsharedRegistration.preDestructor !is null)
-            {
+            if (unsharedRegistration.preDestructor !is null) {
                 unsharedRegistration.preDestructor()();
             }
         }
@@ -528,32 +470,28 @@ synchronized class DependencyContainer
     /**
      * Apply persistent registration options which will be used everytime register() is called.
      */
-    public void setPersistentRegistrationOptions(RegistrationOption options)
-    {
+    public void setPersistentRegistrationOptions(RegistrationOption options) {
         persistentRegistrationOptions = options;
     }
 
     /**
      * Unsets all applied persistent registration options
      */
-    public void unsetPersistentRegistrationOptions()
-    {
+    public void unsetPersistentRegistrationOptions() {
         persistentRegistrationOptions = RegistrationOption.none;
     }
 
     /**
      * Apply persistent resolve options which will be used everytime resolve() is called.
      */
-    public void setPersistentResolveOptions(ResolveOption options)
-    {
+    public void setPersistentResolveOptions(ResolveOption options) {
         persistentResolveOptions = options;
     }
 
     /**
      * Unsets all applied persistent resolve options
      */
-    public void unsetPersistentResolveOptions()
-    {
+    public void unsetPersistentResolveOptions() {
         persistentResolveOptions = ResolveOption.none;
     }
 

@@ -9,50 +9,39 @@ import poodinis;
 
 import std.stdio;
 
-interface Engine
-{
+interface Engine {
 	public void engage();
 }
 
-class FuelEngine : Engine
-{
-	public void engage()
-	{
+class FuelEngine : Engine {
+	public void engage() {
 		writeln("VROOOOOOM!");
 	}
 }
 
-class ElectricEngine : Engine
-{
-	public void engage()
-	{
+class ElectricEngine : Engine {
+	public void engage() {
 		writeln("hummmmmmmm....");
 	}
 }
 
-class HybridCar
-{
+class HybridCar {
 	alias KilometersPerHour = int;
 
 	@Autowire!FuelEngine private Engine fuelEngine;
 
 	@Autowire!ElectricEngine private Engine electricEngine;
 
-	public void moveAtSpeed(KilometersPerHour speed)
-	{
-		if (speed <= 45)
-		{
+	public void moveAtSpeed(KilometersPerHour speed) {
+		if (speed <= 45) {
 			electricEngine.engage();
-		}
-		else
-		{
+		} else {
 			fuelEngine.engage();
 		}
 	}
 }
 
-void main()
-{
+void main() {
 	auto dependencies = new shared DependencyContainer();
 
 	dependencies.register!HybridCar;

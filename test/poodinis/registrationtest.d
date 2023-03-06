@@ -10,65 +10,59 @@ import poodinis.test.testclasses;
 
 import std.exception;
 
-version (unittest)
-{
+version (unittest) {
 
     // Test getting instance without scope defined throws exception
-    unittest
-    {
+    unittest {
         Registration registration = new Registration(typeid(TestType), null, null, null);
         assertThrown!(InstanceCreationException)(registration.getInstance(), null);
     }
 
     // Test set single instance scope using scope setter
-    unittest
-    {
+    unittest {
         Registration registration = new Registration(null, typeid(TestType),
-                new InstanceFactory(), null).initializeFactoryType();
+            new InstanceFactory(), null).initializeFactoryType();
         auto chainedRegistration = registration.singleInstance();
         auto instance1 = registration.getInstance();
         auto instance2 = registration.getInstance();
         assert(instance1 is instance2,
-                "Registration with single instance scope did not return the same instance");
+            "Registration with single instance scope did not return the same instance");
         assert(registration is chainedRegistration,
-                "Registration returned by scope setting is not the same as the registration being set");
+            "Registration returned by scope setting is not the same as the registration being set");
     }
 
     // Test set new instance scope using scope setter
-    unittest
-    {
+    unittest {
         Registration registration = new Registration(null, typeid(TestType),
-                new InstanceFactory(), null).initializeFactoryType();
+            new InstanceFactory(), null).initializeFactoryType();
         auto chainedRegistration = registration.newInstance();
         auto instance1 = registration.getInstance();
         auto instance2 = registration.getInstance();
         assert(instance1 !is instance2,
-                "Registration with new instance scope did not return a different instance");
+            "Registration with new instance scope did not return a different instance");
         assert(registration is chainedRegistration,
-                "Registration returned by scope setting is not the same as the registration being set");
+            "Registration returned by scope setting is not the same as the registration being set");
     }
 
     // Test set existing instance scope using scope setter
-    unittest
-    {
+    unittest {
         Registration registration = new Registration(null, null, new InstanceFactory(), null);
         auto expectedInstance = new TestType();
         auto chainedRegistration = registration.existingInstance(expectedInstance);
         auto actualInstance = registration.getInstance();
         assert(expectedInstance is actualInstance,
-                "Registration with existing instance scope did not return the same instance");
+            "Registration with existing instance scope did not return the same instance");
         assert(registration is chainedRegistration,
-                "Registration returned by scope setting is not the same as the registration being set");
+            "Registration returned by scope setting is not the same as the registration being set");
     }
 
     // Test linking registrations
-    unittest
-    {
+    unittest {
         Registration firstRegistration = new Registration(typeid(TestInterface),
-                typeid(TestImplementation), new InstanceFactory(), null).initializeFactoryType()
+            typeid(TestImplementation), new InstanceFactory(), null).initializeFactoryType()
             .singleInstance();
         Registration secondRegistration = new Registration(typeid(TestImplementation),
-                typeid(TestImplementation), new InstanceFactory(), null).initializeFactoryType()
+            typeid(TestImplementation), new InstanceFactory(), null).initializeFactoryType()
             .singleInstance().linkTo(firstRegistration);
 
         auto firstInstance = firstRegistration.getInstance();
@@ -78,10 +72,9 @@ version (unittest)
     }
 
     // Test custom factory method via initializedBy
-    unittest
-    {
+    unittest {
         Registration registration = new Registration(typeid(TestInterface),
-                typeid(TestImplementation), new InstanceFactory(), null);
+            typeid(TestImplementation), new InstanceFactory(), null);
 
         registration.initializedBy({
             auto instance = new TestImplementation();
@@ -97,10 +90,9 @@ version (unittest)
     }
 
     // Test custom factory method via initializedOnceBy
-    unittest
-    {
+    unittest {
         Registration registration = new Registration(typeid(TestInterface),
-                typeid(TestImplementation), new InstanceFactory(), null);
+            typeid(TestImplementation), new InstanceFactory(), null);
 
         registration.initializedOnceBy({
             auto instance = new TestImplementation();
@@ -116,10 +108,9 @@ version (unittest)
     }
 
     // Test chaining single/new instance scope to initializedBy will not overwrite the factory method.
-    unittest
-    {
+    unittest {
         Registration registration = new Registration(typeid(TestInterface),
-                typeid(TestImplementation), new InstanceFactory(), null);
+            typeid(TestImplementation), new InstanceFactory(), null);
 
         registration.initializedBy({
             auto instance = new TestImplementation();

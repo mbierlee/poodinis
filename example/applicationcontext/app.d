@@ -9,64 +9,50 @@ import poodinis;
 
 import std.stdio;
 
-class TownSquare
-{
-
+class TownSquare {
 	@Autowire private MarketStall marketStall;
 
-	public void makeSound()
-	{
+	public void makeSound() {
 		marketStall.announceGoodsForSale();
 	}
 }
 
-interface Goods
-{
+interface Goods {
 	public string getGoodsName();
 }
 
-class Fish : Goods
-{
-	public override string getGoodsName()
-	{
+class Fish : Goods {
+	public override string getGoodsName() {
 		return "Fish";
 	}
 }
 
-class MarketStall
-{
+class MarketStall {
 	private Goods goods;
 
-	this(Goods goods)
-	{
+	this(Goods goods) {
 		this.goods = goods;
 	}
 
-	public void announceGoodsForSale()
-	{
+	public void announceGoodsForSale() {
 		writeln(goods.getGoodsName() ~ " for sale!");
 	}
 }
 
-class ExampleApplicationContext : ApplicationContext
-{
-
+class ExampleApplicationContext : ApplicationContext {
 	@Autowire private Goods goods;
 
-	public override void registerDependencies(shared(DependencyContainer) container)
-	{
+	public override void registerDependencies(shared(DependencyContainer) container) {
 		container.register!(Goods, Fish);
 		container.register!TownSquare;
 	}
 
-	@Component public MarketStall marketStall()
-	{
+	@Component public MarketStall marketStall() {
 		return new MarketStall(goods);
 	}
 }
 
-void main()
-{
+void main() {
 	auto container = new shared DependencyContainer();
 	container.registerContext!ExampleApplicationContext;
 
