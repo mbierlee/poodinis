@@ -1,6 +1,9 @@
 Poodinis Changelog
 ==================
 
+**Version 8.1.4** (??????)
+* FIX some dlang deprecation warnings (#43). Some remain due to further issues in dlang/phobos.
+
 **Version 8.1.3** (27-10-2022)
 * FIX unnecessary re-registration of types when registerBeforeResolving is specified.
 * FIX registerBeforeResolving not working for classes that have no default constructor
