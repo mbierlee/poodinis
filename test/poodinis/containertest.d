@@ -617,4 +617,35 @@ version (unittest) {
 
         assert(instance !is null);
     }
+
+    // Test autowiring classes with recursive template parameters
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!CircularTemplateComponentA;
+        container.register!CircularTemplateComponentB;
+
+        auto componentA = container.resolve!CircularTemplateComponentA;
+        auto componentB = container.resolve!CircularTemplateComponentB;
+
+        assert(componentA !is null);
+        assert(componentB !is null);
+
+        assert(componentA.instance is componentB);
+        assert(componentB.instance is componentA);
+    }
+
+    // Test autowiring class where a method is marked with @Autowire does nothing
+    unittest {
+        // It should also not show deprecation warning:
+        // Deprecation: `__traits(getAttributes)` may only be used for individual functions, not overload sets such as: `lala`
+        //      the result of `__traits(getOverloads)` may be used to select the desired function to extract attributes from
+
+        auto container = new shared DependencyContainer();
+        container.register!AutowiredMethod;
+        auto instance = container.resolve!AutowiredMethod;
+
+        assert(instance !is null);
+        assert(instance.lala == 42);
+        assert(instance.lala(77) == 77);
+    }
 }
