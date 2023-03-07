@@ -32,7 +32,7 @@ class CardboardBoxPie : Pie {
 }
 
 class PieEater {
-	@Autowire private Pie[] pies;
+	@Inject private Pie[] pies;
 
 	public void eatThemAll() {
 		foreach (pie; pies) {

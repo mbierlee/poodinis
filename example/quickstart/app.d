@@ -22,7 +22,7 @@ class RelationalDatabase : Database {
 }
 
 class DataWriter {
-	@Autowire private Database database; // Automatically injected when class is resolved
+	@Inject private Database database; // Automatically injected when class is resolved
 }
 
 void main() {

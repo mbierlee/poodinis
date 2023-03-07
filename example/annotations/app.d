@@ -32,11 +32,11 @@ class SuperSecurityDevice {
 }
 
 class SecurityManager {
-	@Autowire private SuperSecurityDevice levelOneSecurity;
+	@Inject private SuperSecurityDevice levelOneSecurity;
 
-	@Autowire @AssignNewInstance private SuperSecurityDevice levelTwoSecurity;
+	@Inject @AssignNewInstance private SuperSecurityDevice levelTwoSecurity;
 
-	@Autowire @OptionalDependency private SecurityAuditor auditor;
+	@Inject @OptionalDependency private SecurityAuditor auditor;
 
 	public void doAudit() {
 		if (auditor !is null) {

@@ -44,6 +44,8 @@ private struct UseMemberType {
  * of a concrete class is used to autowire members declared by supertype. If no qualifier is supplied, the type
  * of the member is used as qualifier.
  *
+ * Note: @Autowire is considered legacy, but not deprecated. Using @Inject is preferred.
+ *
  * Examples:
  * Annotate member of class to be autowired:
  * ---

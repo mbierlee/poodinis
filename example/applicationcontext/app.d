@@ -10,7 +10,7 @@ import poodinis;
 import std.stdio;
 
 class TownSquare {
-	@Autowire private MarketStall marketStall;
+	@Inject private MarketStall marketStall;
 
 	public void makeSound() {
 		marketStall.announceGoodsForSale();
@@ -40,7 +40,7 @@ class MarketStall {
 }
 
 class ExampleApplicationContext : ApplicationContext {
-	@Autowire private Goods goods;
+	@Inject private Goods goods;
 
 	public override void registerDependencies(shared(DependencyContainer) container) {
 		container.register!(Goods, Fish);

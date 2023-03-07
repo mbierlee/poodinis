@@ -28,9 +28,9 @@ class ElectricEngine : Engine {
 class HybridCar {
 	alias KilometersPerHour = int;
 
-	@Autowire!FuelEngine private Engine fuelEngine;
+	@Inject!FuelEngine private Engine fuelEngine;
 
-	@Autowire!ElectricEngine private Engine electricEngine;
+	@Inject!ElectricEngine private Engine electricEngine;
 
 	public void moveAtSpeed(KilometersPerHour speed) {
 		if (speed <= 45) {

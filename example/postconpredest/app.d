@@ -20,7 +20,7 @@ class ADependency {
 }
 
 class AClass {
-	@Autowire public ADependency dependency; // Dependencies are autowired before the post-constructor is called.
+	@Inject public ADependency dependency; // Dependencies are autowired before the post-constructor is called.
 
 	@PostConstruct public void postConstructor() {
 		writeln("The class is created.");

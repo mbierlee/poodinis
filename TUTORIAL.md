@@ -89,17 +89,17 @@ dependencies.register!ExampleClass.initializedBy({
 
 ## Automatic Injection
 
-The real value of any dependency injection framework comes from its ability to automatically inject dependencies. Poodinis supports automatic injection either through autowiring members annotated with the `@Autowire` UDA or through constructor injection.
+The real value of any dependency injection framework comes from its ability to automatically inject dependencies. Poodinis supports automatic injection either through autowiring members annotated with the `@Inject` attribute or through constructor injection.
 
-### UDA-based Autowiring
+### Attribute-based Injection
 
-UDA-based autowiring can be achieved by annotating members of a class with the `@Autowire` UDA:
+Attribute-based injection can be achieved by annotating members of a class with the `@Inject` attribute:
 
 ```d
 class ExampleClassA {}
 
 class ExampleClassB {
-	@Autowire
+	@Inject
 	private ExampleClassA dependency;
 }
 
@@ -109,9 +109,9 @@ dependencies.autowire(exampleInstance);
 assert(exampleInstance.dependency !is null);
 ```
 
-It is possible to autowire public as well as protected and private members.
+It is possible to inject public as well as protected and private members.
 
-Dependencies are automatically autowired when a class is resolved. So when you resolve `ExampleClassB`, its member `dependency` is automatically autowired:
+Dependencies are automatically injected when a class is resolved. So when you resolve `ExampleClassB`, its member `dependency` is automatically injected:
 
 ```d
 dependencies.register!ExampleClassA;
@@ -120,15 +120,15 @@ auto instance = dependencies.resolve!ExampleClassB;
 assert(instance.dependency !is null);
 ```
 
-If an interface is to be autowired, you must register a concrete class by interface. A class registered only by concrete type can only be injected into members of that type, not its supertypes.
+If an interface is to be injected, you must register a concrete class by interface. A class registered only by concrete type can only be injected into members of that type, not its supertypes.
 
-Using the UDA `OptionalDependency` you can mark an autowired member as being optional. When a member is optional, no ResolveException will be thrown when
+Using the attribute `@OptionalDependency` you can mark an injected member as being optional. When a member is optional, no ResolveException will be thrown when
 the type of the member is not registered and `ResolveOption.registerBeforeResolving` is not set on the container. The member will remain null or an empty array in
 case of array dependencies.
 
 ```d
 class ExampleClass {
-	@Autowire
+	@Inject
 	@OptionalDependency
 	private AnotherExampleClass dependency;
 }
@@ -196,13 +196,13 @@ You can only register one value injector per type, a resolve exception will be t
 
 Besides injecting primitive types, it is also possible to inject structs. While it is possible to inject class instances this way, this mechanism isn't really meant for that.
 
-Value injectors will also be autowired before being used. Value injectors will even be value injected themselves, even if they will use themselves to do so. Dependencies of value injectors will also be value injected. Be extremely careful with relying on injected values within value injectors though, you might easily create a stack overflow or a chicken-egg situation.
+Value injectors will also be injected before being used. Value injectors will even be value injected themselves, even if they will use themselves to do so. Dependencies of value injectors will also be value injected. Be extremely careful with relying on injected values within value injectors though, you might easily create a stack overflow or a chicken-egg situation.
 
 Poodinis doesn't come with any value injector implementations. In the [README.md](README.md) you will find a list of projects which use different libraries as value sources.
 
 ## Circular Dependencies
 
-Poodinis can autowire circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be autowired, as this would cause an endless loop. Circular dependencies are only supported when autowiring members through the `@Autowire` UDA; circular dependencies in constructors are not supported and will result in an `InstanceCreationException`.
+Poodinis can inject circular dependencies when they are registered with `singleInstance` or `existingInstance` registration scopes. Circular dependencies in registrations with `newInstance` scopes will not be injected, as this would cause an endless loop. Circular dependencies are only supported when autowiring members through the `@Inject` attribute; circular dependencies in constructors are not supported and will result in an `InstanceCreationException`.
 
 ## Registering and Resolving Using Qualifiers
 
@@ -215,11 +215,11 @@ dependencies.register!(Color, Red);
 auto blueInstance = dependencies.resolve!(Color, Blue);
 ```
 
-If you want to autowire a type registered to multiple concrete types, specify a qualified type as template argument:
+If you want to inject a type registered to multiple concrete types, specify a qualified type as template argument:
 
 ```d
 class BluePaint {
-	@Autowire!Blue
+	@Inject!Blue
 	private Color color;
 }
 ```
@@ -228,13 +228,13 @@ If you registered multiple concrete types to the same supertype and you do not r
 
 ## Autowiring All Registered Instances to an Array
 
-If you have registered multiple concrete types to a super type, you can autowire them all to an array, in which case you can easily operate on them all:
+If you have registered multiple concrete types to a super type, you can inject them all to an array, in which case you can easily operate on them all:
 
 ```d
 // Color is an interface, Blue and Red are classes implementing that interface
 
 class ColorMixer {
-	@Autowire
+	@Inject
 	private Color[] colors;
 }
 
@@ -272,7 +272,7 @@ In the override `registerDependencies()` you can register all dependencies which
 This override is optional. You can still register simple dependencies outside of the context (or in another context).  
 Complex dependencies are registered through member methods of the context. These member methods serve as factory methods which will be called when a dependency is resolved.
 
-They are annotated with the `@Component` UDA to let the container know that these methods should be registered as dependencies. The type of the registration is the same as the return type of the method.
+They are annotated with the `@Component` attribute to let the container know that these methods should be registered as dependencies. The type of the registration is the same as the return type of the method.
 
 Factory methods are useful when you have to deal with dependencies which require constructor arguments or elaborate set-up after instantiation.
 
@@ -282,21 +282,21 @@ Application contexts have to be registered with a dependency container. They are
 container.registerContext!Context;
 ```
 
-All registered dependencies can now be resolved by the same dependency container. Registering a context will also register it as a dependency, meaning you can autowire the application context in other classes.
+All registered dependencies can now be resolved by the same dependency container. Registering a context will also register it as a dependency, meaning you can inject the application context in other classes.
 You can register as many types of application contexts as you like.
 
 ### Autowiring Application Contexts
 
-Application contexts can make use of autowired dependencies like any other dependency. When registering an application context, all its components are registered first after which the application context is autowired.
-This means that after the registration of an application context some dependencies will already be resolved and instantiated. The following example illustrates how autowired members can be used in a context:
+Application contexts can make use of injected dependencies like any other dependency. When registering an application context, all its components are registered first after which the application context is injected.
+This means that after the registration of an application context some dependencies will already be resolved and instantiated. The following example illustrates how injected members can be used in a context:
 
 ```d
 class Context : ApplicationContext {
 
-	@Autowire
+	@Inject
 	private SomeClass someClass;
 
-	@Autowire
+	@Inject
 	private SomeOtherClass someOtherClass;
 
 	public override void registerDependencies(shared(DependencyContainer) container) {
@@ -310,14 +310,14 @@ class Context : ApplicationContext {
 }
 ```
 
-As you can see, autowired dependencies can be used within factory methods. When `SomeLibraryClass` is resolved, it will be created with a resolved instance of `SomeClass` and `SomeOtherClass`. As shown, autowired dependencies can be registered within the same
-application context, but don't neccesarily have to be. You can even autowire dependencies which are created within a factory method within the same application context.
+As you can see, injected dependencies can be used within factory methods. When `SomeLibraryClass` is resolved, it will be created with a resolved instance of `SomeClass` and `SomeOtherClass`. As shown, injected dependencies can be registered within the same
+application context, but don't neccesarily have to be. You can even inject dependencies which are created within a factory method within the same application context.
 
-Application contexts are directly autowired after they have been registered. This means that all autowired dependencies which are not registered in the application context itself need to be registered before registering the application context.
+Application contexts are directly injected after they have been registered. This means that all injected dependencies which are not registered in the application context itself need to be registered before registering the application context.
 
 ### Controlling Component Registration
 
-You can further influence how components are registered and created with additional UDAs:
+You can further influence how components are registered and created with additional attributes:
 
 ```d
 class Context : ApplicationContext {
@@ -350,13 +350,13 @@ Please note that setting options will unset previously set options; the options 
 
 ## Post-Constructors and Pre-Destructors
 
-Using the `@PostConstruct` and `@PreDestroy` UDAs you can let the container call public methods in your class right after the container constructed it or when it loses its registration for your class. The pre-constructor is called right after the container has created a new instance of your class and has autowired its members. The post-construtor is called when `removeRegistration` or `clearAllRegistrations` is called, or when the container's destructor is called. A post-constructor or pre-destructor must have the signature `void(void)`.
+Using the `@PostConstruct` and `@PreDestroy` attributes you can let the container call public methods in your class right after the container constructed it or when it loses its registration for your class. The pre-constructor is called right after the container has created a new instance of your class and has injected its members. The post-construtor is called when `removeRegistration` or `clearAllRegistrations` is called, or when the container's destructor is called. A post-constructor or pre-destructor must have the signature `void(void)`.
 
 ```d
 class MyFineClass {
 	@PostConstruct
 	void postConstructor() {
-		// Is called right after MyFineClass is created and autowired
+		// Is called right after MyFineClass is created and injected
 	}
 
 	@PreDestroy

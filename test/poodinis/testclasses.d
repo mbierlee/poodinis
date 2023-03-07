@@ -15,7 +15,7 @@ version (unittest) {
     }
 
     class ComponentB {
-        public @Autowire ComponentA componentA;
+        public @Inject ComponentA componentA;
     }
 
     interface InterfaceA {
@@ -25,8 +25,8 @@ version (unittest) {
     }
 
     class ComponentD {
-        public @Autowire InterfaceA componentC = null;
-        private @Autowire InterfaceA _privateComponentC = null;
+        public @Inject InterfaceA componentC = null;
+        private @Inject InterfaceA _privateComponentC = null;
 
         public InterfaceA privateComponentC() {
             return _privateComponentC;
@@ -43,7 +43,7 @@ version (unittest) {
     class ComponentDeclarationCocktail {
         alias noomer = int;
 
-        @Autowire public ComponentA componentA;
+        @Inject public ComponentA componentA;
 
         public void doesNothing() {
         }
@@ -59,36 +59,36 @@ version (unittest) {
     }
 
     class MonkeyShine {
-        @Autowire!ComponentX public InterfaceA component;
+        @Inject!ComponentX public InterfaceA component;
     }
 
     class BootstrapBootstrap {
-        @Autowire!ComponentX public InterfaceA componentX;
+        @Inject!ComponentX public InterfaceA componentX;
 
-        @Autowire!ComponentC public InterfaceA componentC;
+        @Inject!ComponentC public InterfaceA componentC;
     }
 
     class LordOfTheComponents {
-        @Autowire public InterfaceA[] components;
+        @Inject public InterfaceA[] components;
     }
 
     class ComponentCharlie {
-        @Autowire @AssignNewInstance public ComponentA componentA;
+        @Inject @AssignNewInstance public ComponentA componentA;
     }
 
     class OuttaTime {
-        @Autowire @OptionalDependency public InterfaceA interfaceA;
+        @Inject @OptionalDependency public InterfaceA interfaceA;
 
-        @Autowire @OptionalDependency public ComponentA componentA;
+        @Inject @OptionalDependency public ComponentA componentA;
 
-        @Autowire @OptionalDependency public ComponentC[] componentCs;
+        @Inject @OptionalDependency public ComponentC[] componentCs;
     }
 
     class ValuedClass {
         @Value("values.int")
         public int intValue;
 
-        @Autowire public ComponentA unrelated;
+        @Inject public ComponentA unrelated;
     }
 
     class TestInjector : ValueInjector!int {
@@ -105,7 +105,7 @@ version (unittest) {
     }
 
     class TestClassDeux : TestInterface {
-        @Autowire public UnrelatedClass unrelated;
+        @Inject public UnrelatedClass unrelated;
     }
 
     class UnrelatedClass {
@@ -121,46 +121,46 @@ version (unittest) {
     }
 
     class ComponentClass {
-        @Autowire public AutowiredClass autowiredClass;
+        @Inject public AutowiredClass autowiredClass;
     }
 
     class ComponentCat {
-        @Autowire public ComponentMouse mouse;
+        @Inject public ComponentMouse mouse;
     }
 
     class ComponentMouse {
-        @Autowire public ComponentCat cat;
+        @Inject public ComponentCat cat;
     }
 
     class Eenie {
-        @Autowire public Meenie meenie;
+        @Inject public Meenie meenie;
     }
 
     class Meenie {
-        @Autowire public Moe moe;
+        @Inject public Moe moe;
     }
 
     class Moe {
-        @Autowire public Eenie eenie;
+        @Inject public Eenie eenie;
     }
 
     class Ittie {
-        @Autowire public Bittie bittie;
+        @Inject public Bittie bittie;
     }
 
     class Bittie {
-        @Autowire public Bunena banana;
+        @Inject public Bunena banana;
     }
 
     class Bunena {
-        @Autowire public Bittie bittie;
+        @Inject public Bittie bittie;
     }
 
     interface SuperInterface {
     }
 
     class SuperImplementation : SuperInterface {
-        @Autowire public Bunena banana;
+        @Inject public Bunena banana;
     }
 
     interface Color {
@@ -173,26 +173,26 @@ version (unittest) {
     }
 
     class Spiders {
-        @Autowire public TestInterface testMember;
+        @Inject public TestInterface testMember;
     }
 
     class Recursive {
-        @Autowire public Recursive recursive;
+        @Inject public Recursive recursive;
     }
 
     class Moolah {
     }
 
     class Wants {
-        @Autowire public Moolah moolah;
+        @Inject public Moolah moolah;
     }
 
     class John {
-        @Autowire public Wants wants;
+        @Inject public Wants wants;
     }
 
     class Cocktail {
-        @Autowire public Moolah moolah;
+        @Inject public Moolah moolah;
 
         public Red red;
 
@@ -263,7 +263,7 @@ version (unittest) {
     }
 
     class PostConstructWithAutowiring {
-        @Autowire private PostConstructionDependency dependency;
+        @Inject private PostConstructionDependency dependency;
 
         @Value("")
         private int theNumber = 1;
@@ -359,9 +359,9 @@ version (unittest) {
 
     class ComplexAutowiredTestContext : ApplicationContext {
 
-        @Autowire private Apple apple;
+        @Inject private Apple apple;
 
-        @Autowire protected ClassWrapper classWrapper;
+        @Inject protected ClassWrapper classWrapper;
 
         public override void registerDependencies(shared(DependencyContainer) container) {
             container.register!Apple;
@@ -379,7 +379,7 @@ version (unittest) {
 
     class AutowiredTestContext : ApplicationContext {
 
-        @Autowire private Apple apple;
+        @Inject private Apple apple;
 
         @Component public ClassWrapper wrapper() {
             return new ClassWrapper(apple);
@@ -561,7 +561,7 @@ version (unittest) {
     }
 
     class DependencyInjectedIntInjector : ValueInjector!int {
-        @Autowire public Dependency dependency;
+        @Inject public Dependency dependency;
 
         public override int get(string key) {
             return 2345;
@@ -569,7 +569,7 @@ version (unittest) {
     }
 
     class CircularIntInjector : ValueInjector!int {
-        @Autowire public ValueInjector!int dependency;
+        @Inject public ValueInjector!int dependency;
 
         private int count = 0;
 
@@ -596,7 +596,7 @@ version (unittest) {
     }
 
     class DependencyValueInjectedIntInjector : ValueInjector!int {
-        @Autowire public ConfigWithDefaults config;
+        @Inject public ConfigWithDefaults config;
 
         public override int get(string key) {
             if (key == "conf.missing") {
@@ -608,7 +608,7 @@ version (unittest) {
     }
 
     class TemplatedComponent(T) {
-        @Autowire T instance;
+        @Inject T instance;
     }
 
     class CircularTemplateComponentA : TemplatedComponent!CircularTemplateComponentB {
@@ -640,18 +640,18 @@ version (unittest) {
     }
 
     class AutowiredMethod {
-        @Autowire
+        @Inject
         public int lala() {
             return 42;
         }
 
-        @Autowire
+        @Inject
         public int lala(int valla) {
             return valla;
         }
     }
 
-    class WithInjectAttribute {
-        public @Inject ComponentA componentA;
+    class WithAutowireAttribute {
+        public @Autowire ComponentA componentA;
     }
 }

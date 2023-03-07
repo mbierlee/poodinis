@@ -51,7 +51,7 @@ class RelationalDatabase : Database {
 }
 
 class DataWriter {
-	@Autowire
+	@Inject
 	private Database database; // Automatically injected when class is resolved
 }
 
