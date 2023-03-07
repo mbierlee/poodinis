@@ -648,4 +648,14 @@ version (unittest) {
         assert(instance.lala == 42);
         assert(instance.lala(77) == 77);
     }
+
+    // Test autowiring using @Inject attribute
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!ComponentA;
+        container.register!WithInjectAttribute;
+
+        auto instance = container.resolve!WithInjectAttribute;
+        assert(instance.componentA is container.resolve!ComponentA);
+    }
 }

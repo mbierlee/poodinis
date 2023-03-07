@@ -69,6 +69,8 @@ private struct UseMemberType {
  * The members of an instance of "HybridCar" will now be autowired properly, because the autowire mechanism will
  * autowire member "fuelEngine" as if it's of type "FuelEngine". This means that the members of instance "fuelEngine"
  * will also be autowired because the autowire mechanism knows that member "fuelEngine" is an instance of "FuelEngine"
+ *
+ * See_Also: Inject
  */
 struct Autowire(QualifierType) {
     QualifierType qualifier;

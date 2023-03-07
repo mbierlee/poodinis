@@ -650,4 +650,8 @@ version (unittest) {
             return valla;
         }
     }
+
+    class WithInjectAttribute {
+        public @Inject ComponentA componentA;
+    }
 }
