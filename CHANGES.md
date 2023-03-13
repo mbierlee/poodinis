@@ -4,7 +4,7 @@
 This version is only compatible with DMD 2.086.1 or higher (compatible) compilers.
 
 -   FIX compilation issue for older DMD compilers.
--   CHANGE baseline DMD version to 2.086.1. Older simply didn't compiler proper anymore.
+-   CHANGE baseline DMD version to 2.086.1. Older ones simply didn't compile proper anymore.
 
 **Version 8.2.0** (13-03-2023)
 
