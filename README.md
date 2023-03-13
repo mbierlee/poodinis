@@ -1,6 +1,6 @@
 # Poodinis Dependency Injection Framework
 
-Version 8.2.0  
+Version 9.0.0  
 Copyright 2014-2023 Mike Bierlee  
 Licensed under the terms of the MIT license - See [LICENSE.txt](LICENSE.txt)
 
@@ -68,7 +68,7 @@ Dependency set-up can further be reduced by enabling "Register on resolve". For 
 
 ## Documentation
 
-You can find the public API documentation [here](https://poodinis.dpldocs.info/v8.2.0/index.html).
+You can find the public API documentation [here](https://poodinis.dpldocs.info/v9.0.0/index.html).
 
 Alternatively you can generate documentation from the source code using DUB:
 
