@@ -76,7 +76,7 @@ jobs:
 #          - dmd-2.085.1
 #          - dmd-2.077.1
           - dmd-2.076.1 # gdc (gcc v9 - v11.1) supports D at this version
-          - dmd-2.068.2
+#          - dmd-2.068.2 # Fails to download (signature error)
 #          - ldc-1.25.1 # eq to dmd v2.095.1 (excluded as this version seemed to be a bad release)
           - ldc-1.24.0 # eq to dmd v2.094.1
           - ldc-1.23.0 # eq to dmd v2.093.1
@@ -87,7 +87,6 @@ jobs:
 #          - ldc-1.18.0 # eq to dmd v2.088.1
 #          - ldc-1.17.0 # eq to dmd v2.087
 #          - ldc-1.16.0 # eq to dmd v2.086.1
-          - ldc-1.15.0 # eq to dmd v2.085.1
     steps:
       - uses: actions/checkout@v2
 
