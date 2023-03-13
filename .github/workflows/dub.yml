@@ -73,15 +73,23 @@ jobs:
           - dmd-2.088.1
           - dmd-2.087.1
           - dmd-2.086.1 # Baseline DMD version
+          - ldc-1.32.0 # eq to dmd v2.102.2
+          - ldc-1.31.0 # eq to dmd v2.101.2
+          - ldc-1.30.0 # eq to dmd v2.100.1
+          - ldc-1.29.0 # eq to dmd v2.099.1
+          - ldc-1.28.1 # eq to dmd v2.098.1
+          - ldc-1.27.1 # eq to dmd v2.097.1
+          - ldc-1.26.1 # eq to dmd v2.096.1
+          - ldc-1.25.1 # eq to dmd v2.095.1
           - ldc-1.24.0 # eq to dmd v2.094.1
           - ldc-1.23.0 # eq to dmd v2.093.1
-#          - ldc-1.22.0 # eq to dmd v2.092.1
-#          - ldc-1.21.0 # eq to dmd v2.091.1
-#          - ldc-1.20.1 # eq to dmd v2.090.1
-#          - ldc-1.19.0 # eq to dmd v2.089.1
-#          - ldc-1.18.0 # eq to dmd v2.088.1
-#          - ldc-1.17.0 # eq to dmd v2.087
-#          - ldc-1.16.0 # eq to dmd v2.086.1
+          - ldc-1.22.0 # eq to dmd v2.092.1
+          - ldc-1.21.0 # eq to dmd v2.091.1
+          - ldc-1.20.1 # eq to dmd v2.090.1
+          - ldc-1.19.0 # eq to dmd v2.089.1
+          - ldc-1.18.0 # eq to dmd v2.088.1
+          - ldc-1.17.0 # eq to dmd v2.087
+          - ldc-1.16.0 # eq to dmd v2.086.1
     steps:
       - uses: actions/checkout@v2
 
