@@ -1,6 +1,6 @@
 # Poodinis Changelog
 
-**Version 8.2.0** (??????)
+**Version 8.2.0** (13-03-2023)
 
 -   FIX some dlang deprecation warnings (#43). Some remain due to further issues in dlang/phobos.
 -   ADD support for JSR330 @Inject attribute. It will be the preferred attribute from now on. However, @Autowire is not deprecated and will still work.
