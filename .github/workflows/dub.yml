@@ -72,18 +72,7 @@ jobs:
           - dmd-2.089.1
           - dmd-2.088.1
           - dmd-2.087.1
-          - dmd-2.086.1
-          - dmd-2.085.1
-          - dmd-2.084.1
-          - dmd-2.083.1
-          - dmd-2.082.1
-          - dmd-2.081.2
-          - dmd-2.080.1
-          - dmd-2.079.1
-          - dmd-2.078.3
-          - dmd-2.077.1
-          - dmd-2.076.1
-#          - dmd-2.068.2 # Fails to download (signature error)
+          - dmd-2.086.1 # Baseline DMD version
           - ldc-1.24.0 # eq to dmd v2.094.1
           - ldc-1.23.0 # eq to dmd v2.093.1
 #          - ldc-1.22.0 # eq to dmd v2.092.1
@@ -119,7 +108,7 @@ jobs:
           dub run --build=release --config=valueInjectionExample
           dub run --build=release --config=postConPreDestExample
 
-  # On Ubuntu we can use GDC (so keep working for D version 2.076)
+  # Ensure Poodinis can build on GDC
   gdc-latest:
     name: GDC on Ubuntu
     runs-on: ubuntu-latest
