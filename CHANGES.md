@@ -1,6 +1,6 @@
 # Poodinis Changelog
 
-**Version 9.0.0**
+**Version 9.0.0** (13-03-2023)
 This version is only compatible with DMD 2.086.1 or higher (compatible) compilers.
 
 -   FIX compilation issue for older DMD compilers.
