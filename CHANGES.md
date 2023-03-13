@@ -1,5 +1,11 @@
 # Poodinis Changelog
 
+**Version 9.0.0**
+This version is only compatible with DMD 2.086.1 or higher (compatible) compilers.
+
+-   FIX compilation issue for older DMD compilers.
+-   CHANGE baseline DMD version to 2.086.1. Older simply didn't compiler proper anymore.
+
 **Version 8.2.0** (13-03-2023)
 
 -   FIX some dlang deprecation warnings (#43). Some remain due to further issues in dlang/phobos.
