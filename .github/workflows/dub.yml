@@ -8,7 +8,6 @@ on:
     branches: [ main ]
 
 jobs:
-  # Make sure the latest versions of dub and ldc work on all platforms
   build-latest:
     name: ${{ matrix.compiler }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -45,7 +44,6 @@ jobs:
           dub run --build=release --config=valueInjectionExample
           dub run --build=release --config=postConPreDestExample
 
-  # Ensure poodinis can build on everything from 2.076 to latest. These builds are Ubuntu only for speed
   build-older:
     name: ${{ matrix.compiler }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -116,7 +114,6 @@ jobs:
           dub run --build=release --config=valueInjectionExample
           dub run --build=release --config=postConPreDestExample
 
-  # Ensure Poodinis can build on GDC
   gdc-latest:
     name: GDC on Ubuntu
     runs-on: ubuntu-latest
