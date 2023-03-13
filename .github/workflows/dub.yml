@@ -80,7 +80,7 @@ jobs:
           - ldc-1.28.1 # eq to dmd v2.098.1
           - ldc-1.27.1 # eq to dmd v2.097.1
           - ldc-1.26.0 # eq to dmd v2.096.1
-          - ldc-1.25.1 # eq to dmd v2.095.1
+          # - ldc-1.25.1 # eq to dmd v2.095.1. This version has issues. Do not use with Poodinis.
           - ldc-1.24.0 # eq to dmd v2.094.1
           - ldc-1.23.0 # eq to dmd v2.093.1
           - ldc-1.22.0 # eq to dmd v2.092.1
