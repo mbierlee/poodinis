@@ -79,7 +79,7 @@ jobs:
           - ldc-1.29.0 # eq to dmd v2.099.1
           - ldc-1.28.1 # eq to dmd v2.098.1
           - ldc-1.27.1 # eq to dmd v2.097.1
-          - ldc-1.26.1 # eq to dmd v2.096.1
+          - ldc-1.26.0 # eq to dmd v2.096.1
           - ldc-1.25.1 # eq to dmd v2.095.1
           - ldc-1.24.0 # eq to dmd v2.094.1
           - ldc-1.23.0 # eq to dmd v2.093.1
