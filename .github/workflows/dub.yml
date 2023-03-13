@@ -65,7 +65,6 @@ jobs:
         compiler:
           - dmd-latest
           - ldc-latest
-          - dmd-2.103.0
           - dmd-2.102.2
           - dmd-2.101.2
           - dmd-2.100.2
