@@ -52,7 +52,7 @@ jobs:
           dub run --build=release --config=registerOnResolveExample
           dub run --build=release --config=constructorInjectionExample
           dub run --build=release --config=valueInjectionExample
-          dub run --build=release --config=postConstructorPreDestructorExample
+          dub run --build=release --config=postConPreDestExample
 
   # Ensure poodinis can build on everything from 2.076 to latest. These builds are Ubuntu only for speed
   build-older:
