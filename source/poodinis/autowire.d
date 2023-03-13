@@ -309,7 +309,7 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
     private void delegate() getPreDestructor(RegistrationType instance) {
         void delegate() preDestructor = null;
         static foreach (memberName; __traits(allMembers, RegistrationType)) {
-            static foreach (overload; __traits(getOverloads, instance, memberName)) {
+            static foreach (overload; __traits(getOverloads, RegistrationType, memberName)) {
                 static if (__traits(compiles, __traits(getProtection, overload))
                     && __traits(getProtection, overload) == "public"
                     && isFunction!overload

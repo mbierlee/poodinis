@@ -65,7 +65,7 @@ public void registerContext(Context : ApplicationContext)(shared(DependencyConta
 public void registerContextComponents(ApplicationContextType : ApplicationContext)(
     ApplicationContextType context, shared(DependencyContainer) container) {
     foreach (memberName; __traits(allMembers, ApplicationContextType)) {
-        foreach (overload; __traits(getOverloads, context, memberName)) {
+        foreach (overload; __traits(getOverloads, ApplicationContextType, memberName)) {
             static if (__traits(getProtection, overload) == "public" && hasUDA!(overload, Component)) {
                 auto factoryMethod = &__traits(getMember, context, memberName);
                 Registration registration = null;
