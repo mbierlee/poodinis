@@ -49,7 +49,7 @@ class InstanceFactory {
         factoryParameters = InstanceFactoryParameters();
     }
 
-    @property void factoryParameters(InstanceFactoryParameters factoryParameters) {
+    void factoryParameters(InstanceFactoryParameters factoryParameters) {
         if (factoryParameters.factoryMethod is null) {
             factoryParameters.factoryMethod = &this.createInstance;
         }
@@ -62,7 +62,7 @@ class InstanceFactory {
         _factoryParameters = factoryParameters;
     }
 
-    @property InstanceFactoryParameters factoryParameters() {
+    InstanceFactoryParameters factoryParameters() {
         return _factoryParameters;
     }
 

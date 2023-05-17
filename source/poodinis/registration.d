@@ -25,27 +25,27 @@ class Registration {
     private InstanceFactory _instanceFactory;
     private void delegate() _preDestructor;
 
-    @property registeredType() {
+    TypeInfo registeredType() {
         return _registeredType;
     }
 
-    @property instanceType() {
+    TypeInfo_Class instanceType() {
         return _instanceType;
     }
 
-    @property originatingContainer() {
+    shared(DependencyContainer) originatingContainer() {
         return _originatingContainer;
     }
 
-    @property instanceFactory() {
+    InstanceFactory instanceFactory() {
         return _instanceFactory;
     }
 
-    @property preDestructor() {
+    void delegate() preDestructor() {
         return _preDestructor;
     }
 
-    protected @property preDestructor(void delegate() preDestructor) {
+    protected void preDestructor(void delegate() preDestructor) {
         _preDestructor = preDestructor;
     }
 
