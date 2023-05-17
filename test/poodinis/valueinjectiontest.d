@@ -17,7 +17,7 @@ version (unittest) {
     }
 
     class LocalStructInjector : ValueInjector!LocalStruct {
-        public override LocalStruct get(string key) {
+        override LocalStruct get(string key) {
             auto data = LocalStruct(true);
             return data;
         }
@@ -25,7 +25,7 @@ version (unittest) {
 
     class LocalClassWithStruct {
         @Value("")
-        public LocalStruct localStruct;
+        LocalStruct localStruct;
     }
 
     // Test injection of values

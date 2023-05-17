@@ -49,7 +49,7 @@ class InstanceFactory {
         factoryParameters = InstanceFactoryParameters();
     }
 
-    public @property void factoryParameters(InstanceFactoryParameters factoryParameters) {
+    @property void factoryParameters(InstanceFactoryParameters factoryParameters) {
         if (factoryParameters.factoryMethod is null) {
             factoryParameters.factoryMethod = &this.createInstance;
         }
@@ -62,11 +62,11 @@ class InstanceFactory {
         _factoryParameters = factoryParameters;
     }
 
-    public @property InstanceFactoryParameters factoryParameters() {
+    @property InstanceFactoryParameters factoryParameters() {
         return _factoryParameters;
     }
 
-    public Object getInstance() {
+    Object getInstance() {
         if (_factoryParameters.createsSingleton && instance !is null) {
             debug (poodinisVerbose) {
                 printDebugUseExistingInstance();

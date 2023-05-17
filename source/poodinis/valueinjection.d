@@ -101,7 +101,7 @@ struct MandatoryValue {
  * Examples:
  * ---
  * class MyIntInjector : ValueInjector!int {
- *     public override int get(string key) { ... }
+ *     override int get(string key) { ... }
  * }
  *
  * // In order to make the container use your injector, register it by interface:

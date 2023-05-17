@@ -10,19 +10,19 @@ import poodinis;
 import std.stdio;
 
 class ADependency {
-	@PostConstruct public void postConstructor() {
+	@PostConstruct void postConstructor() {
 		writeln("The dependency is created.");
 	}
 
-	public void callMe() {
+	void callMe() {
 		writeln("The dependency was called.");
 	}
 }
 
 class AClass {
-	@Inject public ADependency dependency; // Dependencies are autowired before the post-constructor is called.
+	@Inject ADependency dependency; // Dependencies are autowired before the post-constructor is called.
 
-	@PostConstruct public void postConstructor() {
+	@PostConstruct void postConstructor() {
 		writeln("The class is created.");
 		if (dependency !is null) {
 			writeln("The dependency is autowired.");
@@ -31,12 +31,12 @@ class AClass {
 		}
 	}
 
-	@PreDestroy public void preDestructor() {
+	@PreDestroy void preDestructor() {
 		writeln("The class is no longer registered with the container.");
 	}
 }
 
-public void main() {
+void main() {
 	auto container = new shared DependencyContainer();
 	container.register!(ADependency).onConstructed((Object obj) {
 		writeln("ADependency constructed");

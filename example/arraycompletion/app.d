@@ -10,23 +10,23 @@ import poodinis;
 import std.stdio;
 
 interface Pie {
-	public void eat();
+	void eat();
 }
 
 class BlueBerryPie : Pie {
-	public override void eat() {
+	override void eat() {
 		writeln("Nom nom nom. I like this one!");
 	}
 }
 
 class ApplePie : Pie {
-	public override void eat() {
+	override void eat() {
 		writeln("Nom nom nom. These aren't real apples...");
 	}
 }
 
 class CardboardBoxPie : Pie {
-	public override void eat() {
+	override void eat() {
 		writeln("Nom nom nom. This... is not a pie.");
 	}
 }
@@ -34,7 +34,7 @@ class CardboardBoxPie : Pie {
 class PieEater {
 	@Inject private Pie[] pies;
 
-	public void eatThemAll() {
+	void eatThemAll() {
 		foreach (pie; pies) {
 			pie.eat();
 		}

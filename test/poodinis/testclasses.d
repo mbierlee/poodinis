@@ -15,7 +15,7 @@ version (unittest) {
     }
 
     class ComponentB {
-        public @Inject ComponentA componentA;
+        @Inject ComponentA componentA;
     }
 
     interface InterfaceA {
@@ -25,10 +25,10 @@ version (unittest) {
     }
 
     class ComponentD {
-        public @Inject InterfaceA componentC = null;
+        @Inject InterfaceA componentC = null;
         private @Inject InterfaceA _privateComponentC = null;
 
-        public InterfaceA privateComponentC() {
+        InterfaceA privateComponentC() {
             return _privateComponentC;
         }
     }
@@ -37,15 +37,15 @@ version (unittest) {
     };
 
     class ComponentE {
-        @DummyAttribute public ComponentC componentC;
+        @DummyAttribute ComponentC componentC;
     }
 
     class ComponentDeclarationCocktail {
         alias noomer = int;
 
-        @Inject public ComponentA componentA;
+        @Inject ComponentA componentA;
 
-        public void doesNothing() {
+        void doesNothing() {
         }
 
         ~this() {
@@ -59,40 +59,40 @@ version (unittest) {
     }
 
     class MonkeyShine {
-        @Inject!ComponentX public InterfaceA component;
+        @Inject!ComponentX InterfaceA component;
     }
 
     class BootstrapBootstrap {
-        @Inject!ComponentX public InterfaceA componentX;
+        @Inject!ComponentX InterfaceA componentX;
 
-        @Inject!ComponentC public InterfaceA componentC;
+        @Inject!ComponentC InterfaceA componentC;
     }
 
     class LordOfTheComponents {
-        @Inject public InterfaceA[] components;
+        @Inject InterfaceA[] components;
     }
 
     class ComponentCharlie {
-        @Inject @AssignNewInstance public ComponentA componentA;
+        @Inject @AssignNewInstance ComponentA componentA;
     }
 
     class OuttaTime {
-        @Inject @OptionalDependency public InterfaceA interfaceA;
+        @Inject @OptionalDependency InterfaceA interfaceA;
 
-        @Inject @OptionalDependency public ComponentA componentA;
+        @Inject @OptionalDependency ComponentA componentA;
 
-        @Inject @OptionalDependency public ComponentC[] componentCs;
+        @Inject @OptionalDependency ComponentC[] componentCs;
     }
 
     class ValuedClass {
         @Value("values.int")
-        public int intValue;
+        int intValue;
 
-        @Inject public ComponentA unrelated;
+        @Inject ComponentA unrelated;
     }
 
     class TestInjector : ValueInjector!int {
-        public override int get(string key) {
+        override int get(string key) {
             assert(key == "values.int");
             return 8;
         }
@@ -105,7 +105,7 @@ version (unittest) {
     }
 
     class TestClassDeux : TestInterface {
-        @Inject public UnrelatedClass unrelated;
+        @Inject UnrelatedClass unrelated;
     }
 
     class UnrelatedClass {
@@ -121,46 +121,46 @@ version (unittest) {
     }
 
     class ComponentClass {
-        @Inject public AutowiredClass autowiredClass;
+        @Inject AutowiredClass autowiredClass;
     }
 
     class ComponentCat {
-        @Inject public ComponentMouse mouse;
+        @Inject ComponentMouse mouse;
     }
 
     class ComponentMouse {
-        @Inject public ComponentCat cat;
+        @Inject ComponentCat cat;
     }
 
     class Eenie {
-        @Inject public Meenie meenie;
+        @Inject Meenie meenie;
     }
 
     class Meenie {
-        @Inject public Moe moe;
+        @Inject Moe moe;
     }
 
     class Moe {
-        @Inject public Eenie eenie;
+        @Inject Eenie eenie;
     }
 
     class Ittie {
-        @Inject public Bittie bittie;
+        @Inject Bittie bittie;
     }
 
     class Bittie {
-        @Inject public Bunena banana;
+        @Inject Bunena banana;
     }
 
     class Bunena {
-        @Inject public Bittie bittie;
+        @Inject Bittie bittie;
     }
 
     interface SuperInterface {
     }
 
     class SuperImplementation : SuperInterface {
-        @Inject public Bunena banana;
+        @Inject Bunena banana;
     }
 
     interface Color {
@@ -173,28 +173,28 @@ version (unittest) {
     }
 
     class Spiders {
-        @Inject public TestInterface testMember;
+        @Inject TestInterface testMember;
     }
 
     class Recursive {
-        @Inject public Recursive recursive;
+        @Inject Recursive recursive;
     }
 
     class Moolah {
     }
 
     class Wants {
-        @Inject public Moolah moolah;
+        @Inject Moolah moolah;
     }
 
     class John {
-        @Inject public Wants wants;
+        @Inject Wants wants;
     }
 
     class Cocktail {
-        @Inject public Moolah moolah;
+        @Inject Moolah moolah;
 
-        public Red red;
+        Red red;
 
         this(Red red) {
             this.red = red;
@@ -202,7 +202,7 @@ version (unittest) {
     }
 
     class Wallpaper {
-        public Color color;
+        Color color;
 
         this(Color color) {
             this.color = color;
@@ -240,9 +240,9 @@ version (unittest) {
     }
 
     class PostConstructionDependency {
-        public bool postConstructWasCalled = false;
+        bool postConstructWasCalled = false;
 
-        @PostConstruct public void callMeMaybe() {
+        @PostConstruct void callMeMaybe() {
             postConstructWasCalled = true;
         }
     }
@@ -255,9 +255,9 @@ version (unittest) {
     }
 
     class ButThereWontBe : ThereWillBePostConstruction {
-        public bool postConstructWasCalled = false;
+        bool postConstructWasCalled = false;
 
-        public override void constructIt() {
+        override void constructIt() {
             postConstructWasCalled = true;
         }
     }
@@ -268,16 +268,16 @@ version (unittest) {
         @Value("")
         private int theNumber = 1;
 
-        @PostConstruct public void doIt() {
+        @PostConstruct void doIt() {
             assert(theNumber == 8783);
             assert(dependency !is null);
         }
     }
 
     class PreDestroyerOfFates {
-        public bool preDestroyWasCalled = false;
+        bool preDestroyWasCalled = false;
 
-        @PreDestroy public void callMeMaybe() {
+        @PreDestroy void callMeMaybe() {
             preDestroyWasCalled = true;
         }
     }
@@ -297,7 +297,7 @@ version (unittest) {
     }
 
     class Banana {
-        public string color;
+        string color;
 
         this(string color) {
             this.color = color;
@@ -308,19 +308,19 @@ version (unittest) {
     }
 
     class Pear : Fruit {
-        public override string getShape() {
+        override string getShape() {
             return "Pear shaped";
         }
     }
 
     class Rabbit : Animal {
-        public override string getYell() {
+        override string getYell() {
             return "Squeeeeeel";
         }
     }
 
     class Wolf : Animal {
-        public override string getYell() {
+        override string getYell() {
             return "Wooooooooooo";
         }
     }
@@ -332,7 +332,7 @@ version (unittest) {
     }
 
     class ClassWrapper {
-        public Object someClass;
+        Object someClass;
 
         this(Object someClass) {
             this.someClass = someClass;
@@ -340,7 +340,7 @@ version (unittest) {
     }
 
     class ClassWrapperWrapper {
-        public ClassWrapper wrapper;
+        ClassWrapper wrapper;
 
         this(ClassWrapper wrapper) {
             this.wrapper = wrapper;
@@ -348,11 +348,11 @@ version (unittest) {
     }
 
     class SimpleContext : ApplicationContext {
-        public override void registerDependencies(shared(DependencyContainer) container) {
+        override void registerDependencies(shared(DependencyContainer) container) {
             container.register!CakeChart;
         }
 
-        @Component public Apple apple() {
+        @Component Apple apple() {
             return new Apple();
         }
     }
@@ -363,15 +363,15 @@ version (unittest) {
 
         @Inject protected ClassWrapper classWrapper;
 
-        public override void registerDependencies(shared(DependencyContainer) container) {
+        override void registerDependencies(shared(DependencyContainer) container) {
             container.register!Apple;
         }
 
-        @Component public ClassWrapper wrapper() {
+        @Component ClassWrapper wrapper() {
             return new ClassWrapper(apple);
         }
 
-        @Component public ClassWrapperWrapper wrapperWrapper() {
+        @Component ClassWrapperWrapper wrapperWrapper() {
             return new ClassWrapperWrapper(classWrapper);
         }
 
@@ -381,47 +381,47 @@ version (unittest) {
 
         @Inject private Apple apple;
 
-        @Component public ClassWrapper wrapper() {
+        @Component ClassWrapper wrapper() {
             return new ClassWrapper(apple);
         }
     }
 
     class TestContext : ApplicationContext {
 
-        @Component public Banana banana() {
+        @Component Banana banana() {
             return new Banana("Yellow");
         }
 
-        public Apple apple() {
+        Apple apple() {
             return new Apple();
         }
 
-        @Component @RegisterByType!Fruit public Pear pear() {
+        @Component @RegisterByType!Fruit Pear pear() {
             return new Pear();
         }
 
-        @Component @RegisterByType!Animal public Rabbit rabbit() {
+        @Component @RegisterByType!Animal Rabbit rabbit() {
             return new Rabbit();
         }
 
-        @Component @RegisterByType!Animal public Wolf wolf() {
+        @Component @RegisterByType!Animal Wolf wolf() {
             return new Wolf();
         }
 
-        @Component @Prototype public PieChart pieChart() {
+        @Component @Prototype PieChart pieChart() {
             return new PieChart();
         }
     }
 
     class TestImplementation : TestInterface {
-        public string someContent = "";
+        string someContent = "";
     }
 
     class SomeOtherClassThen {
     }
 
     class ClassWithConstructor {
-        public TestImplementation testImplementation;
+        TestImplementation testImplementation;
 
         this(TestImplementation testImplementation) {
             this.testImplementation = testImplementation;
@@ -429,8 +429,8 @@ version (unittest) {
     }
 
     class ClassWithMultipleConstructors {
-        public SomeOtherClassThen someOtherClassThen;
-        public TestImplementation testImplementation;
+        SomeOtherClassThen someOtherClassThen;
+        TestImplementation testImplementation;
 
         this(SomeOtherClassThen someOtherClassThen) {
             this.someOtherClassThen = someOtherClassThen;
@@ -443,8 +443,8 @@ version (unittest) {
     }
 
     class ClassWithConstructorWithMultipleParameters {
-        public SomeOtherClassThen someOtherClassThen;
-        public TestImplementation testImplementation;
+        SomeOtherClassThen someOtherClassThen;
+        TestImplementation testImplementation;
 
         this(SomeOtherClassThen someOtherClassThen, TestImplementation testImplementation) {
             this.someOtherClassThen = someOtherClassThen;
@@ -453,7 +453,7 @@ version (unittest) {
     }
 
     class ClassWithPrimitiveConstructor {
-        public SomeOtherClassThen someOtherClassThen;
+        SomeOtherClassThen someOtherClassThen;
 
         this(string willNotBePicked) {
         }
@@ -464,7 +464,7 @@ version (unittest) {
     }
 
     class ClassWithEmptyConstructor {
-        public SomeOtherClassThen someOtherClassThen;
+        SomeOtherClassThen someOtherClassThen;
 
         this() {
         }
@@ -480,7 +480,7 @@ version (unittest) {
     }
 
     class ClassWithStructConstructor {
-        public SomeOtherClassThen someOtherClassThen;
+        SomeOtherClassThen someOtherClassThen;
 
         this(Thing willNotBePicked) {
         }
@@ -522,58 +522,58 @@ version (unittest) {
     }
 
     class IntInjector : ValueInjector!int {
-        public override int get(string key) {
+        override int get(string key) {
             assert(key == "conf.stuffs");
             return 364;
         }
     }
 
     class StringInjector : ValueInjector!string {
-        public override string get(string key) {
+        override string get(string key) {
             assert(key == "conf.name");
             return "Le Chef";
         }
     }
 
     class ThingInjector : ValueInjector!Thing {
-        public override Thing get(string key) {
+        override Thing get(string key) {
             assert(key == "conf.thing");
             return Thing(8899);
         }
     }
 
     class DefaultIntInjector : ValueInjector!int {
-        public override int get(string key) {
+        override int get(string key) {
             throw new ValueNotAvailableException(key);
         }
     }
 
     class MandatoryAvailableIntInjector : ValueInjector!int {
-        public override int get(string key) {
+        override int get(string key) {
             return 7466;
         }
     }
 
     class MandatoryUnavailableIntInjector : ValueInjector!int {
-        public override int get(string key) {
+        override int get(string key) {
             throw new ValueNotAvailableException(key);
         }
     }
 
     class DependencyInjectedIntInjector : ValueInjector!int {
-        @Inject public Dependency dependency;
+        @Inject Dependency dependency;
 
-        public override int get(string key) {
+        override int get(string key) {
             return 2345;
         }
     }
 
     class CircularIntInjector : ValueInjector!int {
-        @Inject public ValueInjector!int dependency;
+        @Inject ValueInjector!int dependency;
 
         private int count = 0;
 
-        public override int get(string key) {
+        override int get(string key) {
             count += 1;
             if (count >= 3) {
                 return count;
@@ -584,9 +584,9 @@ version (unittest) {
 
     class ValueInjectedIntInjector : ValueInjector!int {
         @Value("five")
-        public int count = 0;
+        int count = 0;
 
-        public override int get(string key) {
+        override int get(string key) {
             if (key == "five") {
                 return 5;
             }
@@ -596,9 +596,9 @@ version (unittest) {
     }
 
     class DependencyValueInjectedIntInjector : ValueInjector!int {
-        @Inject public ConfigWithDefaults config;
+        @Inject ConfigWithDefaults config;
 
-        public override int get(string key) {
+        override int get(string key) {
             if (key == "conf.missing") {
                 return 8899;
             }
@@ -620,7 +620,7 @@ version (unittest) {
     }
 
     class ClassWithTemplatedConstructorArg(T) {
-        public TemplatedComponent!T dependency;
+        TemplatedComponent!T dependency;
 
         this(TemplatedComponent!T assignedDependency) {
             this.dependency = assignedDependency;
@@ -641,17 +641,17 @@ version (unittest) {
 
     class AutowiredMethod {
         @Inject
-        public int lala() {
+        int lala() {
             return 42;
         }
 
         @Inject
-        public int lala(int valla) {
+        int lala(int valla) {
             return valla;
         }
     }
 
     class WithAutowireAttribute {
-        public @Autowire ComponentA componentA;
+        @Autowire ComponentA componentA;
     }
 }

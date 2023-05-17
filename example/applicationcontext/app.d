@@ -12,17 +12,17 @@ import std.stdio;
 class TownSquare {
 	@Inject private MarketStall marketStall;
 
-	public void makeSound() {
+	void makeSound() {
 		marketStall.announceGoodsForSale();
 	}
 }
 
 interface Goods {
-	public string getGoodsName();
+	string getGoodsName();
 }
 
 class Fish : Goods {
-	public override string getGoodsName() {
+	override string getGoodsName() {
 		return "Fish";
 	}
 }
@@ -34,7 +34,7 @@ class MarketStall {
 		this.goods = goods;
 	}
 
-	public void announceGoodsForSale() {
+	void announceGoodsForSale() {
 		writeln(goods.getGoodsName() ~ " for sale!");
 	}
 }
@@ -42,12 +42,12 @@ class MarketStall {
 class ExampleApplicationContext : ApplicationContext {
 	@Inject private Goods goods;
 
-	public override void registerDependencies(shared(DependencyContainer) container) {
+	override void registerDependencies(shared(DependencyContainer) container) {
 		container.register!(Goods, Fish);
 		container.register!TownSquare;
 	}
 
-	@Component public MarketStall marketStall() {
+	@Component MarketStall marketStall() {
 		return new MarketStall(goods);
 	}
 }

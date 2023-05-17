@@ -13,7 +13,7 @@ import std.stdio;
 import std.conv;
 
 class SecurityAuditor {
-	public void submitAudit() {
+	void submitAudit() {
 		writeln("Hmmmyes I have received your audit. It is.... adequate.");
 	}
 }
@@ -21,12 +21,12 @@ class SecurityAuditor {
 class SuperSecurityDevice {
 	private int seed;
 
-	public this() {
+	this() {
 		auto randomGenerator = Random(unpredictableSeed);
 		seed = uniform(0, 999, randomGenerator);
 	}
 
-	public string getPassword() {
+	string getPassword() {
 		return to!string(seed) ~ "t1m3sp13!!:";
 	}
 }
@@ -38,7 +38,7 @@ class SecurityManager {
 
 	@Inject @OptionalDependency private SecurityAuditor auditor;
 
-	public void doAudit() {
+	void doAudit() {
 		if (auditor !is null) {
 			auditor.submitAudit();
 		} else {

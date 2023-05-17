@@ -15,7 +15,7 @@ class Scheduler {
 		this.calendar = calendar;
 	}
 
-	public void scheduleJob() {
+	void scheduleJob() {
 		calendar.findOpenDate();
 	}
 }
@@ -32,7 +32,7 @@ class Calendar {
 		this.hardwareClock = hardwareClock;
 	}
 
-	public void findOpenDate() {
+	void findOpenDate() {
 		hardwareClock.doThings();
 	}
 }
@@ -47,7 +47,7 @@ class HardwareClock {
 		throw new Exception("This constructor should not be used by Poodinis");
 	}
 
-	public void doThings() {
+	void doThings() {
 		writeln("Things are being done!");
 	}
 }

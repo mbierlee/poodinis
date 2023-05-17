@@ -255,13 +255,13 @@ An application context is defined as follows:
 
 ```d
 class Context : ApplicationContext {
-	public override void registerDependencies(shared(DependencyContainer) container) {
+	override void registerDependencies(shared(DependencyContainer) container) {
 		container.register!SomeClass;
 		container.register!(SomeInterface, SomeOtherClass).newInstance();
 	}
 
 	@Component
-	public SomeLibraryClass libraryClass() {
+	SomeLibraryClass libraryClass() {
 		return new SomeLibraryClass("This class uses a constructor parameter of a built-in type so I have to register it through an application context");
 	}
 }
@@ -299,12 +299,12 @@ class Context : ApplicationContext {
 	@Inject
 	private SomeOtherClass someOtherClass;
 
-	public override void registerDependencies(shared(DependencyContainer) container) {
+	override void registerDependencies(shared(DependencyContainer) container) {
 		container.register!SomeClass;
 	}
 
 	@Component
-	public SomeLibraryClass libraryClass() {
+	SomeLibraryClass libraryClass() {
 		return new SomeLibraryClass(someClass, someOtherClass);
 	}
 }
@@ -324,7 +324,7 @@ class Context : ApplicationContext {
 	@Component
 	@Prototype // Will create a new instance every time the dependency is resolved.
 	@RegisterByType!SomeInterface // Registers the dependency by the specified super type instead of the return type
-	public SomeClass someClass() {
+	SomeClass someClass() {
 		return new SomeClass();
 	}
 }

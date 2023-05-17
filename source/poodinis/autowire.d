@@ -51,7 +51,7 @@ private struct UseMemberType {
  * ---
  * class Car {
  *    @Autowire
- *    public Engine engine;
+ *    Engine engine;
  * }
  * ---
  *
@@ -62,10 +62,10 @@ private struct UseMemberType {
  *
  * class HybridCar {
  *    @Autowire!FuelEngine
- *    public Engine fuelEngine;
+ *    Engine fuelEngine;
  *
  *    @Autowire!ElectricEngine
- *    public Engine electricEngine;
+ *    Engine electricEngine;
  * }
  * ---
  * The members of an instance of "HybridCar" will now be autowired properly, because the autowire mechanism will
@@ -94,7 +94,7 @@ struct OptionalDependency {
  * class Car {
  *     @Autowire
  *     @AssignNewInstance
- *     public Antenna antenna;
+ *     Antenna antenna;
  * }
  *---
  * antenna will always be assigned a new instance of class Antenna.
@@ -117,7 +117,7 @@ private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAd
  *
  * See_Also: Autowire
  */
-public void autowire(Type)(shared(DependencyContainer) container, Type instance) {
+void autowire(Type)(shared(DependencyContainer) container, Type instance) {
     debug (poodinisVerbose) {
         printDebugAutowiredInstance(typeid(Type), &instance);
     }
@@ -276,19 +276,19 @@ private void printDebugValueInjection(TypeInfo instanceType,
  * See_Also: DependencyContainer
  * Deprecated: Using the global container is undesired. See DependencyContainer.getInstance().
  */
-public deprecated void globalAutowire(Type)(Type instance) {
+deprecated void globalAutowire(Type)(Type instance) {
     DependencyContainer.getInstance().autowire(instance);
 }
 
 class AutowiredRegistration(RegistrationType : Object) : Registration {
     private shared(DependencyContainer) container;
 
-    public this(TypeInfo registeredType, InstanceFactory instanceFactory,
+    this(TypeInfo registeredType, InstanceFactory instanceFactory,
         shared(DependencyContainer) originatingContainer) {
         super(registeredType, typeid(RegistrationType), instanceFactory, originatingContainer);
     }
 
-    public override Object getInstance(
+    override Object getInstance(
         InstantiationContext context = new AutowireInstantiationContext()) {
         enforce(!(originatingContainer is null),
             "The registration's originating container is null. There is no way to resolve autowire dependencies.");
@@ -324,5 +324,5 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
 }
 
 class AutowireInstantiationContext : InstantiationContext {
-    public bool autowireInstance = true;
+    bool autowireInstance = true;
 }

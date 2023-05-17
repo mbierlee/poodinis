@@ -56,7 +56,7 @@ class RegistrationException : Exception {
 /**
  * Options which influence the process of registering dependencies
  */
-public enum RegistrationOption {
+enum RegistrationOption {
     none = 0,
     /**
      * Prevent a concrete type being registered on itself. With this option you will always need
@@ -68,7 +68,7 @@ public enum RegistrationOption {
 /**
  * Options which influence the process of resolving dependencies
  */
-public enum ResolveOption {
+enum ResolveOption {
     none = 0,
     /**
      * Registers the type you're trying to resolve before returning it.
@@ -146,7 +146,7 @@ synchronized class DependencyContainer {
      *
      * See_Also: singleInstance, newInstance, existingInstance
      */
-    public Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none) {
+    Registration register(ConcreteType)(RegistrationOption options = RegistrationOption.none) {
         return register!(ConcreteType, ConcreteType)(options);
     }
 
@@ -167,7 +167,7 @@ synchronized class DependencyContainer {
      *
      * See_Also: singleInstance, newInstance, existingInstance, RegistrationOption
      */
-    public Registration register(SuperType, ConcreteType:
+    Registration register(SuperType, ConcreteType:
         SuperType)(RegistrationOption options = RegistrationOption.none)
             if (!is(ConcreteType == struct)) {
         TypeInfo registeredType = typeid(SuperType);
@@ -271,7 +271,7 @@ synchronized class DependencyContainer {
      * ---
      * You need to use the resolve method which allows you to specify a qualifier.
      */
-    public RegistrationType resolve(RegistrationType)(
+    RegistrationType resolve(RegistrationType)(
         ResolveOption resolveOptions = ResolveOption.none)
             if (!is(RegistrationType == struct)) {
         return resolve!(RegistrationType, RegistrationType)(resolveOptions);
@@ -303,7 +303,7 @@ synchronized class DependencyContainer {
      * container.resolve!(Animal, Dog);
      * ---
      */
-    public QualifierType resolve(RegistrationType, QualifierType:
+    QualifierType resolve(RegistrationType, QualifierType:
         RegistrationType)(ResolveOption resolveOptions = ResolveOption.none)
             if (!is(QualifierType == struct)) {
         TypeInfo resolveType = typeid(RegistrationType);
@@ -381,7 +381,7 @@ synchronized class DependencyContainer {
      * Animal[] animals = container.resolveAll!Animal;
      * ---
      */
-    public RegistrationType[] resolveAll(RegistrationType)(
+    RegistrationType[] resolveAll(RegistrationType)(
         ResolveOption resolveOptions = ResolveOption.none) {
         RegistrationType[] instances;
         TypeInfo resolveType = typeid(RegistrationType);
@@ -435,7 +435,7 @@ synchronized class DependencyContainer {
     /**
      * Clears all dependency registrations managed by this container.
      */
-    public void clearAllRegistrations() {
+    void clearAllRegistrations() {
         foreach (registrationsOfType; registrations) {
             callPreDestructorsOfRegistrations(registrationsOfType);
         }
@@ -452,7 +452,7 @@ synchronized class DependencyContainer {
      * container.removeRegistration!Animal;
      * ---
      */
-    public void removeRegistration(RegistrationType)() {
+    void removeRegistration(RegistrationType)() {
         auto registrationsOfType = *(typeid(RegistrationType) in registrations);
         callPreDestructorsOfRegistrations(registrationsOfType);
         registrations.remove(typeid(RegistrationType));
@@ -470,28 +470,28 @@ synchronized class DependencyContainer {
     /**
      * Apply persistent registration options which will be used everytime register() is called.
      */
-    public void setPersistentRegistrationOptions(RegistrationOption options) {
+    void setPersistentRegistrationOptions(RegistrationOption options) {
         persistentRegistrationOptions = options;
     }
 
     /**
      * Unsets all applied persistent registration options
      */
-    public void unsetPersistentRegistrationOptions() {
+    void unsetPersistentRegistrationOptions() {
         persistentRegistrationOptions = RegistrationOption.none;
     }
 
     /**
      * Apply persistent resolve options which will be used everytime resolve() is called.
      */
-    public void setPersistentResolveOptions(ResolveOption options) {
+    void setPersistentResolveOptions(ResolveOption options) {
         persistentResolveOptions = options;
     }
 
     /**
      * Unsets all applied persistent resolve options
      */
-    public void unsetPersistentResolveOptions() {
+    void unsetPersistentResolveOptions() {
         persistentResolveOptions = ResolveOption.none;
     }
 

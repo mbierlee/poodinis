@@ -10,17 +10,17 @@ import poodinis;
 import std.stdio;
 
 interface Engine {
-	public void engage();
+	void engage();
 }
 
 class FuelEngine : Engine {
-	public void engage() {
+	void engage() {
 		writeln("VROOOOOOM!");
 	}
 }
 
 class ElectricEngine : Engine {
-	public void engage() {
+	void engage() {
 		writeln("hummmmmmmm....");
 	}
 }
@@ -32,7 +32,7 @@ class HybridCar {
 
 	@Inject!ElectricEngine private Engine electricEngine;
 
-	public void moveAtSpeed(KilometersPerHour speed) {
+	void moveAtSpeed(KilometersPerHour speed) {
 		if (speed <= 45) {
 			electricEngine.engage();
 		} else {

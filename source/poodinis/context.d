@@ -21,7 +21,7 @@ import poodinis.autowire : autowire;
 import std.traits : hasUDA, ReturnType;
 
 class ApplicationContext {
-    public void registerDependencies(shared(DependencyContainer) container) {
+    void registerDependencies(shared(DependencyContainer) container) {
     }
 }
 
@@ -54,7 +54,7 @@ struct Prototype {
 * It is mostly used for dependencies which come from an external library or when you don't
 * want to use annotations to set-up dependencies in your classes.
 */
-public void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container) {
+void registerContext(Context : ApplicationContext)(shared(DependencyContainer) container) {
     auto context = new Context();
     context.registerDependencies(container);
     context.registerContextComponents(container);
@@ -62,7 +62,7 @@ public void registerContext(Context : ApplicationContext)(shared(DependencyConta
     autowire(container, context);
 }
 
-public void registerContextComponents(ApplicationContextType : ApplicationContext)(
+void registerContextComponents(ApplicationContextType : ApplicationContext)(
     ApplicationContextType context, shared(DependencyContainer) container) {
     foreach (memberName; __traits(allMembers, ApplicationContextType)) {
         foreach (overload; __traits(getOverloads, ApplicationContextType, memberName)) {

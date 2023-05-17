@@ -48,7 +48,7 @@ class HttpServer {
 	@MandatoryValue("http.keep_alive")
 	private int keepAliveTime; // A ResolveException is thrown when the value is not available, default assignments are not used.
 
-	public void serve() {
+	void serve() {
 		writeln(format("Serving pages for %s:%s with max connection count of %s",
 				hostName, port, maxConnections));
 	}
