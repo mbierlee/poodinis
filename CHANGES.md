@@ -1,5 +1,9 @@
 # Poodinis Changelog
 
+**Version 9.0.1** (17-06-2024)
+
+-   FIX compilation issue with Vibe.d RestInterface (#46) (Thanks to @vnayar for the fix)
+
 **Version 9.0.0** (13-03-2023)
 This version is only compatible with DMD 2.086.1 or higher (compatible) compilers.
 
@@ -39,7 +43,7 @@ This version is only compatible with DMD 2.086.1 or higher (compatible) compiler
 
 **Version 8.0.2** (15-04-2018)
 
--   FIX resolving types which use template types with circular type arguments (Thanks to aruthane for fixing this.)
+-   FIX resolving types which use template types with circular type arguments (Thanks to @aruthane for fixing this.)
 
 **Version 8.0.1** (13-08-2017)
 
@@ -72,7 +76,7 @@ This version introduces changes which might be incompatible with your current co
 
 **Version 6.3.0** (27-06-2016)
 
--   CHANGE registration and resolve options to be supplied using bit flags instead. (Thanks to tmccombs)
+-   CHANGE registration and resolve options to be supplied using bit flags instead. (Thanks to @tmccombs)
 -   DEPRECATE all other forms of supplying registration and resolve options (by array or variadics)
 
 **Version 6.2.0** (10-04-2016)
@@ -87,7 +91,7 @@ This version introduces changes which might be incompatible with your current co
 -   DEPRECATE supplying register()'s registration options as variadic arguments. Use register(SuperType, ConcreteType)(RegistrationOption[]) instead.
 -   ADD resolve options to container resolve()
 -   ADD ability to register a type while resolving it. Use resolve option registerBeforeResolving
--   ADD ability to autowire private fields (Thanks to Extrawurst)
+-   ADD ability to autowire private fields (Thanks to @Extrawurst)
 -   FIX registration of application contexts with non-public members
 
 **Version 6.0.0** (29-12-2015)
