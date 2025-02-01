@@ -1,3 +1,4 @@
 {
-    "dfmt.braceStyle": "otbs"
+    "dfmt.braceStyle": "otbs",
+    "makefile.configureOnOpen": false
 }
