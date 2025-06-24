@@ -189,4 +189,31 @@ version (unittest) {
         assert(instance.intValue == 8);
         assert(instance.unrelated !is null);
     }
+
+    // Test that @Value is not injected at all for existingInstance (default value case)
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!(ValueInjector!int, TestInjector);
+        container.register!ComponentA;
+        auto instance1 = new ValuedClass();
+        container.register!ValuedClass.existingInstance(instance1);
+        auto resolved1 = container.resolve!ValuedClass;
+        assert(resolved1 is instance1, "Should resolve to the same instance");
+        assert(resolved1.intValue == int.init, "@Value should not inject for existingInstance, even if default");
+        assert(resolved1.unrelated !is null, "Other dependencies should still be autowired");
+    }
+
+    // Test that @Value is not injected at all for existingInstance (non-default value case)
+    unittest {
+        auto container = new shared DependencyContainer();
+        container.register!(ValueInjector!int, TestInjector);
+        container.register!ComponentA;
+        auto instance2 = new ValuedClass();
+        instance2.intValue = 42;
+        container.register!ValuedClass.existingInstance(instance2);
+        auto resolved2 = container.resolve!ValuedClass;
+        assert(resolved2 is instance2, "Should resolve to the same instance");
+        assert(resolved2.intValue == 42, "@Value should not inject for existingInstance, even if non-default");
+        assert(resolved2.unrelated !is null, "Other dependencies should still be autowired");
+    }
 }

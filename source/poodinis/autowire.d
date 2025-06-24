@@ -117,18 +117,18 @@ private void printDebugAutowiredInstance(TypeInfo instanceType, void* instanceAd
  *
  * See_Also: Autowire
  */
-void autowire(Type)(shared(DependencyContainer) container, Type instance) {
+void autowire(Type)(shared(DependencyContainer) container, Type instance, bool isExistingInstance = false) {
     debug (poodinisVerbose) {
         printDebugAutowiredInstance(typeid(Type), &instance);
     }
 
     // Recurse into base class if there are more between Type and Object in the hierarchy
     static if (BaseClassesTuple!Type.length > 1) {
-        autowire!(BaseClassesTuple!Type[0])(container, instance);
+        autowire!(BaseClassesTuple!Type[0])(container, instance, isExistingInstance);
     }
 
     foreach (index, name; FieldNameTuple!Type) {
-        autowireMember!(name, index, Type)(container, instance);
+        autowireMember!(name, index, Type)(container, instance, isExistingInstance);
     }
 }
 
@@ -149,18 +149,19 @@ private void printDebugAutowiringArray(TypeInfo superTypeInfo,
 }
 
 private void autowireMember(string member, size_t memberIndex, Type)(
-    shared(DependencyContainer) container, Type instance) {
+    shared(DependencyContainer) container, Type instance, bool isExistingInstance) {
     foreach (attribute; __traits(getAttributes, Type.tupleof[memberIndex])) {
         static if (is(attribute == Autowire!T, T)) {
             injectInstance!(member, memberIndex, typeof(attribute.qualifier))(container, instance);
         } else static if (__traits(isSame, attribute, Autowire)) {
             injectInstance!(member, memberIndex, UseMemberType)(container, instance);
-        } else static if (is(typeof(attribute) == Value)) {
+        } else static if (is(typeof(attribute) == Value) || is(typeof(attribute) == MandatoryValue)) {
+            if (isExistingInstance) {
+                continue;
+            }
             enum key = attribute.key;
-            injectValue!(member, memberIndex, key, false)(container, instance);
-        } else static if (is(typeof(attribute) == MandatoryValue)) {
-            enum key = attribute.key;
-            injectValue!(member, memberIndex, key, true)(container, instance);
+            enum isMandatory = is(typeof(attribute) == MandatoryValue);
+            injectValue!(member, memberIndex, key, isMandatory)(container, instance);
         }
     }
 }
@@ -296,9 +297,12 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
         RegistrationType instance = cast(RegistrationType) super.getInstance(context);
 
         AutowireInstantiationContext autowireContext = cast(AutowireInstantiationContext) context;
-        enforce(!(autowireContext is null), "Given instantiation context type could not be cast to an AutowireInstantiationContext. If you relied on using the default assigned context: make sure you're calling getInstance() on an instance of type AutowiredRegistration!");
+        enforce(!(autowireContext is null),
+            "Given instantiation context type could not be cast to an AutowireInstantiationContext. If you relied on using the default assigned context: make sure you're calling getInstance() on an instance of type AutowiredRegistration!");
         if (autowireContext.autowireInstance) {
-            originatingContainer.autowire(instance);
+            bool isExistingInstance = instanceFactory.factoryParameters
+                .existingInstance !is null;
+            originatingContainer.autowire(instance, isExistingInstance);
         }
 
         this.preDestructor = getPreDestructor(instance);
@@ -312,10 +316,10 @@ class AutowiredRegistration(RegistrationType : Object) : Registration {
             static if (__traits(compiles, __traits(getOverloads, RegistrationType, memberName))) {
                 static foreach (overload; __traits(getOverloads, RegistrationType, memberName)) {
                     static if (__traits(compiles, __traits(getProtection, overload))
-                            && __traits(getProtection, overload) == "public"
-                            && isFunction!overload
-                            && hasUDA!(overload, PreDestroy)) {
-                            preDestructor = &__traits(getMember, instance, memberName);
+                        && __traits(getProtection, overload) == "public"
+                        && isFunction!overload
+                        && hasUDA!(overload, PreDestroy)) {
+                        preDestructor = &__traits(getMember, instance, memberName);
                     }
                 }
             }
