@@ -5,5 +5,7 @@
  * The full terms of the license can be found in the LICENSE file.
  */
 
+version (unittest)  :  //
+
 void main() {
 }

@@ -5,9 +5,9 @@
  * The full terms of the license can be found in the LICENSE file.
  */
 
-module poodinis.test.foreigndependencies;
+module poodinis.foreigndependencies;
 
-version (unittest) {
-    class Ola {
-    }
+version (unittest)  :  //
+
+class Ola {
 }

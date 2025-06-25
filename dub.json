@@ -14,15 +14,13 @@
         {
             "name": "unittest",
             "targetType": "executable",
-            "sourcePaths": ["test"],
-            "mainSourceFile": "test/poodinis/testmain.d"
+            "mainSourceFile": "source/poodinis/testmain.d"
         },
         {
             "name": "unittestVerbose",
             "targetType": "executable",
             "debugVersions": ["poodinisVerbose"],
-            "sourcePaths": ["test"],
-            "mainSourceFile": "test/poodinis/testmain.d"
+            "mainSourceFile": "source/poodinis/testmain.d"
         },
         {
             "name": "quickstartExample",
