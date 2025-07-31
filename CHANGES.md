@@ -1,5 +1,9 @@
 # Poodinis Changelog
 
+**Version 9.0.2** (31-07-2025)
+
+-   FIX @Value initialization for existing instances happening more than once (#45) 
+
 **Version 9.0.1** (17-06-2024)
 
 -   FIX compilation issue with Vibe.d RestInterface (#46) (Thanks to @vnayar for the fix)
