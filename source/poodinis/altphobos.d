@@ -14,7 +14,7 @@
  *            Kenji Hara,
  *            Shoichi Kato,
  *            Mike Bierlee (m.bierlee@lostmoment.com)
- * Copyright: Copyright Digital Mars 2005 - 2009., Copyright Andrei Alexandrescu 2008-, Jonathan M Davis 2011-., 2014-2025 Mike Bierlee
+ * Copyright: Copyright Digital Mars 2005 - 2009., Copyright Andrei Alexandrescu 2008-, Jonathan M Davis 2011-., 2014-2026 Mike Bierlee
  * License:  $(HTTP boost.org/LICENSE_1_0.txt, Boost License 1.0)
  */
 
